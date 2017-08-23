@@ -25,5 +25,8 @@ Nu je hebt gecommit staat het nog niet op github, alleen lokaal.
 
 7. Push naar github. Gebruik
 git push origin -u [branchname] (voorbeeld: develop of jursbranch/grote_feature/kleine_fix)
+of gebruik
+git push (pushed de branch waar je in werkt op dit moment (dus als je hiervoor git checkout develop
+hebt gedaan pushed hij de changes naar develop)
 Dan staat het ook daadwerkelijk op github
 
