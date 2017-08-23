@@ -3,18 +3,18 @@
 // General piece, can be a 1, 2, 3, etc.
 class Piece {
 	protected:
-		int value;
+		char value;
 	public:
-		int getValue();
+		char getValue();
 };
 
 // General Tile, can be water or grass
 class Tile {
 	protected:
-		char name;
+		char value;
 		Piece piece;
 	public:
-		char getName();
+		char getValue();
 };
 
 // Specific Grass tile

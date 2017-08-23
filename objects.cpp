@@ -1,18 +1,17 @@
 #include "objects.h"
 
-int Piece::getValue() 
+char Piece::getValue() 
 {
 	return value;
 }
 
-
-char Tile::getName() 
+char Tile::getValue() 
 {
-	return name;
+	return this->piece.getValue() != 0 ? this->piece.getValue() : value;
 }
 
 Grass::Grass() {
-	name = '0';
+	value = '0';
 }
 
 void Grass::setPiece(Piece p) {
@@ -20,5 +19,5 @@ void Grass::setPiece(Piece p) {
 }
 
 Water::Water() {
-	name = 'W';
+	value = 'W';
 }
