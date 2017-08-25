@@ -19,3 +19,6 @@ struct Start_pos {
 	Piece row2[10];
 	Piece row3[10];
 };
+
+void createBoard(Tile field[10][10]);
+void fillBoard(Tile field[10][10]);
