@@ -3,13 +3,13 @@
 
 //Creates the initial empty board
 void createBoard(Tile field[10][10]) {
-	for(int i=0; i < 10; i++) {
-		for(int j=0; j < 10; j++) {
-			if ((i==4 || i==5) && (j==2 || j==3 || j==6 || j==7)) {
-				field[i][j].land = w;
-			} 
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			if ((i == 4 || i == 5) && (j == 2 || j == 3 || j == 6 || j == 7)) {
+				field[i][j].land = 'W';
+			}
 			else {
-				field[i][j].land = g;
+				field[i][j].land = 'G';
 			}
 		}
 	}
@@ -19,10 +19,10 @@ void createBoard(Tile field[10][10]) {
 void fillBoard(Tile field[10][10])
 {
 	Start_pos AI1_pos = AI1_start_pos_gen();
-	Start_pos AI2_pos = AI2_start_pos_gen(); //is nog geen voorbeeld voor
-	
-	for(int i=0; i < 10; i++) {
-		int j = 10 -i;
+	Start_pos AI2_pos = AI1_start_pos_gen(); //is nog geen voorbeeld voor
+
+	for (int i = 0; i < 10; i++) {
+		int j = 10 - i - 1;
 		field[0][i].piece = AI1_pos.row0[i];
 		field[1][i].piece = AI1_pos.row1[i];
 		field[2][i].piece = AI1_pos.row2[i];
