@@ -12,6 +12,7 @@ Start_pos AI1_start_pos_gen()
 	Start_pos uit;
 	int getallen[40] = {11, 12, 12, 12, 12, 12, 12, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9, 10};
 	Piece stukken[40];
+	// make all the pieces in a array
 	for (int T1 = 0; T1 < 40; T1++)
 	{
 		if (getallen[T1] != 11 && getallen[T1] != 12)
@@ -30,7 +31,7 @@ Start_pos AI1_start_pos_gen()
 			stukken[T1].name = 'B';
 		}
 	}
-
+	//transver array to start_pos
 	for (int T2 = 0; T2 < 10; T2++)
 	{
 		uit.row0[T2] = stukken[T2];
