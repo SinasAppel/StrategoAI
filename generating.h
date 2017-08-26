@@ -4,6 +4,8 @@
 struct Piece {
 	int value;
 	char name;
+	int owner;
+	bool visible;
 };
 
 // General Tile, land can be water or grass and can contain a piece
