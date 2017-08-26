@@ -12,6 +12,19 @@ struct Tile {
 	Piece piece;
 };
 
+/**
+ * Move struct that an AI returns when called for it's next move
+ * x and y are the coordinates of the current position.
+ * cardinal is the direction the piece should go.
+ * cardinal can be 'N' for north, 'E' for east, 
+ * 'W' for west and 'S' for south 
+ */
+struct Move {
+	int x;
+	int y;
+	char cardinal;
+};
+
 // A way to pass the starting positions easely
 struct Start_pos {
 	Piece row0[10];

@@ -1,3 +1,7 @@
 #define	AI1_H
 
-Start_pos AI1_start_pos_gen();
+class AI1 {
+	public:
+		Start_pos startPos();
+		Move move();
+};

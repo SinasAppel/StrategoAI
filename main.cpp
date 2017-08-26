@@ -11,25 +11,16 @@ using namespace std;
 void printField(Tile field[10][10]) {
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
-			if (field[i][j].piece.value == 0)
-			{
-				printf(" %c", field[i][j].piece.name);
-			}
-			else if (field[i][j].piece.value < 0)
-			{
+			if (field[i][j].piece.value < 0 || field[i][j].piece.value > 10) {
 				printf(" %c", field[i][j].land);
 			}
-			else
-			{
-				printf(" %i", field[i][j].piece.value);
+			else {
+				printf(" %c", field[i][j].piece.name);
 			}
 		}
 		printf("\n");
 	}
 }
-
-
-
 
 int main() {
 	Tile field[10][10];
