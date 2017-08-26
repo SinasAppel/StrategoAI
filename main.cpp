@@ -43,7 +43,7 @@ int combatScore(Tile attacker, Tile defender)
 	// normal combat
 	if (attacker.piece.value > defender.piece.value) {
 		return 1;
-	} else if { attack.piece.value == defender.piece.value) {
+	} else if (attacker.piece.value == defender.piece.value) {
 		return 0;
 	} else {
 		return -1;
@@ -57,7 +57,7 @@ int handleMove(Tile field[10][10], Move move)
 {
 	switch (move.cardinal) {
 		case 'N': // Piece should be moved North
-			switch(combatScore(field[move.x][move.y], field[move.x-1][move.y]) {
+			switch(combatScore(field[move.x][move.y], field[move.x-1][move.y])) {
 				case 2:  return field[move.x][move.y].piece.owner; break;
 				case 1:  field[move.x-1][move.y] = field[move.x][move.y];
 						 field[move.x][move.y] = cleanGrassTile(); break;
@@ -67,7 +67,7 @@ int handleMove(Tile field[10][10], Move move)
 			}
 			break;
 		case 'E': // Piece should be moved East
-			switch(combatScore(field[move.x][move.y], field[move.x][move.y+1]) {
+			switch(combatScore(field[move.x][move.y], field[move.x][move.y+1])) {
 				case 2:  return field[move.x][move.y].piece.owner; break;
 				case 1:  field[move.x][move.y+1] = field[move.x][move.y];
 						 field[move.x][move.y] = cleanGrassTile(); break;
@@ -77,7 +77,7 @@ int handleMove(Tile field[10][10], Move move)
 			}
 			break;
 		case 'S': // Piece should be moved South
-			switch(combatScore(field[move.x][move.y], field[move.x+1][move.y]) {
+			switch(combatScore(field[move.x][move.y], field[move.x+1][move.y])) {
 				case 2:  return field[move.x][move.y].piece.owner; break;
 				case 1:  field[move.x+1][move.y] = field[move.x][move.y];
 						 field[move.x][move.y] = cleanGrassTile(); break;
@@ -87,7 +87,7 @@ int handleMove(Tile field[10][10], Move move)
 			}
 			break;
 		case 'W': // Piece should be moved West
-			switch(combatScore(field[move.x][move.y], field[move.x][move.y-1]) {
+			switch(combatScore(field[move.x][move.y], field[move.x][move.y-1])) {
 				case 2:  return field[move.x][move.y].piece.owner; break;
 				case 1:  field[move.x][move.y-1] = field[move.x][move.y];
 						 field[move.x][move.y] = cleanGrassTile(); break;

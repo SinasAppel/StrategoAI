@@ -54,11 +54,11 @@ Tile cleanGrassTile()
 /**
  * Creates an empty water tile
  */
-Tile cleanGrassTile() 
+Tile cleanWaterTile() 
 {
 	Tile w;
 	w.land = 'W';
 	w.piece.value = -1;
 	w.piece.name = 'E';
-	return g;
+	return w;
 }
