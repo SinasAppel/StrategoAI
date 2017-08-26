@@ -135,8 +135,8 @@ int playAiGame()
 	Move previous_move;
 	
 	// Make custom private fields for AI's to prevent cheating
-	Tile player1_field[10][10] = field;
-	Tile player2_field[10][10] = field;
+	Tile player1_field[10][10] = {};
+	Tile player2_field[10][10] = {};
 	
 	while(!isFinished) {
 		if(turn == 1) {
