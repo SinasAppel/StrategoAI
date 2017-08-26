@@ -55,50 +55,36 @@ int combatScore(Tile attacker, Tile defender)
  */
 int handleMove(Tile field[10][10], Move move) 
 {
+	int newX = 0;
+	int newY = 0;
 	switch (move.cardinal) {
 		case 'N': // Piece should be moved North
-			switch(combatScore(field[move.x][move.y], field[move.x-1][move.y])) {
-				case 2:  return field[move.x][move.y].piece.owner; break;
-				case 1:  field[move.x-1][move.y] = field[move.x][move.y];
-						 field[move.x][move.y] = cleanGrassTile(); break;
-				case 0:  field[move.x-1][move.y] = cleanGrassTile();
-				case -1: field[move.x][move.y] = cleanGrassTile(); break;
-				default: printf("Not a valid combat score!\n"); break;
-			}
+			newX = move.x-1;
+			newY = move.y;
 			break;
 		case 'E': // Piece should be moved East
-			switch(combatScore(field[move.x][move.y], field[move.x][move.y+1])) {
-				case 2:  return field[move.x][move.y].piece.owner; break;
-				case 1:  field[move.x][move.y+1] = field[move.x][move.y];
-						 field[move.x][move.y] = cleanGrassTile(); break;
-				case 0:  field[move.x][move.y+1] = cleanGrassTile();
-				case -1: field[move.x][move.y] = cleanGrassTile(); break;
-				default: printf("Not a valid combat score!\n"); break;
-			}
+			newX = move.x;
+			newY = move.y+1;
 			break;
 		case 'S': // Piece should be moved South
-			switch(combatScore(field[move.x][move.y], field[move.x+1][move.y])) {
-				case 2:  return field[move.x][move.y].piece.owner; break;
-				case 1:  field[move.x+1][move.y] = field[move.x][move.y];
-						 field[move.x][move.y] = cleanGrassTile(); break;
-				case 0:  field[move.x+1][move.y] = cleanGrassTile();
-				case -1: field[move.x][move.y] = cleanGrassTile(); break;
-				default: printf("Not a valid combat score!\n"); break;
-			}
+			newX = move.x+1;
+			newY = move.y;
 			break;
 		case 'W': // Piece should be moved West
-			switch(combatScore(field[move.x][move.y], field[move.x][move.y-1])) {
-				case 2:  return field[move.x][move.y].piece.owner; break;
-				case 1:  field[move.x][move.y-1] = field[move.x][move.y];
-						 field[move.x][move.y] = cleanGrassTile(); break;
-				case 0:  field[move.x][move.y-1] = cleanGrassTile();
-				case -1: field[move.x][move.y] = cleanGrassTile(); break;
-				default: printf("Not a valid combat score!\n"); break;
-			}
+			newX = move.x;
+			newY = move.y-1;
 			break;
 		default:
 			printf("Error, not a valid cardinal\n");
 			break;
+	}
+	switch(combatScore(field[move.x][move.y], field[newX][newY])) {
+		case 2:  return field[move.x][move.y].piece.owner; break;
+		case 1:  field[newX][newY] = field[move.x][move.y];
+				 field[move.x][move.y] = cleanGrassTile(); break;
+		case 0:  field[newX][newY] = cleanGrassTile();
+		case -1: field[move.x][move.y] = cleanGrassTile(); break;
+		default: printf("Not a valid combat score!\n"); break;
 	}
 	return 0;
 }
