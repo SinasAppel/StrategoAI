@@ -55,23 +55,19 @@ int combatScore(Tile attacker, Tile defender)
  */
 int handleMove(Tile field[10][10], Move move) 
 {
-	int newX = 0;
-	int newY = 0;
+	int newX = move.x;
+	int newY = move.y;
 	switch (move.cardinal) {
 		case 'N': // Piece should be moved North
 			newX = move.x-1;
-			newY = move.y;
 			break;
 		case 'E': // Piece should be moved East
-			newX = move.x;
 			newY = move.y+1;
 			break;
 		case 'S': // Piece should be moved South
 			newX = move.x+1;
-			newY = move.y;
 			break;
 		case 'W': // Piece should be moved West
-			newX = move.x;
 			newY = move.y-1;
 			break;
 		default:
