@@ -35,3 +35,5 @@ struct Start_pos {
 
 void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10]);
+Tile cleanGrassTile();
+Tile cleanWaterTile();

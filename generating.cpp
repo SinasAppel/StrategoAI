@@ -7,14 +7,11 @@ void createBoard(Tile field[10][10])
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
 			if ((i == 4 || i == 5) && (j == 2 || j == 3 || j == 6 || j == 7)) {
-				field[i][j].land = 'W';
+				field[i][j] = cleanWaterTile();
 			}
 			else {
-				field[i][j].land = 'G';
+				field[i][j] = cleanGrassTile();
 			}
-			// Create default pieces that are empty
-			field[i][j].piece.value = -1;
-			field[i][j].piece.name = 'E';
 		}
 	}
 }
@@ -40,4 +37,28 @@ void fillBoard (Tile field[10][10])
 		field[8][i].piece = startPos2.row1[j];
 		field[9][i].piece = startPos2.row0[j];
 	}
+}
+
+/**
+ * Creates an empty grass tile
+ */
+Tile cleanGrassTile() 
+{
+	Tile g;
+	g.land = 'G';
+	g.piece.value = -1;
+	g.piece.name = 'E';
+	return g;
+}
+
+/**
+ * Creates an empty water tile
+ */
+Tile cleanGrassTile() 
+{
+	Tile w;
+	w.land = 'W';
+	w.piece.value = -1;
+	w.piece.name = 'E';
+	return g;
 }
