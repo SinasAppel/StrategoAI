@@ -5,6 +5,7 @@
 #include <ctime>
 #include "generating.h"
 #include "AI1.h"
+using namespace std;
 
 /**
  * Gives the base game the starting position
@@ -18,32 +19,50 @@ Start_pos AI1::startPos()
 		1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4,
 		4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9, 10};
 	Piece list_of_pieces[40];
-	// make all the pieces in a array
+	string b;
 	for (int T1 = 0; T1 < 40; T1++)
 	{
-		if (piece_values[T1] != 11 && piece_values[T1] != 12)
+		int R1 = rand() % 40, R2 = rand() % 40;
+		int temp = getallen[R1];
+		getallen[R1] = getallen[R2];
+		getallen[R2] = temp;
+	}
+	
+	// make all the pieces in a array
+	for (int T2 = 0; T2 < 40; T2++)
+	{
+		if (getallen[T2] != 11 && getallen[T2] != 12)
 		{
-			list_of_pieces[T1].value = piece_values[T1];
-			list_of_pieces[T1].name = 'N';
+			stukken[T2].value = getallen[T2];
+			if (getallen[T2] == 10)
+			{
+				stukken[T2].name = 'T';
+			}
+			else
+			{
+				b = to_string(getallen[T2]);
+				stukken[T2].name = b[0];
+			}
 		}
-		else if (piece_values[T1] == 11)
+		else if (getallen[T2] == 11)
 		{
-			list_of_pieces[T1].value = 0;
-			list_of_pieces[T1].name = 'F';
+			stukken[T2].value = 0;
+			stukken[T2].name = 'F';
 		}
 		else 
 		{
-			list_of_pieces[T1].value = 0;
-			list_of_pieces[T1].name = 'B';
+			stukken[T2].value = 0;
+			stukken[T2].name = 'B';
 		}
 	}
+	
 	//transver array to start_pos
-	for (int T2 = 0; T2 < 10; T2++)
+	for (int T3 = 0; T3 < 10; T3++)
 	{
-		output.row0[T2] = list_of_pieces[T2];
-		output.row1[T2] = list_of_pieces[10 + T2];
-		output.row2[T2] = list_of_pieces[20 + T2];
-		output.row3[T2] = list_of_pieces[30 + T2];
+		uit.row0[T3] = stukken[T3];
+		uit.row1[T3] = stukken[10 + T3];
+		uit.row2[T3] = stukken[20 + T3];
+		uit.row3[T3] = stukken[30 + T3];
 	}
 
 	return output;
