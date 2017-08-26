@@ -75,6 +75,18 @@ int handleMove(Tile field[10][10], Move move)
 			printf("Error, not a valid cardinal\n");
 			break;
 	}
+	// check if the move is not out of bounds (out of array or water)
+	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
+		field[newX][newY].land == 'W') {
+		printf("Error, move is out of bounds");
+		return field[move.x][move.y].piece.owner == 1 ? 2 : 1;
+	}
+	// check if AI is now attacking it's own pieces.
+	if (field[move.x][move.y].piece.owner == field[newX][newY].piece.owner) {
+		printf("Error, AI%d used friendly fire!\n", field[move.x][move.y].piece.owner);
+		return field[move.x][move.y].piece.owner == 1 ? 2 : 1;
+	}
+	
 	switch(combatScore(field[move.x][move.y], field[newX][newY])) {
 		case 2:  return field[move.x][move.y].piece.owner; break;
 		case 1:  field[newX][newY] = field[move.x][move.y];
