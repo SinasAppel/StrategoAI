@@ -19,13 +19,8 @@ void createBoard(Tile field[10][10])
  * fillBoard handles the starting positions of the AI('s).
  * Manipulates the field of the base game.
  */
-void fillBoard (Tile field[10][10]) 
+void fillBoard (Tile field[10][10], Start_pos startPos1, Start_pos startPos2) 
 {
-	// No second ai yet, identical boards as a result
-	AI1 AiOne;
-	Start_pos startPos1 = AiOne.startPos();
-	Start_pos startPos2 = AiOne.startPos();
-	
 	for (int i = 0; i < 10; i++) {
 		int j = 10 - i - 1;
 		field[0][i].piece = startPos1.row0[i];

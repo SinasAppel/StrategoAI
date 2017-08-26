@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include "generating.h"
+#include "AI1.h"
 using namespace std;
 
 /**
@@ -85,11 +86,34 @@ int handleMove(Tile field[10][10], Move move)
 	return 0;
 }
 
-int main() {
+int playAiGame() {
+	// No second ai yet, identical boards as a result
+	AI1 player1;
+	AI1 player2;
 	Tile field[10][10];
 	createBoard(field);
-	fillBoard(field);
-	printField(field);
+	fillBoard(field, player1.startPos(), player2.startPos());
+	bool isFinished = false;
+	int turn = 1;
+	Move move;
+	Move previous_move;
+	while(!isFinished) {
+		if(turn == 1) {
+			move = player1.move(field, previous_move);
+		} else {
+			move = player2.move(field, previous_move);
+		}
+		int winningPlayer = handleMove(field, move);
+		if (winningPlayer != 0) {
+			return winningPlayer;
+			isFinished = true;
+		}
+		move = previous_move;
+	}
+}
+
+int main() {
+	playAiGame();
 	getchar();
 	getchar();
 	return 0;
