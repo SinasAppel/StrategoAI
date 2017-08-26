@@ -12,6 +12,9 @@ void createBoard(Tile field[10][10])
 			else {
 				field[i][j].land = 'G';
 			}
+			// Create default pieces that are empty
+			field[i][j].piece.value = -1;
+			field[i][j].piece.name = 'E';
 		}
 	}
 }
