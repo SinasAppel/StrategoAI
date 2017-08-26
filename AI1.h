@@ -7,5 +7,5 @@ class AI1 {
 		int playerNumber;
 	private:
 		int hasmoved[10][10] = {};
-		int evaluate_tile(Tile target, int piece_falue)
+		int evaluate_tile(Tile target, int piece_falue);
 };
