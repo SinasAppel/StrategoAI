@@ -24,6 +24,25 @@ void printField(Tile field[10][10]) {
 }
 
 /**
+ * Makes sure the AI can't cheat by deleting invisible data
+ * This function is pretty inefficient but will suffice until
+ * maybe a better solution is found.
+ */
+void makeDataInvisible(Tile field[10][10], int playerNumber, Tile playerField[10][10]) {
+	for (int i=0; i < 10; i++) {
+		for (int j=0; j < 10; j++) {
+			if (!(field[i][j].piece.owner == playerNumber || field[i][j].piece.visible)) {
+				playerField[i][j].piece.name = '?';
+				// -2 means that it is not visible what the value is
+				playerField[i][j].piece.value = -2; 
+			} else {
+				// is visible or is owned by the player, all data is visible
+				playerField[i][j] = field[i][j];
+			}
+		}
+	}
+}
+/**
  * Evaluates combat
  * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
  */
@@ -75,18 +94,35 @@ int handleMove(Tile field[10][10], Move move)
 			printf("Error, not a valid cardinal\n");
 			break;
 	}
+	// check if the move is not out of bounds (out of array or water)
+	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
+		field[newX][newY].land == 'W') {
+		printf("Error, move is out of bounds");
+		return field[move.x][move.y].piece.owner == 1 ? 2 : 1;
+	}
+	// check if AI is now attacking it's own pieces.
+	if (field[move.x][move.y].piece.owner == field[newX][newY].piece.owner) {
+		printf("Error, AI%d used friendly fire!\n", field[move.x][move.y].piece.owner);
+		return field[move.x][move.y].piece.owner == 1 ? 2 : 1;
+	}
+	
 	switch(combatScore(field[move.x][move.y], field[newX][newY])) {
 		case 2:  return field[move.x][move.y].piece.owner; break;
 		case 1:  field[newX][newY] = field[move.x][move.y];
 				 field[move.x][move.y] = cleanGrassTile(); break;
 		case 0:  field[newX][newY] = cleanGrassTile();
-		case -1: field[move.x][move.y] = cleanGrassTile(); break;
+		case -1: field[newX][newY].piece.visible = true;
+				 field[move.x][move.y] = cleanGrassTile(); break;
 		default: printf("Not a valid combat score!\n"); break;
 	}
 	return 0;
 }
 
-int playAiGame() {
+/**
+ * plays game of two Ai's
+ */
+int playAiGame() 
+{
 	// No second ai yet, identical boards as a result
 	AI1 player1;
 	AI1 player2;
@@ -97,11 +133,20 @@ int playAiGame() {
 	int turn = 1;
 	Move move;
 	Move previous_move;
+	
+	// Make custom private fields for AI's to prevent cheating
+	Tile player1_field[10][10] = field;
+	Tile player2_field[10][10] = field;
+	
 	while(!isFinished) {
 		if(turn == 1) {
+			makeDataInvisible(field, 1, player1_field);
 			move = player1.move(field, previous_move);
+			turn++;
 		} else {
+			makeDataInvisible(field, 2, player2_field);
 			move = player2.move(field, previous_move);
+			turn--;
 		}
 		int winningPlayer = handleMove(field, move);
 		if (winningPlayer != 0) {
