@@ -7,11 +7,8 @@
 #include "AI1.h"
 using namespace std;
 
-/**
- * Gives the base game the starting position
- * @return Start_pos 
- */
-Start_pos AI1::startPos() 
+// gives the base game the starting position.
+Start_pos AI1::startPos()
 {
 	srand(time(0));
 	Start_pos output;
@@ -29,6 +26,7 @@ Start_pos AI1::startPos()
 
 	for (int T2 = 0; T2 < 40; T2++)
 	{
+		list_of_pieces[T2].owner = playerNumber;
 		if (piece_values[T2] != 11 && piece_values[T2] != 12)
 		{
 			list_of_pieces[T2].value = piece_values[T2];
@@ -67,27 +65,30 @@ Start_pos AI1::startPos()
 
 int AI1::evaluate_tile(Tile target, int piece_falue)
 {
-	if (target.piece.value == -1){ return 1; }
 	if (target.piece.owner == playerNumber){ return -900; }
+	if (target.land == 'W'){ return -900; }
 	if (target.piece.owner != playerNumber){ return 10; }
+	if (target.piece.value == -1){ return 1; }
+	else { return 0; }
 }
 
 Move AI1::move(Tile field[10][10], Move opponent_move)
 {
-	Move output; 
+	Move output;
 
 	//update de hasmoved map
-	int opp_des_x, opp_des_y;
-	if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y-1; }
-	else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x+1; opp_des_y = opponent_move.y; }
-	else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y+1; }
-	else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x-1; opp_des_y = opponent_move.y; }
-	hasmoved[opp_des_x][opp_des_y] = 1;
-
+	if (opponent_move.x != -1){
+		int opp_des_x, opp_des_y;
+		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
+		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
+		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
+		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		hasmoved[opp_des_x][opp_des_y] = 1;
+	}
 
 	int max = -10000, rating;
-	char best;
-	int best_tile[2];
+	char best = 'N';
+	int best_tile[2] = {-1, -1};
 	for (int T1 = 0; T1 < 10; T1++){
 		for (int T2 = 0; T2 < 10; T2++){
 			if (field[T1][T2].piece.owner == playerNumber && field[T1][T2].piece.value != 0)//evaluate the moves of the piece it the Ai ownse it and it is not a flag or a bom
@@ -96,25 +97,25 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 				if (T1 != 0){
 					target = field[T1 - 1][T2];// get the target field to evaluate
 					rating = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
-					if (rating > max){ max = rating;  best = 'N'; best_tile[0] = T1 - 1; best_tile[1] = T2; }// if it is max move there
+					if (rating > max){ max = rating;  best = 'N'; best_tile[0] = T1; best_tile[1] = T2; }// if it is max move there
 				}
 
 				if (T1 != 10){
 					target = field[T1 + 1][T2];
 					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'S'; best_tile[0] = T1 + 1; best_tile[1] = T2; }
+					if (rating > max){ max = rating;  best = 'S'; best_tile[0] = T1; best_tile[1] = T2; }
 				}
 
 				if (T2 != 0){
 					target = field[T1][T2 - 1];
 					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'W'; best_tile[0] = T1; best_tile[1] = T2 - 1; }
+					if (rating > max){ max = rating;  best = 'W'; best_tile[0] = T1; best_tile[1] = T2; }
 				}
 
 				if (T1 != 10){
 					target = field[T1][T2 + 1];
 					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'E'; best_tile[0] = T1; best_tile[1] = T2 + 1; }
+					if (rating > max){ max = rating;  best = 'E'; best_tile[0] = T1; best_tile[1] = T2; }
 				}
 			}
 		}
@@ -122,5 +123,6 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 	output.cardinal = best;
 	output.x = best_tile[1];
 	output.y = best_tile[0];
+	printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
 	return output;
 }
