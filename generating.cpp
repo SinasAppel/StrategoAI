@@ -1,8 +1,13 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <ctime>
 #include "generating.h"
 #include "AI1.h"
 
 //Creates the initial empty board
-void createBoard(Tile field[10][10]) 
+void createBoard(Tile field[10][10])
 {
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
@@ -16,10 +21,10 @@ void createBoard(Tile field[10][10])
 	}
 }
 /**
- * fillBoard handles the starting positions of the AI('s).
- * Manipulates the field of the base game.
- */
-void fillBoard (Tile field[10][10], Start_pos startPos1, Start_pos startPos2) 
+* fillBoard handles the starting positions of the AI('s).
+* Manipulates the field of the base game.
+*/
+void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 {
 	for (int i = 0; i < 10; i++) {
 		int j = 10 - i - 1;
@@ -35,25 +40,27 @@ void fillBoard (Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 }
 
 /**
- * Creates an empty grass tile
- */
-Tile cleanGrassTile() 
+* Creates an empty grass tile
+*/
+Tile cleanGrassTile()
 {
 	Tile g;
 	g.land = 'G';
 	g.piece.value = -1;
 	g.piece.name = 'E';
+	g.piece.owner = 0;
 	return g;
 }
 
 /**
- * Creates an empty water tile
- */
-Tile cleanWaterTile() 
+* Creates an empty water tile
+*/
+Tile cleanWaterTile()
 {
 	Tile w;
 	w.land = 'W';
 	w.piece.value = -1;
 	w.piece.name = 'E';
+	w.piece.owner = 0;
 	return w;
 }
