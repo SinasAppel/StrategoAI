@@ -7,8 +7,8 @@ struct Piece {
 	int owner;
 	bool visible;
 	Piece();
-	Piece(char n);
-	Piece(int v);
+	Piece(char n, int o);
+	Piece(int v, int o);
 };
 
 // General Tile, land can be water or grass and can contain a piece

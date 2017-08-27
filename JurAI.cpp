@@ -12,7 +12,6 @@ using namespace std;
  */
 Start_pos JurAI::startPos()
 {
-	printf("Debug: startPos() called JURAI\n");
 	srand(time(0));
 	// Create eventual output variable
 	Start_pos output;
@@ -31,27 +30,23 @@ Start_pos JurAI::startPos()
 	 // Place flag
 	 int flagPos = rand() % 10;
 	 if (piecesLeft[0]) {
-		 Piece flag('F');
+		 Piece flag('F', playerNumber);
 		 output.row0[flagPos] = flag;
 		 piecesLeft[0]--;
 	 }
-	 
-	 printf("Debug: flag placed at 0, %d\n", flagPos);
 	 // Place bombs around flag
 	 if (flagPos > 0 && piecesLeft[11]) {
-		 Piece bomb('B');
+		 Piece bomb('B', playerNumber);
 		 output.row0[flagPos-1] = bomb;
 		 piecesLeft[11]--;
-		 printf("leftBomb placed at 0, %d\n", flagPos-1);
 	 }
 	 if (flagPos < 9 && piecesLeft[11]) {
-		 Piece bomb('B');
+		 Piece bomb('B', playerNumber);
 		 output.row0[flagPos+1] = bomb;
 		 piecesLeft[11]--;
-		 printf("rightBomb placed at 0, %d\n", flagPos+1);
 	 }
 	 if (piecesLeft[11]) {
-		 Piece bomb('B');
+		 Piece bomb('B', playerNumber);
 		 output.row1[flagPos] = bomb;
 		 piecesLeft[11]--;
 	 }
@@ -68,7 +63,7 @@ Start_pos JurAI::startPos()
 		 
 		 // Get row
 		 int twoRow = rand() % 4;
-		 Piece two('2');
+		 Piece two('2', playerNumber);
 		 // Find out if there is a piece already placed on random position
 		 // If empty, place piece in there, if not try again
 		 if (twoRow == 0) {
@@ -126,7 +121,7 @@ Start_pos JurAI::startPos()
 			 int r = rand() % 12;
 			 if (piecesLeft[r]) {
 				 // Still pieces left of chosen piece, place
-				 Piece randomPiece(r);
+				 Piece randomPiece(r, playerNumber);
 				 output.row0[i] = randomPiece;
 				 piecesLeft[r]--;
 			 } else {
@@ -141,7 +136,7 @@ Start_pos JurAI::startPos()
 			 int r = rand() % 12;
 			 if (piecesLeft[r]) {
 				 // Still pieces left of chosen piece, place
-				 Piece randomPiece(r);
+				 Piece randomPiece(r, playerNumber);
 				 output.row1[i] = randomPiece;
 				 piecesLeft[r]--;
 			 } else {
@@ -156,7 +151,7 @@ Start_pos JurAI::startPos()
 			 int r = rand() % 12;
 			 if (piecesLeft[r]) {
 				 // Still pieces left of chosen piece, place
-				 Piece randomPiece(r);
+				 Piece randomPiece(r, playerNumber);
 				 output.row2[i] = randomPiece;
 				 piecesLeft[r]--;
 			 } else {
@@ -171,7 +166,7 @@ Start_pos JurAI::startPos()
 			 int r = rand() % 12;
 			 if (piecesLeft[r]) {
 				 // Still pieces left of chosen piece, place
-				 Piece randomPiece(r);
+				 Piece randomPiece(r, playerNumber);
 				 output.row3[i] = randomPiece;
 				 piecesLeft[r]--;
 			 } else {
@@ -181,10 +176,6 @@ Start_pos JurAI::startPos()
 		 }
 	 }
 	 
-	 printf("Debug: pieces left to place:\n");
-	 for(int i=0; i < 12; i++) {
-		 printf("%d pieces left to place of type %d\n", piecesLeft[i], i);
-	 }
 	 return output;
 }
 
@@ -193,9 +184,24 @@ int JurAI::evaluate_tile(Tile target, int piece_falue)
 	return 0;
 }
 
+// Simple function that update the hasMoved array (used in JurAI::move)
+void JurAI::updateHasMoved(Move opponent_move)
+{
+	if (opponent_move.x != -1) {
+		int opp_des_x, opp_des_y;
+		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
+		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
+		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
+		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		hasmoved[opp_des_x][opp_des_y] = 1;
+	}
+}
+
 Move JurAI::move(Tile field[10][10], Move opponent_move)
 {
+	updateHasMoved(opponent_move);
 	Move output;
 	return output;
 }
+
 

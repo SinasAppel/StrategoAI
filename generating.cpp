@@ -19,9 +19,9 @@ Piece::Piece() {
  * Takes a char n, that denotes the name of the Piece.
  * For example '5' corresponds to the Five (AKA Lieutenant) Piece.
  */
-Piece::Piece(char n) {
+Piece::Piece(char n, int o) {
 	name = n;
-	owner = 0;
+	owner = o;
 	visible = false;
 	if (n == 'B' || n == 'F') { // Bomb or flag, both have the same value
 		value = 0;
@@ -37,9 +37,9 @@ Piece::Piece(char n) {
  * Takes an int v, that denotes the value of the Piece
  * In this case, 0 is the flag and 11 is the bomb
  */
-Piece::Piece(int v) {
+Piece::Piece(int v, int o) {
 	v > 10 ? value = 0 : value = v;
-	owner = 0;
+	owner = o;
 	visible = false;
 	if (v == 11) {
 		name = 'B';
