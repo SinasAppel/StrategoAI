@@ -23,12 +23,10 @@ Piece::Piece(char n) {
 	name = n;
 	owner = 0;
 	visible = false;
-	if (n == 'B') { // Bomb
-		value = 12;
+	if (n == 'B' || n == 'F') { // Bomb or flag, both have the same value
+		value = 0;
 	} else if (n == 'T') { // Ten (AKA Marshal)
 		value = 10;
-	} else if (n == 'F') { // Flag
-		value = 11;
 	} else { // Name equals value for all other pieces
 		value = name - '0'; // Handy trick to convert chars to ints
 	}	
