@@ -12,35 +12,180 @@ using namespace std;
  */
 Start_pos JurAI::startPos()
 {
+	printf("Debug: startPos() called JURAI\n");
 	srand(time(0));
 	// Create eventual output variable
 	Start_pos output;
 	
-	// Initial array storing values of pieces
-	char piece_names[40] = {'F', 'B', 'B', 'B', 'B', 'B', 'B', '1', 
-		'2', '2', '2', '2', '2', '2', '2', '2', '3', '3', '3', '3', 
-		'3', '4', '4', '4', '4', '5', '5', '5', '5', '6', '6', '6', 
-		'6', '7', '7', '7', '8', '8', '9', 'T'};
+	// Array that stores the pieces left to place
+	// 0 = flag, 11 = bomb
+	int piecesLeft[12] = {1, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1, 6};
 	
-	// Piece array that will contain 
-	// the pieces generated using piece_names array
-	Piece list_of_pieces[40];
-
-	// Generate Pieces
-	for (int i = 0; i < 40; i++) {
-		Piece piece(piece_names[i]);
-		list_of_pieces[i] = piece;
-	}
-	
-	// Fit the array of pieces into the Start_pos struct used by the base game
-	for (int T3 = 0; T3 < 10; T3++) {
-		output.row0[T3] = list_of_pieces[T3];
-		output.row1[T3] = list_of_pieces[10 + T3];
-		output.row2[T3] = list_of_pieces[20 + T3];
-		output.row3[T3] = list_of_pieces[30 + T3];
-	}
-
-	return output;
+	/** 
+	 * Place certain pieces on strategic places.
+	 * 
+	 * Currently implements the following rules:
+	 * Flag on the backmost row, bombs around it.
+	 * Scouts on non water columns
+	 */
+	 // Place flag
+	 int flagPos = rand() % 10;
+	 if (piecesLeft[0]) {
+		 Piece flag('F');
+		 output.row0[flagPos] = flag;
+		 piecesLeft[0]--;
+	 }
+	 
+	 printf("Debug: flag placed at 0, %d\n", flagPos);
+	 // Place bombs around flag
+	 if (flagPos > 0 && piecesLeft[11]) {
+		 Piece bomb('B');
+		 output.row0[flagPos-1] = bomb;
+		 piecesLeft[11]--;
+		 printf("leftBomb placed at 0, %d\n", flagPos-1);
+	 }
+	 if (flagPos < 9 && piecesLeft[11]) {
+		 Piece bomb('B');
+		 output.row0[flagPos+1] = bomb;
+		 piecesLeft[11]--;
+		 printf("rightBomb placed at 0, %d\n", flagPos+1);
+	 }
+	 if (piecesLeft[11]) {
+		 Piece bomb('B');
+		 output.row1[flagPos] = bomb;
+		 piecesLeft[11]--;
+	 }
+	 
+	 // Place Scouts on non water columns
+	 for (int i = 0; i < 8; i++) {
+		 // Get column
+		 int twoColumn = rand () % 6;
+		 if (twoColumn >= 4) {
+			 twoColumn += 4;
+		 } else if (twoColumn >= 2) {
+			 twoColumn += 2;
+		 }
+		 
+		 // Get row
+		 int twoRow = rand() % 4;
+		 Piece two('2');
+		 // Find out if there is a piece already placed on random position
+		 // If empty, place piece in there, if not try again
+		 if (twoRow == 0) {
+			 if (output.row0[twoColumn].value == -1) {
+				 if (piecesLeft[2]) {
+					 output.row0[twoColumn] = two;
+					 piecesLeft[2]--;
+				 } else {
+					 printf("Error, JurAI tried to place 2 while not have a 2 left\n");
+				 }
+			 } else {
+				 i--;
+			 }
+		 } else if (twoRow == 1) {
+			 if (output.row1[twoColumn].value == -1) {
+				 if (piecesLeft[2]) {
+					 output.row1[twoColumn] = two;
+					 piecesLeft[2]--;
+				 } else {
+					 printf("Error, JurAI tried to place 2 while not have a 2 left\n");
+				 }
+			 } else {
+				 i--;
+			 }
+		 } else if (twoRow == 2) {
+			 if (output.row2[twoColumn].value == -1) {
+				 if (piecesLeft[2]) {
+					 output.row2[twoColumn] = two;
+					 piecesLeft[2]--;
+				 } else {
+					 printf("Error, JurAI tried to place 2 while not have a 2 left\n");
+				 }
+			 } else {
+				 i--;
+			 }
+		 } else {
+			 if (output.row3[twoColumn].value == -1) {
+				 if (piecesLeft[2]) {
+					 output.row3[twoColumn] = two;
+					 piecesLeft[2]--;
+				 } else {
+					 printf("Error, JurAI tried to place 2 while not have a 2 left\n");
+				 }
+			 } else {
+				 i--;
+			 }
+		 }
+	 }
+	 
+	 // Fill rest of the board randomly
+	 
+	 // Row 0
+	 for (int i=0; i < 10; i++) {
+		 if (output.row0[i].value == -1) { // place is empty
+			 int r = rand() % 12;
+			 if (piecesLeft[r]) {
+				 // Still pieces left of chosen piece, place
+				 Piece randomPiece(r);
+				 output.row0[i] = randomPiece;
+				 piecesLeft[r]--;
+			 } else {
+				 // No piece left of chosen piece, try to fill this space again
+				 i--;
+			 }
+		 }
+	 }
+	 // Row 1
+	 for (int i=0; i < 10; i++) {
+		 if (output.row1[i].value == -1) { // place is empty
+			 int r = rand() % 12;
+			 if (piecesLeft[r]) {
+				 // Still pieces left of chosen piece, place
+				 Piece randomPiece(r);
+				 output.row1[i] = randomPiece;
+				 piecesLeft[r]--;
+			 } else {
+				 // No piece left of chosen piece, try to fill this space again
+				 i--;
+			 }
+		 }
+	 }
+	 // Row 2
+	 for (int i=0; i < 10; i++) {
+		 if (output.row2[i].value == -1) { // place is empty
+			 int r = rand() % 12;
+			 if (piecesLeft[r]) {
+				 // Still pieces left of chosen piece, place
+				 Piece randomPiece(r);
+				 output.row2[i] = randomPiece;
+				 piecesLeft[r]--;
+			 } else {
+				 // No piece left of chosen piece, try to fill this space again
+				 i--;
+			 }
+		 }
+	 }
+	 // Row 3
+	 for (int i=0; i < 10; i++) {
+		 if (output.row3[i].value == -1) { // place is empty
+			 int r = rand() % 12;
+			 if (piecesLeft[r]) {
+				 // Still pieces left of chosen piece, place
+				 Piece randomPiece(r);
+				 output.row3[i] = randomPiece;
+				 piecesLeft[r]--;
+			 } else {
+				 // No piece left of chosen piece, try to fill this space again
+				 i--;
+			 }
+		 }
+	 }
+	 
+	 printf("Debug: pieces left to place:\n");
+	 for(int i=0; i < 12; i++) {
+		 printf("%d pieces left to place of type %d\n", piecesLeft[i], i);
+	 }
+	 return output;
 }
 
 int JurAI::evaluate_tile(Tile target, int piece_falue)

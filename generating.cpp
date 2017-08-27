@@ -32,6 +32,26 @@ Piece::Piece(char n) {
 	}	
 }
 
+/**
+ * Special constructor for Piece
+ * Takes an int v, that denotes the value of the Piece
+ * In this case, 0 is the flag and 11 is the bomb
+ */
+Piece::Piece(int v) {
+	v > 10 ? value = 0 : value = v;
+	owner = 0;
+	visible = false;
+	if (v == 11) {
+		name = 'B';
+	} else if (v == 0) {
+		name = 'F';
+	} else if (v == 10) {
+		name = 'T';
+	} else {
+		name = value + '0';
+	}
+}
+
 // Default constructor for a Grass tile
 Grass::Grass() {
 	land = 'G';
