@@ -4,6 +4,7 @@
 #include <fstream>
 #include "generating.h"
 #include "AI1.h"
+#include "JurAI.h"
 using namespace std;
 
 /**
@@ -127,13 +128,14 @@ int handleMove(Tile field[10][10], Move move)
 int playAiGame()
 {
 	// No second ai yet, identical boards as a result
-	AI1 player1;
+	JurAI player1;
 	AI1 player2;
 	player1.playerNumber = 1;
 	player2.playerNumber = 2;
 	Tile field[10][10];
 	createBoard(field);
 	fillBoard(field, player1.startPos(), player2.startPos());
+	printField(field);
 	bool isFinished = false;
 	int turn = 1, turns_done = 0;
 	Move move;
@@ -142,7 +144,11 @@ int playAiGame()
 	// Make custom private fields for AI's to prevent cheating
 	Tile player1_field[10][10] = {};
 	Tile player2_field[10][10] = {};
-
+	
+	int winningPlayer = 0;
+	/**
+	 * The main gameloop, handles doing the turns
+	 */
 	while (!isFinished) {
 		if (turn == 1) {
 			makeDataInvisible(field, 1, player1_field);
@@ -158,23 +164,23 @@ int playAiGame()
 			turn--;
 			turns_done++;
 		}
-		int winningPlayer = handleMove(field, move);
+		winningPlayer = handleMove(field, move);
 		if (winningPlayer != 0) {
-			return winningPlayer;
 			isFinished = true;
 		}
-		if (turns_done > 1000)
-		{
-			printField(field);
+		if (turns_done > 1000) {
+			//printField(field);
 			return turn;
 			isFinished = true;
 		}
 		move = previous_move;
 	}
+	return winningPlayer;
 }
 
 int main() {
 	playAiGame();
+	
 	getchar();
 	getchar();
 	return 0;
