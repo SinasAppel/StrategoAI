@@ -6,6 +6,48 @@
 #include "generating.h"
 #include "AI1.h"
 
+// Standard constructor for a Piece, creates an empty piece.
+Piece::Piece() {
+	value = -1;
+	name = 'E';
+	owner = 0;
+	visible = false;
+}
+
+/**
+ * Special constructor for Piece.
+ * Takes a char n, that denotes the name of the Piece.
+ * For example '5' corresponds to the Five (AKA Lieutenant) Piece.
+ */
+Piece::Piece(char n) {
+	name = n;
+	owner = 0;
+	visible = false;
+	if (n == 'B') { // Bomb
+		value = 12;
+	} else if (n == 'T') { // Ten (AKA Marshal)
+		value = 10;
+	} else if (n == 'F') { // Flag
+		value = 11;
+	} else { // Name equals value for all other pieces
+		value = name - '0'; // Handy trick to convert chars to ints
+	}	
+}
+
+// Default constructor for a Grass tile
+Grass::Grass() {
+	land = 'G';
+	Piece p;
+	piece = p;
+}
+
+// Default constructor for a Water tile
+Water::Water() {
+	land = 'W';
+	Piece p;
+	piece = p;
+}
+
 //Creates the initial empty board
 void createBoard(Tile field[10][10])
 {
@@ -44,11 +86,7 @@ void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 */
 Tile cleanGrassTile()
 {
-	Tile g;
-	g.land = 'G';
-	g.piece.value = -1;
-	g.piece.name = 'E';
-	g.piece.owner = 0;
+	Grass g;
 	return g;
 }
 
@@ -57,10 +95,6 @@ Tile cleanGrassTile()
 */
 Tile cleanWaterTile()
 {
-	Tile w;
-	w.land = 'W';
-	w.piece.value = -1;
-	w.piece.name = 'E';
-	w.piece.owner = 0;
+	Water w;
 	return w;
 }
