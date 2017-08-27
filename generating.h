@@ -8,6 +8,7 @@ struct Piece {
 	bool visible;
 	Piece();
 	Piece(char n);
+	Piece(int v);
 };
 
 // General Tile, land can be water or grass and can contain a piece
