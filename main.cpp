@@ -153,12 +153,12 @@ int movecheck(Move move, Move movestore[]){
 /**
 * plays game of two Ai's
 */
-Game playAiGame()
-{
+Game playAiGame() {
 	//timing
 	clock_t AI11, AI12, AI21, AI22;
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
-	// No second ai yet, identical boards as a result
+	
+	// Create AI's
 	AI1 player1;
 	AI1 player2;
 	player1.playerNumber = 1;
@@ -178,7 +178,6 @@ Game playAiGame()
 	while (!isFinished) {
 		if (turn == 1) {
 			makeDataInvisible(field, 1, player1_field);
-			//printField(player1_field);
 			AI11 = clock();
 			move = player1.move(field, previous_move);
 			AI12 = clock();
@@ -190,7 +189,6 @@ Game playAiGame()
 		}
 		else {
 			makeDataInvisible(field, 2, player2_field);
-			//printField(player2_field);
 			AI21 = clock();
 			move = player2.move(field, previous_move);
 			AI22 = clock();
@@ -227,8 +225,7 @@ int main() {
 	int P1wins = 0, P2wins = 0, maxgames = 1001, turns_total = 0, turns_avarage;
 	float Game_time = 0, Game_time_avarage = 0, AI1_total = 0, AI2_total = 0, AI1_avarage = 0, AI2_avarage = 0;
 	clock_t P1, P2;
-	for (int Games = 0; Games < maxgames; Games++)
-	{
+	for (int Games = 0; Games < maxgames; Games++) {
 		P1 = clock();
 		Game game = playAiGame();
 		if (game.playerWon == 1){ P1wins++;}
@@ -244,8 +241,11 @@ int main() {
 	Game_time_avarage = Game_time / maxgames;
 	AI1_avarage = AI1_total / maxgames * 1000;
 	AI2_avarage = AI2_total / maxgames * 1000;
-	if (P1wins > P2wins){ printf("player 1 WON!\nWith %i points of %i.\n", P1wins, maxgames); }
-	else{ printf("player 2 WON!\nWith %i points of %i.\n", P2wins, maxgames); }
+	if (P1wins > P2wins) { 
+		printf("player 1 WON!\nWith %i points of %i.\n", P1wins, maxgames); 
+	} else {
+		printf("player 2 WON!\nWith %i points of %i.\n", P2wins, maxgames); 
+	}
 	printf("Avarage turns per games: %i\n", turns_avarage);
 	printf("Avarage gametime: %0.3f seconds\n", Game_time_avarage);
 	printf("Avarage think time of AI1: %0.5f miliseconds\n", AI1_avarage);

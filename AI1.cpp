@@ -7,6 +7,10 @@
 #include "AI1.h"
 using namespace std;
 
+// Standard constructor for AI1
+AI1::AI1(int p) {
+	p = playerNumber;
+}
 // gives the base game the starting position.
 Start_pos AI1::startPos()
 {

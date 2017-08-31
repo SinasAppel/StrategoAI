@@ -35,6 +35,9 @@ struct Start_pos {
 	Piece row3[10];
 };
 
+/*
+ * Data struct that gets returned after a game
+ */
 struct Game {
 	int playerWon;
 	int turns;
