@@ -249,5 +249,7 @@ int main() {
 	printf("Avarage think time of AI1: %0.5f miliseconds\n", AI1_avarage);
 	printf("Avarage think time of AI2: %0.5f miliseconds\n", AI2_avarage);
 	getchar();
+	getchar();
+	getchar();
 	return 0;
 }
