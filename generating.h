@@ -6,12 +6,23 @@ struct Piece {
 	char name;
 	int owner;
 	bool visible;
+	Piece();
+	Piece(char n, int o);
+	Piece(int v, int o);
 };
 
 // General Tile, land can be water or grass and can contain a piece
 struct Tile {
 	char land;
 	Piece piece;
+};
+
+struct Grass: public Tile {
+	Grass();
+};
+
+struct Water: public Tile {
+	Water();
 };
 
 /**

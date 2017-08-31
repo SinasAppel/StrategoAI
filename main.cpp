@@ -159,10 +159,8 @@ Game playAiGame() {
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
 	
 	// Create AI's
-	AI1 player1;
-	AI1 player2;
-	player1.playerNumber = 1;
-	player2.playerNumber = 2;
+	AI1 player1(1);
+	AI1 player2(2);
 	Tile field[10][10];
 	createBoard(field);
 	fillBoard(field, player1.startPos(), player2.startPos());
