@@ -7,6 +7,10 @@
 #include "AI1.h"
 using namespace std;
 
+// Standard constructor for AI1
+AI1::AI1(int p) {
+	p = playerNumber;
+}
 // gives the base game the starting position.
 Start_pos AI1::startPos()
 {
@@ -27,6 +31,7 @@ Start_pos AI1::startPos()
 	for (int T2 = 0; T2 < 40; T2++)
 	{
 		list_of_pieces[T2].owner = playerNumber;
+		list_of_pieces[T2].visible = false;
 		if (piece_values[T2] != 11 && piece_values[T2] != 12)
 		{
 			list_of_pieces[T2].value = piece_values[T2];
@@ -67,9 +72,18 @@ int AI1::evaluate_tile(Tile target, int piece_falue)
 {
 	if (target.piece.owner == playerNumber){ return -900; }
 	if (target.land == 'W'){ return -900; }
-	if (target.piece.owner != playerNumber){ return 10; }
-	if (target.piece.value == -1){ return 1; }
-	else { return 0; }
+	if (target.piece.value > piece_falue){ return -900; }
+	if (target.piece.value == -1){ return 2; }
+	if (target.piece.value == -2)
+	{
+		return 3;
+	}
+	else 
+	{
+		if (target.piece.value < piece_falue){ int V1 = target.piece.value, V2 = piece_falue; int V3 = V2 - V1; return V3; }
+		if (target.piece.value == piece_falue){ return 1; }
+	}
+	 return 0; 
 }
 
 Move AI1::move(Tile field[10][10], Move opponent_move)
@@ -86,9 +100,8 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 
-	int max = -10000, rating;
-	char best = 'N';
-	int best_tile[2] = {-1, -1};
+	int rating[100] = {}, M = 0, value, max = -10000, value2 = -10;
+	Move moveCat[100];
 	for (int T1 = 0; T1 < 10; T1++){
 		for (int T2 = 0; T2 < 10; T2++){
 			if (field[T1][T2].piece.owner == playerNumber && field[T1][T2].piece.value != 0)//evaluate the moves of the piece it the Ai ownse it and it is not a flag or a bom
@@ -96,33 +109,44 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 				Tile target;
 				if (T1 != 0){
 					target = field[T1 - 1][T2];// get the target field to evaluate
-					rating = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
-					if (rating > max){ max = rating;  best = 'N'; best_tile[0] = T1; best_tile[1] = T2; }// if it is max move there
+					value = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
+					if (value >= max && value > -10 && value < 100){ max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'N'; M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1 + 1][T2];
-					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'S'; best_tile[0] = T1; best_tile[1] = T2; }
+					value = evaluate_tile(target, field[T1][T2].piece.value);
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'S';  M++; }
 				}
 
 				if (T2 != 0){
 					target = field[T1][T2 - 1];
-					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'W'; best_tile[0] = T1; best_tile[1] = T2; }
+					value = evaluate_tile(target, field[T1][T2].piece.value);
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'W';  M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1][T2 + 1];
-					rating = evaluate_tile(target, field[T1][T2].piece.value);
-					if (rating > max){ max = rating;  best = 'E'; best_tile[0] = T1; best_tile[1] = T2; }
+					value = evaluate_tile(target, field[T1][T2].piece.value);
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'E';  M++; }
 				}
 			}
 		}
 	}
-	output.cardinal = best;
-	output.x = best_tile[1];
-	output.y = best_tile[0];
-	printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
+	
+	int R1, D = 0;
+	if (M == 0){ output = { 42, playerNumber, 'N' }; return output; }// nomoves so forfit
+	for (int T3 = 0; T3 < M; T3++)
+	{
+		if (rating[T3] != max){ D++; }
+	}
+
+	srand(time(0));
+	R1 = (rand() % (M - D)) + D;
+	value2 = rating[R1];
+	
+	output = moveCat[R1];
+
+	//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
 	return output;
 }

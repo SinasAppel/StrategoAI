@@ -14,7 +14,7 @@ Piece::Piece() {
 	visible = false;
 }
 
-/**
+/*
  * Special constructor for Piece.
  * Takes a char n, that denotes the name of the Piece.
  * For example '5' corresponds to the Five (AKA Lieutenant) Piece.
@@ -32,7 +32,7 @@ Piece::Piece(char n, int o) {
 	}	
 }
 
-/**
+/*
  * Special constructor for Piece
  * Takes an int v, that denotes the value of the Piece
  * In this case, 0 is the flag and 11 is the bomb
@@ -80,10 +80,10 @@ void createBoard(Tile field[10][10])
 		}
 	}
 }
-/**
-* fillBoard handles the starting positions of the AI('s).
-* Manipulates the field of the base game.
-*/
+/*
+ * fillBoard handles the starting positions of the AI('s).
+ * Manipulates the field of the base game.
+ */
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 {
 	for (int i = 0; i < 10; i++) {
@@ -99,18 +99,18 @@ void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 	}
 }
 
-/**
-* Creates an empty grass tile
-*/
+/*
+ * Creates an empty grass tile
+ */
 Tile cleanGrassTile()
 {
 	Grass g;
 	return g;
 }
 
-/**
-* Creates an empty water tile
-*/
+/*
+ * Creates an empty water tile
+ */
 Tile cleanWaterTile()
 {
 	Water w;
