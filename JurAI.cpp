@@ -7,11 +7,15 @@
 #include "JurAI.h"
 using namespace std;
 
-/**
+/*
  * Start_pos startPos() returns the starting position when called.
+ * Place certain pieces on strategic places.
+ * 
+ * Currently implements the following rules:
+ * Flag on the backmost row, bombs around it.
+ * Scouts on non water columns
  */
-Start_pos JurAI::startPos()
-{
+Start_pos JurAI::startPos() {
 	srand(time(0));
 	// Create eventual output variable
 	Start_pos output;
@@ -20,12 +24,8 @@ Start_pos JurAI::startPos()
 	// 0 = flag, 11 = bomb
 	int piecesLeft[12] = {1, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1, 6};
 	
-	/** 
-	 * Place certain pieces on strategic places.
-	 * 
-	 * Currently implements the following rules:
-	 * Flag on the backmost row, bombs around it.
-	 * Scouts on non water columns
+	/*
+
 	 */
 	 // Place flag
 	 int flagPos = rand() % 10;
@@ -49,6 +49,7 @@ Start_pos JurAI::startPos()
 		 Piece bomb('B', playerNumber);
 		 output.row1[flagPos] = bomb;
 		 piecesLeft[11]--;
+		 
 	 }
 	 
 	 // Place Scouts on non water columns
@@ -179,14 +180,12 @@ Start_pos JurAI::startPos()
 	 return output;
 }
 
-int JurAI::evaluate_tile(Tile target, int piece_falue)
-{
+int JurAI::evaluate_tile(Tile target, int piece_falue) {
 	return 0;
 }
 
 // Simple function that update the hasMoved array (used in JurAI::move)
-void JurAI::updateHasMoved(Move opponent_move)
-{
+void JurAI::updateHasMoved(Move opponent_move) {
 	if (opponent_move.x != -1) {
 		int opp_des_x, opp_des_y;
 		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
@@ -197,8 +196,7 @@ void JurAI::updateHasMoved(Move opponent_move)
 	}
 }
 
-Move JurAI::move(Tile field[10][10], Move opponent_move)
-{
+Move JurAI::move(Tile field[10][10], Move opponent_move) {
 	updateHasMoved(opponent_move);
 	Move output;
 	return output;
