@@ -54,8 +54,7 @@ void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile pl
  * Evaluates combat
  * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
  */
-int combatScore(Tile attacker, Tile defender)
-{
+int combatScore(Tile attacker, Tile defender) {
 	// if defender is the vlag
 	if (defender.piece.name == 'F') {
 		return 2;
@@ -84,8 +83,7 @@ int combatScore(Tile attacker, Tile defender)
  * Handles the move from the AI or player
  * returns the player who won or 0, if the flag has not beed attacked
  */
-int handleMove(Tile field[10][10], Move move)
-{
+int handleMove(Tile field[10][10], Move move) {
 	if (move.x == 42){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
 	int newX = move.x;
 	int newY = move.y;
@@ -134,7 +132,7 @@ int handleMove(Tile field[10][10], Move move)
  * movecheck checks if an AI is not doing the same move
  * in an infinite loop
  */
-int moveCheck(Move move, Move movestore[]){
+int moveCheck(Move move, Move movestore[]) {
 	int dubble = 0;
 	for (int T1 = 8; T1 > -1; T1--)
 	{
