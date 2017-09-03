@@ -197,8 +197,21 @@ void JurAI::updateHasMoved(Move opponent_move) {
 }
 
 Move JurAI::move(Tile field[10][10], Move opponent_move) {
-	updateHasMoved(opponent_move);
 	Move output;
+	updateHasMoved(opponent_move);
+	
+	Piece currentPiece;
+	for (int i=0; i < 10; i++) {
+		for (int j=0; j < 10; j++) {
+			// check if current piece is a piece owned by the AI
+			currentPiece = field[i][j].piece;
+			if (currentPiece.owner == playerNumber) {
+				
+			}
+			
+		}
+	}
+	
 	return output;
 }
 
