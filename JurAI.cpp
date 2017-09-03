@@ -7,6 +7,11 @@
 #include "JurAI.h"
 using namespace std;
 
+struct MoveAndScore {
+	int score;
+	Move move;
+}
+
 /*
  * Start_pos startPos() returns the starting position when called.
  * Place certain pieces on strategic places.
@@ -196,23 +201,32 @@ void JurAI::updateHasMoved(Move opponent_move) {
 	}
 }
 
+MoveAndScore JurAI::getMoveAndScore(Tile tile) {
+	MoveAndScore output;
+	return output;
+}
+
+
 Move JurAI::move(Tile field[10][10], Move opponent_move) {
-	Move output;
+	Tile currentTile;
+	MoveAndScore bestMaS, currentMaS;
+	
 	updateHasMoved(opponent_move);
 	
-	Piece currentPiece;
+	// Get best move
 	for (int i=0; i < 10; i++) {
 		for (int j=0; j < 10; j++) {
 			// check if current piece is a piece owned by the AI
-			currentPiece = field[i][j].piece;
+			currentTile = field[i][j];
 			if (currentPiece.owner == playerNumber) {
-				
+				currentMaS = getMoveAndScore(currentTile);
+				if (currentMaS.score > bestMaS.score) {
+					bestMaS = currentMaS;
 			}
-			
 		}
 	}
 	
-	return output;
+	return bestMaS.move;
 }
 
 

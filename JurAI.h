@@ -9,5 +9,6 @@ class JurAI {
 		int hasmoved[10][10] = {};
 		int evaluate_tile(Tile target, int piece_falue);
 		void updateHasMoved(Move);
+		MoveAndScore getMoveAndScore(Tile tile);
 };
 
