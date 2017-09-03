@@ -25,13 +25,13 @@ struct Water: public Tile {
 	Water();
 };
 
-/**
-* Move struct that an AI returns when called for it's next move
-* x and y are the coordinates of the current position.
-* cardinal is the direction the piece should go.
-* cardinal can be 'N' for north, 'E' for east,
-* 'W' for west and 'S' for south
-*/
+/*
+ * Move struct that an AI returns when called for it's next move
+ * x and y are the coordinates of the current position.
+ * cardinal is the direction the piece should go.
+ * cardinal can be 'N' for north, 'E' for east,
+ * 'W' for west and 'S' for south
+ */
 struct Move {
 	int x;
 	int y;
@@ -48,6 +48,7 @@ struct Start_pos {
 
 /*
  * Data struct that gets returned after a game
+ * which holds relevant data to report
  */
 struct Game {
 	int playerWon;
@@ -55,6 +56,7 @@ struct Game {
 	float AI1_time;
 	float AI2_time;
 };
+
 void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2);
 Tile cleanGrassTile();

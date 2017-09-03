@@ -38,7 +38,7 @@ Piece::Piece(char n, int o) {
  * In this case, 0 is the flag and 11 is the bomb
  */
 Piece::Piece(int v, int o) {
-	v > 10 ? value = 0 : value = v;
+	v == 11 ? value = 0 : value = v;
 	owner = o;
 	visible = false;
 	if (v == 11) {
