@@ -104,7 +104,8 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move)
 	//mode1: breach through the small pieces
 	if (mode == 1){
 		for (int T1 = 0; T1 < 10; T1++){
-		
+
+		}
 	}
 	//mode2: reviele the big pieces
 	if (mode == 2){

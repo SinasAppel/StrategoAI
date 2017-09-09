@@ -41,18 +41,25 @@ void printField(const Tile field[10][10]) {
  * Input: The 10 by 10 field of Tiles that the game keeps track on.
  * Input: The player number of the player that is going to recieve the board.
  * Output: The field that the player gets to see.
+ * it now also turn the field arround for player2 so the Ai always plays on top
  */
 void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile playerField[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
 			if (!(field[T1][T2].piece.owner == playerNumber || field[T1][T2].piece.visible)) {
+				if (playerNumber == 2){ T1 = 9 - T1; T2 = 9 - T2; }
 				playerField[T1][T2].piece.name = '?';
 				// -2 means that it is not visible what the value is
 				playerField[T1][T2].piece.value = -2;
 			}
 			else {
 				// is visible or is owned by the player, all data is visible
-				playerField[T1][T2] = field[T1][T2];
+				if (playerNumber == 2){
+					playerField[9 - T1][9 - T2] = field[T1][T2];
+				}
+				else{
+					playerField[T1][T2] = field[T1][T2];
+				}
 			}
 		}
 	}
