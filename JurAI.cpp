@@ -8,6 +8,13 @@
 using namespace std;
 
 /*
+ * Default JurAI constructor
+ */
+JurAI::JurAI(int p) {
+	playerNumber = p;
+}
+
+/*
  * Start_pos startPos() returns the starting position when called.
  * Place certain pieces on strategic places.
  * 
