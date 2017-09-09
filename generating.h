@@ -36,6 +36,7 @@ struct Move {
 	int x;
 	int y;
 	char cardinal;
+	bool no_moves;
 };
 
 // A way to pass the starting positions easely

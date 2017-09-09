@@ -84,7 +84,7 @@ int combatScore(Tile attacker, Tile defender) {
  * returns the player who won or 0, if the flag has not beed attacked
  */
 int handleMove(Tile field[10][10], Move move) {
-	if (move.x == 42){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
+	if (move.no_moves == true){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
@@ -149,7 +149,7 @@ int moveCheck(Move move, Move movestore[]) {
 			}
 		}
 	}
-	if (dubble > 15){ return 1; }
+	if (dubble > 25){ return 1; }
 	return 0;
 }
 
@@ -178,13 +178,13 @@ Game playAiGame() {
 	// Make custom private fields for AI's to prevent cheating
 	Tile player1_field[10][10] = {};
 	Tile player2_field[10][10] = {};
-
 	while (!isFinished) {
 		if (turn == 1) { // player1's turn
 			makeDataInvisible(field, 1, player1_field);
 			AI11 = clock();
 			move = player1.move(field, previous_move);
 			AI12 = clock();
+			//printField(field);
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 			if (moveCheck(move, movestore1) == 1){ end = turn; }
@@ -195,6 +195,7 @@ Game playAiGame() {
 			AI21 = clock();
 			move = player2.move(field, previous_move);
 			AI22 = clock();
+			//printField(field);
 			float diff ((float)AI22 - (float)AI21);
 			AI2tot = AI2tot + (diff / CLOCKS_PER_SEC);
 			if (moveCheck(move, movestore2) == 1){ end = turn; }
@@ -224,7 +225,7 @@ Game playAiGame() {
 }
 
 int main() {
-	int P1wins = 0, P2wins = 0, maxGames = 1001, totalTurns = 0, averageTurns = 0;
+	int P1wins = 0, P2wins = 0, maxGames = 101, totalTurns = 0, averageTurns = 0;
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
 	for (int games = 0; games < maxGames; games++) {
@@ -251,7 +252,6 @@ int main() {
 	printf("Avarage gametime: %0.3f seconds\n", gameTimeAverage);
 	printf("Avarage think time of AI1: %0.5f miliseconds\n", AI1Average);
 	printf("Avarage think time of AI2: %0.5f miliseconds\n", AI2Average);
-	getchar();
 	getchar();
 	return 0;
 }
