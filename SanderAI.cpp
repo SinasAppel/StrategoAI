@@ -13,6 +13,7 @@ SanderAI::SanderAI(int p) : AI(p) {
 // gives a random unice piece from an array
 Piece SanderAI::rand_from_array(int in[], int size)
 {
+	srand(time(0));
 	int V = -1, R;
 	while (V == -1)
 	{
@@ -27,9 +28,11 @@ Piece SanderAI::rand_from_array(int in[], int size)
 //updates the private frontline arrays
 void SanderAI::update_frontline(Tile field[10][10])
 {
-	int T3;
-	for (int T1 = 9; T1 > 0; T1--){
-		T3 = 9 - T1;
+	int T3, T4, p1 = 9, p2 = 0;
+	if (playerNumber == 2){ p1 = 0; p2 = 9; }
+	for (int T1 = 0; T1 < 10; T1++){
+		T3 = p1 - T1 - p2;
+		T4 = T1 - p2 - p1;
 		for (int T2 = 0; T2 < 10; T2++){
 			if (field[T1][T2].piece.owner == playerNumber){
 				Frontline_My[T2] = field[T1][T2].piece;
@@ -83,6 +86,7 @@ Start_pos SanderAI::startPos()
 
 Move SanderAI::move(Tile field[10][10], Move opponent_move)
 {
+	srand(time(0));
 	Move output;
 
 	update_frontline(field);
