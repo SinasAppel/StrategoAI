@@ -8,6 +8,9 @@
 #include "SanderAI.h"
 using namespace std;
 
+const int MAXGAMES = 1;
+
+
 /*
  * Prints a board of Tiles
  * Input: a 10 by 10 array of Tiles.
@@ -228,10 +231,10 @@ Game playAiGame() {
 }
 
 int main() {
-	int P1wins = 0, P2wins = 0, maxGames = 1, totalTurns = 0, averageTurns = 0;
+	int P1wins = 0, P2wins = 0, totalTurns = 0, averageTurns = 0;
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
-	for (int games = 0; games < maxGames; games++) {
+	for (int games = 0; games < MAXGAMES; games++) {
 		P1 = clock();
 		Game game = playAiGame();
 		game.playerWon == 1 ? P1wins++ : P2wins++;
@@ -242,14 +245,14 @@ int main() {
 		AI1Total += game.AI1_time;
 		AI2Total += game.AI2_time;
 	}
-	averageTurns = totalTurns / maxGames;
-	gameTimeAverage = gameTime / maxGames;
-	AI1Average = AI1Total / maxGames * 1000;
-	AI2Average = AI2Total / maxGames * 1000;
+	averageTurns = totalTurns / MAXGAMES;
+	gameTimeAverage = gameTime / MAXGAMES;
+	AI1Average = AI1Total / MAXGAMES * 1000;
+	AI2Average = AI2Total / MAXGAMES * 1000;
 	if (P1wins > P2wins) {
-		printf("player 1 WON!\nWith %i points of %i.\n", P1wins, maxGames); 
+		printf("player 1 WON!\nWith %i points of %i.\n", P1wins, MAXGAMES); 
 	} else {
-		printf("player 2 WON!\nWith %i points of %i.\n", P2wins, maxGames); 
+		printf("player 2 WON!\nWith %i points of %i.\n", P2wins, MAXGAMES); 
 	}
 	printf("Avarage turns per games: %i\n", averageTurns);
 	printf("Avarage gametime: %0.3f seconds\n", gameTimeAverage);
