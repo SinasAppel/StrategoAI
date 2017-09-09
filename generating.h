@@ -58,6 +58,20 @@ struct Game {
 	float AI2_time;
 };
 
+class AI {
+	public:
+		int playerNumber;
+		AI(int p /*playernumber*/);
+		virtual Start_pos startPos() {
+			Start_pos output;
+			return output;
+		}
+		virtual Move move(Tile field[10][10], Move opponent_move) {
+			Move move = { 0, 0, '0', false };
+			return move;
+		}
+};
+
 void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2);
 Tile cleanGrassTile();

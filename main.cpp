@@ -6,9 +6,12 @@
 #include "generating.h"
 #include "AI1.h"
 #include "SanderAI.h"
+#include "JurAI.h"
+
 using namespace std;
 
 const int MAXGAMES = 1;
+const int NUM_OF_AI = 3;
 
 
 /*
@@ -157,6 +160,30 @@ int moveCheck(Move move, Move movestore[]) {
 	return 0;
 }
 
+// Prints the options the player can choose from
+void printOptions(int pNum) {
+	printf("Which AI is going to be player %d?\n", pNum);
+	printf("1: AI1\n");
+	printf("2: SanderAI\n");
+	printf("3: JurAI\n");
+}
+
+// Handles the input of the user choosing
+// which AI they want to use.
+int getAiId() {
+	int AiId = 0;
+	try {
+		scanf_s("%d", &AiId);
+		if (AiId < 1 || AiId > NUM_OF_AI) {
+			throw;
+		}
+	}
+	catch (...) {
+		printf("WrongInputException");
+	}
+	return AiId;
+}
+
 /*
  * plays game of two Ai's
  */
@@ -165,14 +192,29 @@ Game playAiGame() {
 	clock_t AI11, AI12, AI21, AI22;
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
 	
-	// Create AI's
-	AI1 player1(1);
-	AI1 player2(2);
-	
+	// Get AI's to play the games with
+	printOptions(1);
+	int AiId = getAiId();
+	AI *player1;
+	switch (AiId) {
+	case 2: player1 = new SanderAI(1); break;
+	case 3: player1 = new JurAI(1); break;
+	default: player1 = new AI1(1); break;
+	}
+	AI *player2;
+	printOptions(2);
+	AiId = getAiId();
+	switch (AiId) {
+	case 2: player2 = new SanderAI(2); break;
+	case 3: player2 = new JurAI(2); break;
+	default: player2 = new AI1(1); break;
+	}
+
+
 	// Create the board and fill with starting positions
 	Tile field[10][10];
 	createBoard(field);
-	fillBoard(field, player1.startPos(), player2.startPos());
+	fillBoard(field, player1->startPos(), player2->startPos());
 	
 	bool isFinished = false;
 	int turn = 1, end = 0, turns_done =0;
@@ -188,7 +230,7 @@ Game playAiGame() {
 		if (turn == 1) { // player1's turn
 			makeDataInvisible(field, 1, player1_field);
 			AI11 = clock();
-			move = player1.move(field, previous_move);
+			move = player1->move(field, previous_move);
 			AI12 = clock();
 			//printField(field);
 			float diff ((float)AI12 - (float)AI11);
@@ -199,7 +241,7 @@ Game playAiGame() {
 		} else { // player2's turn
 			makeDataInvisible(field, 2, player2_field);
 			AI21 = clock();
-			move = player2.move(field, previous_move);
+			move = player2->move(field, previous_move);
 			AI22 = clock();
 			//printField(field);
 			float diff ((float)AI22 - (float)AI21);
@@ -230,17 +272,19 @@ Game playAiGame() {
 	}
 }
 
-int main() {
+void playGames() {
 	int P1wins = 0, P2wins = 0, totalTurns = 0, averageTurns = 0;
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
+
+	// Play the games
 	for (int games = 0; games < MAXGAMES; games++) {
 		P1 = clock();
 		Game game = playAiGame();
 		game.playerWon == 1 ? P1wins++ : P2wins++;
 		totalTurns += game.turns;
 		P2 = clock();
-		float diff ((float)P2 - (float)P1);
+		float diff((float)P2 - (float)P1);
 		gameTime += diff / CLOCKS_PER_SEC;
 		AI1Total += game.AI1_time;
 		AI2Total += game.AI2_time;
@@ -250,14 +294,21 @@ int main() {
 	AI1Average = AI1Total / MAXGAMES * 1000;
 	AI2Average = AI2Total / MAXGAMES * 1000;
 	if (P1wins > P2wins) {
-		printf("player 1 WON!\nWith %i points of %i.\n", P1wins, MAXGAMES); 
-	} else {
-		printf("player 2 WON!\nWith %i points of %i.\n", P2wins, MAXGAMES); 
+		printf("player 1 WON!\nWith %i points of %i.\n", P1wins, MAXGAMES);
+	}
+	else {
+		printf("player 2 WON!\nWith %i points of %i.\n", P2wins, MAXGAMES);
 	}
 	printf("Avarage turns per games: %i\n", averageTurns);
 	printf("Avarage gametime: %0.3f seconds\n", gameTimeAverage);
 	printf("Avarage think time of AI1: %0.5f miliseconds\n", AI1Average);
 	printf("Avarage think time of AI2: %0.5f miliseconds\n", AI2Average);
+}
+
+int main() {
+	playGames();
+	getchar();
+	getchar();
 	getchar();
 	return 0;
 }

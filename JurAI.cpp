@@ -10,8 +10,7 @@ using namespace std;
 /*
  * Default JurAI constructor
  */
-JurAI::JurAI(int p) {
-	playerNumber = p;
+JurAI::JurAI(int p) : AI(p){
 }
 
 /*
