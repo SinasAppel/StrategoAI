@@ -26,6 +26,24 @@ Piece SanderAI::rand_from_array(int in[], int size)
 	return p;
 }
 
+//updates the private frontline arrays
+void SanderAI::update_frontline(Tile field[10][10])
+{
+	int T3;
+	for (int T1 = 9; T1 > 0; T1--){
+		T3 = 9 - T1;
+		for (int T2 = 0; T2 < 10; T2++){
+			if (field[T1][T2].piece.owner == playerNumber){
+				Frontline_My[T2] = field[T1][T2].piece;
+			}
+			
+			if (field[T3][T2].piece.owner == (playerNumber == 1 ? 2 : 1)){
+				Frontline_Opponent[T2] = field[T3][T2].piece;
+			}
+		}
+	}
+}
+
 // gives the base game the starting position.
 Start_pos SanderAI::startPos()
 {
@@ -39,7 +57,6 @@ Start_pos SanderAI::startPos()
 	for (int T1 = 0; T1 < 10; T1++)
 	{
 		//making row0
-		printf("row0\n");
 		if (T1 < 3 || T1 > 6){
 			output.row0[T1] = rand_from_array(row01, 6);
 		}
@@ -47,19 +64,16 @@ Start_pos SanderAI::startPos()
 			output.row0[T1] = rand_from_array(row02, 4);
 		}
 		//making row1
-		printf("row1\n");
 		if (T1 < 3 || T1 > 6){ output.row1[T1] = Piece(11, playerNumber); }
 		if (T1 >= 3 && T1 <= 6){
 			output.row1[T1] = rand_from_array(row1, 4);
 		}
 		//making row2
-		printf("row2\n");
 		if (T1 < 2 || T1 > 7 || T1 == 4 || T1 == 5){output.row2[T1] = Piece(2, playerNumber);}
 		if (output.row2[T1].value != 2){
 			output.row2[T1] = rand_from_array(row2, 4);
 		}
 		//making row3
-		printf("row3\n");
 		if (T1 == 3 || T1 == 6){ output.row3[T1] = Piece(2, playerNumber); }
 		if (output.row3[T1].value != 2){
 			output.row3[T1] = rand_from_array(row3, 8);
@@ -72,6 +86,8 @@ Start_pos SanderAI::startPos()
 Move SanderAI::move(Tile field[10][10], Move opponent_move)
 {
 	Move output;
+
+	update_frontline(field);
 
 	//update de hasmoved map
 	if (opponent_move.x != -1){

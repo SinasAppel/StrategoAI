@@ -164,7 +164,8 @@ Game playAiGame() {
 	
 	// Create AI's
 	AI1 player1(1);
-	AI1 player2(2);
+	//AI1 player2(2);
+	SanderAI player2(2);
 	
 	// Create the board and fill with starting positions
 	Tile field[10][10];
