@@ -309,6 +309,5 @@ int main() {
 	playGames();
 	getchar();
 	getchar();
-	getchar();
 	return 0;
 }
