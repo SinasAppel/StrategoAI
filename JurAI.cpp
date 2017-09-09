@@ -10,8 +10,7 @@ using namespace std;
 /*
  * Default JurAI constructor
  */
-JurAI::JurAI(int p) {
-	playerNumber = p;
+JurAI::JurAI(int p) : AI(p){
 }
 
 /*
@@ -206,6 +205,10 @@ void JurAI::updateHasMoved(Move opponent_move) {
 Move JurAI::move(Tile field[10][10], Move opponent_move) {
 	updateHasMoved(opponent_move);
 	Move output;
+	output.x = 0;
+	output.y = 0;
+	output.cardinal = 'N';
+
 	return output;
 }
 
