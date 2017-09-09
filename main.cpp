@@ -5,6 +5,7 @@
 #include <time.h>
 #include "generating.h"
 #include "AI1.h"
+#include "SanderAI.h"
 using namespace std;
 
 /*
@@ -174,6 +175,8 @@ Game playAiGame() {
 	int turn = 1, end = 0, turns_done =0;
 	Move move, movestore1[10], movestore2[10];
 	Move previous_move = {-1, -1, 'N'};
+	printField(field);
+	printf("\n");
 
 	// Make custom private fields for AI's to prevent cheating
 	Tile player1_field[10][10] = {};
@@ -225,7 +228,7 @@ Game playAiGame() {
 }
 
 int main() {
-	int P1wins = 0, P2wins = 0, maxGames = 101, totalTurns = 0, averageTurns = 0;
+	int P1wins = 0, P2wins = 0, maxGames = 1, totalTurns = 0, averageTurns = 0;
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
 	for (int games = 0; games < maxGames; games++) {
