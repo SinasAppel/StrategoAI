@@ -8,10 +8,8 @@
 using namespace std;
 
 // Standard constructor for AI1
-SanderAI::SanderAI(int p) {
-	playerNumber = p;
+SanderAI::SanderAI(int p) : AI(p) {
 }
-
 // gives a random unice piece from an array
 Piece SanderAI::rand_from_array(int in[], int size)
 {

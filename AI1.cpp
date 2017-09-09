@@ -8,12 +8,11 @@
 using namespace std;
 
 // Standard constructor for AI1
-AI1::AI1(int p) {
-	playerNumber = p;
+AI1::AI1(int p) : AI(p) {
 }
+
 // gives the base game the starting position.
-Start_pos AI1::startPos()
-{
+Start_pos AI1::startPos() {
 	srand(time(0));
 	Start_pos output;
 	int piece_values[40] = {11, 12, 12, 12, 12, 12, 12, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9, 10};

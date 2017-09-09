@@ -66,6 +66,11 @@ Water::Water() {
 	piece = p;
 }
 
+// Default constructor of a default AI
+AI::AI(int p) {
+	playerNumber = p;
+}
+
 //Creates the initial empty board
 void createBoard(Tile field[10][10])
 {
