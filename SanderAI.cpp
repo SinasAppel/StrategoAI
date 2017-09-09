@@ -28,11 +28,9 @@ Piece SanderAI::rand_from_array(int in[], int size)
 //updates the private frontline arrays
 void SanderAI::update_frontline(Tile field[10][10])
 {
-	int T3, T4, p1 = 9, p2 = 0;
-	if (playerNumber == 2){ p1 = 0; p2 = 9; }
+	int T3;
 	for (int T1 = 0; T1 < 10; T1++){
-		T3 = p1 - T1 - p2;
-		T4 = T1 - p2 - p1;
+		T3 = 9 - T1;
 		for (int T2 = 0; T2 < 10; T2++){
 			if (field[T1][T2].piece.owner == playerNumber){
 				Frontline_My[T2] = field[T1][T2].piece;
@@ -81,6 +79,7 @@ Start_pos SanderAI::startPos()
 		}
 
 	}
+	mode = 1;
 	return output;
 }
 
@@ -102,10 +101,23 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move)
 	}
 
 	//steps
-	//breatch through the small pieces
-	//reviele the big pieces
-	//make you pieces star and plus
-	// attack all that moves
+	//mode1: breach through the small pieces
+	if (mode == 1){
+		for (int T1 = 0; T1 < 10; T1++){
+		
+	}
+	//mode2: reviele the big pieces
+	if (mode == 2){
+
+	}
+	//mode3: make you pieces star and plus
+	if (mode == 3){
+
+	}
+	//mode4: attack all that moves
+	if (mode == 4){
+
+	}
 
 	output.no_moves = true;
 	//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);

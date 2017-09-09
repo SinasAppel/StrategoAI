@@ -11,4 +11,5 @@ private:
 	int hasmoved[10][10] = {};
 	Piece Frontline_Opponent[10];
 	Piece Frontline_My[10];
+	int mode;
 };
