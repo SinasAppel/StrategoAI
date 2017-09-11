@@ -187,29 +187,10 @@ int getAiId() {
 /*
  * plays game of two Ai's
  */
-Game playAiGame() {
+Game playAiGame(AI *player1, AI *player2) {
 	//timing
 	clock_t AI11, AI12, AI21, AI22;
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
-	
-	// Get AI's to play the games with
-	printOptions(1);
-	int AiId = getAiId();
-	AI *player1;
-	switch (AiId) {
-	case 2: player1 = new SanderAI(1); break;
-	case 3: player1 = new JurAI(1); break;
-	default: player1 = new AI1(1); break;
-	}
-	AI *player2;
-	printOptions(2);
-	AiId = getAiId();
-	switch (AiId) {
-	case 2: player2 = new SanderAI(2); break;
-	case 3: player2 = new JurAI(2); break;
-	default: player2 = new AI1(1); break;
-	}
-
 
 	// Create the board and fill with starting positions
 	Tile field[10][10];
@@ -277,10 +258,28 @@ void playGames() {
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
 
+	// Get AI's to play the games with
+	printOptions(1);
+	int AiId = getAiId();
+	AI *player1;
+	switch (AiId) {
+	case 2: player1 = new SanderAI(1); break;
+	case 3: player1 = new JurAI(1); break;
+	default: player1 = new AI1(1); break;
+	}
+	AI *player2;
+	printOptions(2);
+	AiId = getAiId();
+	switch (AiId) {
+	case 2: player2 = new SanderAI(2); break;
+	case 3: player2 = new JurAI(2); break;
+	default: player2 = new AI1(1); break;
+	}
+
 	// Play the games
 	for (int games = 0; games < MAXGAMES; games++) {
 		P1 = clock();
-		Game game = playAiGame();
+		Game game = playAiGame(player1, player2);
 		game.playerWon == 1 ? P1wins++ : P2wins++;
 		totalTurns += game.turns;
 		P2 = clock();

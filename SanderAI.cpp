@@ -91,35 +91,36 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move)
 	update_frontline(field);
 
 	//update de hasmoved map
-	if (opponent_move.x != -1){
+	if (opponent_move.x != -1) {
 		int opp_des_x, opp_des_y;
-		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
-		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
-		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
-		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		if (opponent_move.cardinal == 'N') { opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
+		else if (opponent_move.cardinal == 'E') { opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
+		else if (opponent_move.cardinal == 'S') { opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
+		else if (opponent_move.cardinal == 'W') { opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 
 	//steps
 	//mode1: breach through the small pieces
-	if (mode == 1){
-		for (int T1 = 0; T1 < 10; T1++){
-		
-	}
-	//mode2: reviele the big pieces
-	if (mode == 2){
+	if (mode == 1) {
+		for (int T1 = 0; T1 < 10; T1++) {
 
-	}
-	//mode3: make you pieces star and plus
-	if (mode == 3){
+		}
+		//mode2: reviele the big pieces
+		if (mode == 2) {
 
-	}
-	//mode4: attack all that moves
-	if (mode == 4){
+		}
+		//mode3: make you pieces star and plus
+		if (mode == 3) {
 
-	}
+		}
+		//mode4: attack all that moves
+		if (mode == 4) {
 
-	output.no_moves = true;
-	//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
-	return output;
+		}
+
+		output.no_moves = true;
+		//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
+		return output;
+	}
 }
