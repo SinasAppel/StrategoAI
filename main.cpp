@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const int MAXGAMES = 3;
+const int MAXGAMES = 1;
 const int NUM_OF_AI = 3;
 
 
@@ -71,19 +71,23 @@ void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile pl
  * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
  */
 int combatScore(Tile attacker, Tile defender) {
-	printf("%i against %i\n", attacker.piece.value, defender.piece.value);
 	// if defender is the vlag
 	if (defender.piece.name == 'F') {
 		return 2;
 	}
 	// 3 against bomb:
-	if (attacker.piece.value == 3 && defender.piece.value == 12) {
+	if (attacker.piece.value == 3 && defender.piece.name== 'B') {
 		return 1;
 	}
 	// 1 against 10:
 	if (attacker.piece.value == 1 && defender.piece.value == 10) {
 		return 1;
 	}
+	// combat agains bomb
+	if (defender.piece.name == 'B') {
+		return -1;
+	}
+
 	// normal combat
 	if (attacker.piece.value > defender.piece.value) {
 		// win
@@ -99,8 +103,11 @@ int combatScore(Tile attacker, Tile defender) {
 /*
  * Handles the move from the AI or player
  * returns the player who won or 0, if the flag has not beed attacked
+ * If a unit is killed it returns the unit so the AI can see what it has killed
  */
-int handleMove(Tile field[10][10], Move move, int turn) {
+int handleMove(Tile field[10][10], Turn players_turn) {
+	Move move = players_turn.you_moved;
+	int AI_turn = players_turn.count +1 % 2 + 1;
 	if (move.no_moves == true){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
 	int newX = move.x;
 	int newY = move.y;
@@ -126,22 +133,37 @@ int handleMove(Tile field[10][10], Move move, int turn) {
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
 		printf("Error, move is out of bounds");
-		return turn;
+		return AI_turn;
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
 		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
-		return turn;
+		return AI_turn;
 	}
-	if (currectTile.piece.name == 'E'){ printf("no piece to move\n"); return turn; }
+	//check if the AI does not move an empty piece.
+	if (currectTile.piece.name == 'E'){ printf("no piece to move\n"); return AI_turn; }
 
 	switch (combatScore(currectTile, targetTile)) {
-	case 2:  return turn; break;
-	case 1:  field[newY][newX] = currectTile;
+	case 2:  return AI_turn; break;
+
+	case 1:  players_turn.you_killed[0] = field[newY][newX].piece;
+		players_turn.you_killed[1] = Piece();
+		players_turn.you_revealed = Piece();
+		field[newY][newX] = currectTile;
+		field[move.y][move.x] = cleanGrassTile();  break;
+
+	case 0:  players_turn.you_killed[0] = field[newY][newX].piece;
+		players_turn.you_killed[1] = field[move.y][move.x].piece;
+		players_turn.you_revealed = Piece();
+		field[move.y][move.x] = cleanGrassTile();
+		field[newY][newX] = cleanGrassTile(); break;
+
+	case -1: players_turn.you_killed[0] = Piece();
+		players_turn.you_killed[1] = field[move.y][move.x].piece;
+		players_turn.you_revealed = field[move.y][move.x].piece;
+		field[newY][newX].piece.visible = true;
 		field[move.y][move.x] = cleanGrassTile(); break;
-	case 0:  field[newY][newX] = cleanGrassTile(); break;
-	case -1: field[newY][newX].piece.visible = true;
-		field[move.y][move.x] = cleanGrassTile(); break;
+
 	default: printf("Not a valid combat score!\n"); break;
 	}
 	return 0;
@@ -161,31 +183,6 @@ Move turnaround_Move(Move move)
 	move.x = 9 - move.x;
 	move.y = 9 - move.y;
 	return move;
-}
-
-/*
- * movecheck checks if an AI is not doing the same move
- * in an infinite loop
- */
-int moveCheck(Move move, Move movestore[]) {
-	int dubble = 0;
-	for (int T1 = 8; T1 > -1; T1--)
-	{
-		movestore[T1 + 1] = movestore[T1];
-	}
-	movestore[0] = move;
-	for (int T2 = 0; T2 < 10; T2++)
-	{
-		for (int T3 = 1; T3 < (10 - T2); T3++)
-		{
-			if (movestore[T2].x == movestore[T2 + T3].x && movestore[T2].y == movestore[T2 + T3].y && movestore[T2].cardinal == movestore[T2 + T3].cardinal && movestore[T2].x > -10)
-			{
-				dubble++;
-			}
-		}
-	}
-	if (dubble > 25){ return 1; }
-	return 0;
 }
 
 // Prints the options the player can choose from
@@ -245,9 +242,8 @@ Game playAiGame() {
 	fillBoard(field, player1->startPos(), player2->startPos());
 	
 	bool isFinished = false;
-	int turn = 1, end = 0, turns_done =0;
-	Move move, movestore1[10], movestore2[10];
-	Move previous_move = {-1, -1, 'N'};
+	int AIturn = 1, end = 0, turns_done =0;
+	Move move, previous_move;
 	printf("start board\n");
 	printField(field);
 	printf("\n");
@@ -256,63 +252,59 @@ Game playAiGame() {
 	Tile player1_field[10][10] = {};
 	Tile player2_field[10][10] = {};
 	int winningPlayer;
+	Turn AI1_turn, AI2_turn;
 	while (!isFinished) {
-		if (turn == 1) { // player1's turn
+		if (AIturn == 1) { // player1's turn
+			AI1_turn.count++;
 			makeDataInvisible(field, 1, player1_field);
 			printField(player1_field);// print the input of the AI
 
 			AI11 = clock();
-			move = player1->move(player1_field, previous_move);
+			AI1_turn.you_moved = player1->move(player1_field, previous_move, AI1_turn);
 			AI12 = clock();
 
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
-			if (moveCheck(move, movestore1) == 1){ end = turn; }
 
-			printf("AI1: %i, %i, %c\n", move.x, move.y, move.cardinal);//print the move of the AI
-			winningPlayer = handleMove(field, move, turn);
+			printf("AI1: %i, %i, %c\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal);//print the move of the AI
+			winningPlayer = handleMove(field, AI1_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
 
-			turn++;
-			turns_done++;
+			AIturn++;
 		} else { // player2's turn
+			AI2_turn = Turn(AI2_turn, AI1_turn);
 			makeDataInvisible(field, 2, player2_field);
 			printField(player2_field);// print the input of the AI
 
 			AI21 = clock();
-			move = player2->move(player2_field, previous_move);
+			AI2_turn.you_moved = player2->move(player2_field, previous_move, AI2_turn);
 			AI22 = clock();
 
 			float diff ((float)AI22 - (float)AI21);
 			AI2tot = AI2tot + (diff / CLOCKS_PER_SEC);
-			if (moveCheck(move, movestore2) == 1){ end = turn; }
 
-			move = turnaround_Move(move);
-			printf("AI2: %i, %i, %c\n", move.x, move.y, move.cardinal);//print the move of the AI
-			winningPlayer = handleMove(field, move, turn);
+			AI2_turn.you_moved = turnaround_Move(AI2_turn.you_moved);
+			printf("AI2: %i, %i, %c\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal);//print the move of the AI
+			winningPlayer = handleMove(field, AI2_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
 
-			turn--;
-			turns_done++;
+			AIturn--;
 		}
 
 		if (winningPlayer != 0) {
-			printf("AI%i: %i, %i, %c\n", winningPlayer, move.x, move.y, move.cardinal);
-			printField(field);
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
 			return{ winningPlayer, turns_done, AI1avr, AI2avr };
 			isFinished = true;
 		}
-		if (turns_done > 1000000 || end > 0) {
-			if (end > 0){ printf("AI%i is in a deadlock\n", end); }
-			else{ printf("This game is taking to long\n"); }
+		if (turns_done > 1000000 ) {
+			printf("This game is taking to long\n"); 
 			printField(field);
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
-			return{ turn, turns_done, AI1avr, AI2avr };
+			return{ AIturn, turns_done, AI1avr, AI2avr };
 			isFinished = true;
 		}
 		move = previous_move;

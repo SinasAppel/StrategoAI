@@ -32,11 +32,25 @@ struct Water: public Tile {
  * cardinal can be 'N' for north, 'E' for east,
  * 'W' for west and 'S' for south
  */
+
 struct Move {
 	int x;
 	int y;
 	char cardinal;
 	bool no_moves;
+	Move::Move();
+};
+
+struct Turn{
+	int count;
+	Move you_moved;
+	Move opponent_moved;
+	Piece you_killed[2];//[0]: opponent piece [1] own piece
+	Piece opponent_killed[2];//[0]: your piece [1] own piece
+	Piece you_revealed;
+	Piece opponent_revealed;
+	Turn::Turn();
+	Turn::Turn(Turn players_turn, Turn opponents_turn);
 };
 
 // A way to pass the starting positions easely
@@ -66,8 +80,8 @@ class AI {
 			Start_pos output;
 			return output;
 		}
-		virtual Move move(Tile field[10][10], Move opponent_move) {
-			Move move = { 0, 0, '0', false };
+		virtual Move move(Tile field[10][10], Move opponent_move, Turn turn) {
+			Move move = Move();
 			return move;
 		}
 };

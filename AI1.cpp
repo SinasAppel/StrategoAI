@@ -85,7 +85,7 @@ int AI1::evaluate_tile(Tile target, int piece_falue)
 	 return 0; 
 }
 
-Move AI1::move(Tile field[10][10], Move opponent_move)
+Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
 {
 	Move output;
 
@@ -134,7 +134,7 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 	}
 	
 	int R1, D = 0;
-	if (M == 0){ output = { 42, playerNumber, 'N', true }; return output; }// nomoves so forfit
+	if (M == 0){ output.no_moves = true; return output; }// nomoves so forfit
 	for (int T3 = 0; T3 < M; T3++)
 	{
 		if (rating[T3] != max){ D++; }

@@ -14,6 +14,38 @@ Piece::Piece() {
 	visible = false;
 }
 
+// Standard constructor for a Move, creates an empty Move.
+Move::Move() {
+	x = -1;
+	y = -1;
+	cardinal = '0';
+	no_moves = false;
+}
+// Standard constructor for a Turn, creates an empty Turn.
+Turn::Turn() {
+	count = 0;
+	you_moved = Move();
+	opponent_moved = Move();
+	you_killed[0] = Piece();
+	you_killed[1] = Piece();
+	opponent_killed[0] = Piece();
+	opponent_killed[1] = Piece();
+	you_revealed = Piece();
+	opponent_revealed = Piece();
+}
+// special constructor to call each new turn
+Turn::Turn(Turn players_turn, Turn opponents_turn) {
+	count = opponents_turn.count + 1;
+	you_moved = players_turn.you_moved;
+	opponent_moved = opponents_turn.you_moved;
+	you_killed[0] = players_turn.you_killed[0];
+	you_killed[1] = players_turn.you_killed[1];
+	opponent_killed[0] = opponents_turn.you_killed[0];
+	opponent_killed[1] = opponents_turn.you_killed[1];
+	you_revealed = players_turn.you_revealed;
+	opponent_revealed = opponents_turn.you_revealed;;
+}
+
 /*
  * Special constructor for Piece.
  * Takes a char n, that denotes the name of the Piece.
