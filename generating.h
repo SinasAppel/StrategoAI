@@ -49,6 +49,7 @@ struct Turn{
 	Piece opponent_killed[2];//[0]: your piece [1] own piece
 	Piece you_revealed;
 	Piece opponent_revealed;
+	bool error;
 	Turn::Turn();
 	Turn::Turn(Turn players_turn, Turn opponents_turn);
 };

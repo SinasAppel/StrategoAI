@@ -32,6 +32,7 @@ Turn::Turn() {
 	opponent_killed[1] = Piece();
 	you_revealed = Piece();
 	opponent_revealed = Piece();
+	error = false;
 }
 // special constructor to call each new turn
 Turn::Turn(Turn players_turn, Turn opponents_turn) {
@@ -43,7 +44,8 @@ Turn::Turn(Turn players_turn, Turn opponents_turn) {
 	opponent_killed[0] = opponents_turn.you_killed[0];
 	opponent_killed[1] = opponents_turn.you_killed[1];
 	you_revealed = players_turn.you_revealed;
-	opponent_revealed = opponents_turn.you_revealed;;
+	opponent_revealed = opponents_turn.you_revealed;
+	error = false;
 }
 
 /*

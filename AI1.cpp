@@ -13,7 +13,6 @@ AI1::AI1(int p) : AI(p) {
 
 // gives the base game the starting position.
 Start_pos AI1::startPos() {
-	srand(time(0));
 	Start_pos output;
 	int piece_values[40] = {11, 12, 12, 12, 12, 12, 12, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9, 10};
 	Piece list_of_pieces[40];
@@ -140,7 +139,6 @@ Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
 		if (rating[T3] != max){ D++; }
 	}
 
-	srand(time(0));
 	R1 = (rand() % (M - D)) + D;
 	value2 = rating[R1];
 	moveCat[R1].no_moves = false;

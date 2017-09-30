@@ -73,7 +73,7 @@ void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile pl
 int combatScore(Tile attacker, Tile defender) {
 	// if defender is the vlag
 	if (defender.piece.name == 'F') {
-		return 2;
+		return 1;
 	}
 	// 3 against bomb:
 	if (attacker.piece.value == 3 && defender.piece.name== 'B') {
@@ -105,10 +105,10 @@ int combatScore(Tile attacker, Tile defender) {
  * returns the player who won or 0, if the flag has not beed attacked
  * If a unit is killed it returns the unit so the AI can see what it has killed
  */
-int handleMove(Tile field[10][10], Turn players_turn) {
+Turn handleMove(Tile field[10][10], Turn players_turn) {
 	Move move = players_turn.you_moved;
-	int AI_turn = players_turn.count +1 % 2 + 1;
-	if (move.no_moves == true){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
+	int AI_turn = players_turn.count +1 %2 +1;
+	if (move.no_moves == true){ players_turn.error = true; return players_turn; }// checks if it was the forfit move
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
@@ -132,23 +132,34 @@ int handleMove(Tile field[10][10], Turn players_turn) {
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
-		printf("Error, move is out of bounds");
-		return AI_turn;
+		printf("Error, move is out of bounds\n");
+		players_turn.error = true;
+		return players_turn;
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
-		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
-		return AI_turn;
+		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c\n", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
+		players_turn.error = true;
+		return players_turn;
 	}
 	//check if the AI does not move an empty piece.
-	if (currectTile.piece.name == 'E'){ printf("no piece to move\n"); return AI_turn; }
+	if (currectTile.piece.name == 'E'){
+		printf("no piece to move\n"); 
+		players_turn.error = true;
+		return players_turn;
+	}
 
 	switch (combatScore(currectTile, targetTile)) {
-	case 2:  return AI_turn; break;
 
 	case 1:  players_turn.you_killed[0] = field[newY][newX].piece;
 		players_turn.you_killed[1] = Piece();
-		players_turn.you_revealed = Piece();
+		if (field[newY][newX].piece.name != 'E' && currectTile.piece.visible != true){
+			players_turn.you_revealed = currectTile.piece;
+			currectTile.piece.visible = true;
+		}
+		else {
+			players_turn.you_revealed = Piece();
+		}
 		field[newY][newX] = currectTile;
 		field[move.y][move.x] = cleanGrassTile();  break;
 
@@ -160,13 +171,18 @@ int handleMove(Tile field[10][10], Turn players_turn) {
 
 	case -1: players_turn.you_killed[0] = Piece();
 		players_turn.you_killed[1] = field[move.y][move.x].piece;
-		players_turn.you_revealed = field[move.y][move.x].piece;
-		field[newY][newX].piece.visible = true;
+		if (field[newY][newX].piece.visible != true){
+			players_turn.you_revealed = field[newY][newX].piece;
+			field[newY][newX].piece.visible = true;
+		}
+		else {
+			players_turn.you_revealed = Piece();
+		}
 		field[move.y][move.x] = cleanGrassTile(); break;
 
 	default: printf("Not a valid combat score!\n"); break;
 	}
-	return 0;
+	return players_turn;
 }
 
 /*
@@ -214,6 +230,7 @@ int getAiId() {
  */
 Game playAiGame() {
 	//timing
+	srand(time(0));
 	clock_t AI11, AI12, AI21, AI22;
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
 	
@@ -232,7 +249,7 @@ Game playAiGame() {
 	switch (AiId) {
 	case 2: player2 = new SanderAI(2); break;
 	case 3: player2 = new JurAI(2); break;
-	default: player2 = new AI1(1); break;
+	default: player2 = new AI1(2); break;
 	}
 
 
@@ -251,11 +268,11 @@ Game playAiGame() {
 	// Make custom private fields for AI's to prevent cheating
 	Tile player1_field[10][10] = {};
 	Tile player2_field[10][10] = {};
-	int winningPlayer;
 	Turn AI1_turn, AI2_turn;
 	while (!isFinished) {
 		if (AIturn == 1) { // player1's turn
 			AI1_turn.count++;
+			AI1_turn = Turn(AI1_turn, AI2_turn);
 			makeDataInvisible(field, 1, player1_field);
 			printField(player1_field);// print the input of the AI
 
@@ -267,11 +284,12 @@ Game playAiGame() {
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 
 			printf("AI1: %i, %i, %c\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal);//print the move of the AI
-			winningPlayer = handleMove(field, AI1_turn);
+			AI1_turn = handleMove(field, AI1_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
 
 			AIturn++;
+			turns_done = AI1_turn.count;
 		} else { // player2's turn
 			AI2_turn = Turn(AI2_turn, AI1_turn);
 			makeDataInvisible(field, 2, player2_field);
@@ -286,17 +304,18 @@ Game playAiGame() {
 
 			AI2_turn.you_moved = turnaround_Move(AI2_turn.you_moved);
 			printf("AI2: %i, %i, %c\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal);//print the move of the AI
-			winningPlayer = handleMove(field, AI2_turn);
+			AI2_turn = handleMove(field, AI2_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
 
 			AIturn--;
+			turns_done = AI2_turn.count;
 		}
 
-		if (winningPlayer != 0) {
+		if (AI1_turn.you_killed[0].name == 'F' || AI2_turn.you_killed[0].name == 'F' || AI1_turn.error == true || AI2_turn.error == true) {
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
-			return{ winningPlayer, turns_done, AI1avr, AI2avr };
+			return{ AIturn == 1 ? 2 : 1 , turns_done, AI1avr, AI2avr };
 			isFinished = true;
 		}
 		if (turns_done > 1000000 ) {

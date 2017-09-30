@@ -24,7 +24,6 @@ Army::Army(){
 // gives a random unice piece from an array
 Piece SanderAI::rand_from_array(int in[], int size)
 {
-	srand(time(0));
 	int V = -1, R;
 	while (V == -1)
 	{
@@ -59,7 +58,7 @@ void SanderAI::update_frontline(Tile field[10][10])
 void SanderAI::update_army(Tile field[10][10], Turn turn)
 {
 	int opponent = playerNumber == 1 ? 2 : 1;
-	if (turn.you_killed[0].name != 'E' && turn.you_killed[0].owner == opponent){
+	if (turn.you_killed[0].owner == opponent){
 		Enemy.Dead[turn.you_killed[0].value]++;
 		if (turn.you_killed[0].visible){
 			Enemy.Revealed[turn.you_killed[0].value]--;
@@ -68,20 +67,30 @@ void SanderAI::update_army(Tile field[10][10], Turn turn)
 			Enemy.Hidden[turn.you_killed[0].value]--;
 		}
 	}
-
-	for (int T1 = 0; T1 < 10; T1++){
-		for (int T2 = 0; T2 < 10; T2++){
-			if (field[T1][T2].piece.owner == opponent){
-				
-			}
+	if (turn.opponent_killed[1].owner == opponent){
+		Enemy.Dead[turn.opponent_killed[1].value]++;
+		if (turn.opponent_killed[1].visible){
+			Enemy.Revealed[turn.opponent_killed[1].value]--;
 		}
+		else {
+			Enemy.Hidden[turn.opponent_killed[1].value]--;
+		}
+	}
+	if (turn.you_revealed.owner == opponent){
+		Enemy.Revealed[turn.you_revealed.value]++;
+		Enemy.Hidden[turn.you_revealed.value]--;
+		
+	}
+	if (turn.opponent_revealed.owner == opponent){
+		Enemy.Revealed[turn.opponent_revealed.value]++;
+		Enemy.Hidden[turn.opponent_revealed.value]--;
+
 	}
 }
 
 // gives the base game the starting position.
 Start_pos SanderAI::startPos()
 {
-	srand(time(0));
 	Start_pos output;
 	int row01[4] = { 0, 4, 5, 5 }, row02[6] = { 3, 4, 4, 4, 5, 5 };
 	int row1[4] = { 1, 9, 8, 10 };
@@ -121,12 +130,13 @@ Start_pos SanderAI::startPos()
 
 Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 {
-	srand(time(0));
 	Move output;
 
 	update_frontline(field);
 	update_army(field, turn);
-
+	printf("HIDDEN:   bom:%i 1:%i 2:%i 3:%i 4:%i 5:%i 6:%i 7:%i 8:%i 9:%i 10:%i\n", Enemy.Hidden[0], Enemy.Hidden[1], Enemy.Hidden[2], Enemy.Hidden[3], Enemy.Hidden[4], Enemy.Hidden[5], Enemy.Hidden[6], Enemy.Hidden[7], Enemy.Hidden[8], Enemy.Hidden[9], Enemy.Hidden[10] );
+	printf("REVEALED: bom:%i 1:%i 2:%i 3:%i 4:%i 5:%i 6:%i 7:%i 8:%i 9:%i 10:%i\n", Enemy.Revealed[0], Enemy.Revealed[1], Enemy.Revealed[2], Enemy.Revealed[3], Enemy.Revealed[4], Enemy.Revealed[5], Enemy.Revealed[6], Enemy.Revealed[7], Enemy.Revealed[8], Enemy.Revealed[9], Enemy.Revealed[10]);
+	printf("DEAD:     bom:%i 1:%i 2:%i 3:%i 4:%i 5:%i 6:%i 7:%i 8:%i 9:%i 10:%i\n", Enemy.Dead[0], Enemy.Dead[1], Enemy.Dead[2], Enemy.Dead[3], Enemy.Dead[4], Enemy.Dead[5], Enemy.Dead[6], Enemy.Dead[7], Enemy.Dead[8], Enemy.Dead[9], Enemy.Dead[10]);
 	//update de hasmoved map
 	if (opponent_move.x != -1){
 		int opp_des_x, opp_des_y;
@@ -140,29 +150,35 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 	//steps
 	//mode1: breach through the small pieces
 	if (mode == 1){
-		for (int T1 = 0; T1 < 10; T1++){
-			if (My.Line[T1].value > 5 && My.Line[T1].value < 9)
-			{
-				if (My.Ypos[T1] != 9){
-					if (My.Line[T1].value >= Opponent.Line[T1].value){
-						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false;
-						return output;
+		if (Enemy.Revealed[9] + Enemy.Revealed[10] == 0){// als de 9 of 10 is ontdeckt is die prioritijd
+
+			for (int T1 = 0; T1 < 10; T1++){
+				if (My.Line[T1].value > 5 && My.Line[T1].value < 9)
+				{
+					if (My.Ypos[T1] != 9){
+						if (My.Line[T1].value >= Opponent.Line[T1].value){
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false;
+							return output;
+						}
 					}
-				}
-				else {
-					if (T1 != 0){
-						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'W'; output.no_moves = false;
-						return output;
-					}
-					else{
-						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'E'; output.no_moves = false;
-						return output;
+					else {
+						if (T1 != 0){
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'W'; output.no_moves = false;
+							return output;
+						}
+						else{
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'E'; output.no_moves = false;
+							return output;
+						}
 					}
 				}
 			}
+			printf("MODE2 MODE2 MODE2 MODE2 MODE2 MODE2 MODE2\n");
+			mode = 2;//geen frontline dus naar mode 2
 		}
-		printf("MODE2 MODE2 MODE2 MODE2 MODE2 MODE2 MODE2\n");
-		mode = 2;//mode 3 als de 10 of 9 bekend is
+		else {
+			mode = 3;
+		}
 	}
 	//mode2: reviele the big pieces
 	if (mode == 2){
