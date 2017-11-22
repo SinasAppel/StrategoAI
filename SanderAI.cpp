@@ -153,8 +153,7 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 		if (Enemy.Revealed[9] + Enemy.Revealed[10] == 0){// als de 9 of 10 is ontdeckt is die prioritijd
 
 			for (int T1 = 0; T1 < 10; T1++){
-				if (My.Line[T1].value > 5 && My.Line[T1].value < 9)
-				{
+				if (My.Line[T1].value > 5 && My.Line[T1].value < 9){
 					if (My.Ypos[T1] != 9){
 						if (My.Line[T1].value >= Opponent.Line[T1].value){
 							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false;
@@ -177,16 +176,26 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 			mode = 2;//geen frontline dus naar mode 2
 		}
 		else {
-			mode = 3;
+			mode = 3;// 9 of 10 bekend dus naar 3
 		}
 	}
 	//mode2: reviele the big pieces
 	if (mode == 2){
-		
+
+		for (int T1 = 0; T1 < 10; T1++){
+			if (My.Line[T1].value == 2){
+				if (My.Ypos[T1] != 9 && field[My.Ypos[T1] + 1][T1].land != 'W'){
+					if (Opponent.Line[T1].visible == false){
+						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false; output.tiles = 9 - Opponent.Ypos[T1] - My.Ypos[T1];
+						return output;
+					}
+				}
+			}
+		}
 	}
 	//mode3: make you pieces star and plus
 	if (mode == 3){
-
+		printf("BIG PIECE BIG PIECE BIG PIECE MODE 3 MODE 3 MODE 3\n");
 	}
 	//mode4: attack all that moves
 	if (mode == 4){

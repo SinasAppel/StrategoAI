@@ -19,6 +19,7 @@ Move::Move() {
 	x = -1;
 	y = -1;
 	cardinal = '0';
+	tiles = 1;
 	no_moves = false;
 }
 // Standard constructor for a Turn, creates an empty Turn.

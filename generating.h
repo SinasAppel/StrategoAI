@@ -31,12 +31,14 @@ struct Water: public Tile {
  * cardinal is the direction the piece should go.
  * cardinal can be 'N' for north, 'E' for east,
  * 'W' for west and 'S' for south
+ * incase the 2 wants to move 3 tiles that is specivied in tiles
  */
 
 struct Move {
 	int x;
 	int y;
 	char cardinal;
+	int tiles;
 	bool no_moves;
 	Move::Move();
 };

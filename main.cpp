@@ -113,16 +113,16 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 	int newY = move.y;
 	switch (move.cardinal) {
 	case 'N': // Piece should be moved North
-		newY = move.y - 1;
+		newY = move.y - players_turn.you_moved.tiles;
 		break;
 	case 'E': // Piece should be moved East
-		newX = move.x + 1;
+		newX = move.x + players_turn.you_moved.tiles;
 		break;
 	case 'S': // Piece should be moved South
-		newY = move.y + 1;
+		newY = move.y + players_turn.you_moved.tiles;
 		break;
 	case 'W': // Piece should be moved West
-		newX = move.x - 1;
+		newX = move.x - players_turn.you_moved.tiles;
 		break;
 	default:
 		printf("Error, not a valid cardinal\n");
@@ -283,7 +283,7 @@ Game playAiGame() {
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 
-			printf("AI1: %i, %i, %c\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal);//print the move of the AI
+			printf("AI1: %i, %i, %c %i\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal, AI1_turn.you_moved.tiles);//print the move of the AI
 			AI1_turn = handleMove(field, AI1_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
@@ -303,7 +303,7 @@ Game playAiGame() {
 			AI2tot = AI2tot + (diff / CLOCKS_PER_SEC);
 
 			AI2_turn.you_moved = turnaround_Move(AI2_turn.you_moved);
-			printf("AI2: %i, %i, %c\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal);//print the move of the AI
+			printf("AI2: %i, %i, %c %i\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal, AI2_turn.you_moved.tiles);//print the move of the AI
 			AI2_turn = handleMove(field, AI2_turn);
 			printField(field);//print the output of the AI
 			printf("\n");
