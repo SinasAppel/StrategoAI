@@ -25,6 +25,7 @@ private:
 	Frontline My;
 	Frontline Opponent;
 	Army Enemy;
+	Army Soldiers;
 	int mode;
 };
 
