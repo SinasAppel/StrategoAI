@@ -139,7 +139,7 @@ float SanderAI2::evaluate_armies(void)
 
 float SanderAI2::evaluate_trade(Piece M, FractPiece T) {
 	float P;
-
+	return p;
 }
 
 Start_pos SanderAI2::startPos() {
