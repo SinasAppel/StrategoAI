@@ -88,16 +88,20 @@ Piece::Piece(int v, int o) {
 }
 
 // Default constructor for a Grass tile
-Grass::Grass() {
+Grass::Grass(int X, int Y) {
 	land = 'G';
 	Piece p;
+	x = X;
+	y = Y;
 	piece = p;
 }
 
 // Default constructor for a Water tile
-Water::Water() {
+Water::Water(int X, int Y) {
 	land = 'W';
 	Piece p;
+	x = X;
+	y = Y;
 	piece = p;
 }
 
@@ -112,10 +116,10 @@ void createBoard(Tile field[10][10])
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
 			if ((i == 4 || i == 5) && (j == 2 || j == 3 || j == 6 || j == 7)) {
-				field[i][j] = cleanWaterTile();
+				field[i][j] = cleanWaterTile(j,i);
 			}
 			else {
-				field[i][j] = cleanGrassTile();
+				field[i][j] = cleanGrassTile(j,i);
 			}
 		}
 	}
@@ -142,17 +146,17 @@ void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2)
 /*
  * Creates an empty grass tile
  */
-Tile cleanGrassTile()
+Tile cleanGrassTile(int X, int Y)
 {
-	Grass g;
+	Grass g(X,Y);
 	return g;
 }
 
 /*
  * Creates an empty water tile
  */
-Tile cleanWaterTile()
+Tile cleanWaterTile(int X, int Y)
 {
-	Water w;
+	Water w(X,Y);
 	return w;
 }

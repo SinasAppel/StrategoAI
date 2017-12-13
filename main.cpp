@@ -12,7 +12,7 @@
 using namespace std;
 
 const int MAXGAMES = 1;
-const int NUM_OF_AI = 3;
+const int NUM_OF_AI = 4;
 
 
 /*
@@ -162,13 +162,13 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 			players_turn.you_revealed = Piece();
 		}
 		field[newY][newX] = currectTile;
-		field[move.y][move.x] = cleanGrassTile();  break;
+		field[move.y][move.x] = cleanGrassTile(move.x, move.y);  break;
 
 	case 0:  players_turn.you_killed[0] = field[newY][newX].piece;
 		players_turn.you_killed[1] = field[move.y][move.x].piece;
 		players_turn.you_revealed = Piece();
-		field[move.y][move.x] = cleanGrassTile();
-		field[newY][newX] = cleanGrassTile(); break;
+		field[move.y][move.x] = cleanGrassTile(move.x, move.y);
+		field[newY][newX] = cleanGrassTile(move.x, move.y); break;
 
 	case -1: players_turn.you_killed[0] = Piece();
 		players_turn.you_killed[1] = field[move.y][move.x].piece;
@@ -179,7 +179,7 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 		else {
 			players_turn.you_revealed = Piece();
 		}
-		field[move.y][move.x] = cleanGrassTile(); break;
+		field[move.y][move.x] = cleanGrassTile(move.x, move.y); break;
 
 	default: printf("Not a valid combat score!\n"); break;
 	}

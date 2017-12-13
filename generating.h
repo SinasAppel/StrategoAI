@@ -14,15 +14,17 @@ struct Piece {
 // General Tile, land can be water or grass and can contain a piece
 struct Tile {
 	char land;
+	int x;
+	int y;
 	Piece piece;
 };
 
 struct Grass: public Tile {
-	Grass();
+	Grass(int X, int Y);
 };
 
 struct Water: public Tile {
-	Water();
+	Water(int X, int Y);
 };
 
 /*
@@ -91,5 +93,5 @@ class AI {
 
 void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2);
-Tile cleanGrassTile();
-Tile cleanWaterTile();
+Tile cleanGrassTile(int X, int Y);
+Tile cleanWaterTile(int X, int Y);
