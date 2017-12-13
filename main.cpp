@@ -6,6 +6,7 @@
 #include "generating.h"
 #include "AI1.h"
 #include "SanderAI.h"
+#include "SanderAI2.h"
 #include "JurAI.h"
 
 using namespace std;
@@ -206,7 +207,8 @@ void printOptions(int pNum) {
 	printf("Which AI is going to be player %d?\n", pNum);
 	printf("1: AI1\n");
 	printf("2: SanderAI\n");
-	printf("3: JurAI\n");
+	printf("3: SanderAI2\n");
+	printf("4: JurAI\n");
 }
 
 // Handles the input of the user choosing
@@ -240,7 +242,8 @@ Game playAiGame() {
 	AI *player1;
 	switch (AiId) {
 	case 2: player1 = new SanderAI(1); break;
-	case 3: player1 = new JurAI(1); break;
+	case 3: player1 = new SanderAI2(1); break;
+	case 4: player1 = new JurAI(1); break;
 	default: player1 = new AI1(1); break;
 	}
 	AI *player2;
@@ -248,7 +251,8 @@ Game playAiGame() {
 	AiId = getAiId();
 	switch (AiId) {
 	case 2: player2 = new SanderAI(2); break;
-	case 3: player2 = new JurAI(2); break;
+	case 3: player2 = new SanderAI2(2); break;
+	case 4: player2 = new JurAI(2); break;
 	default: player2 = new AI1(2); break;
 	}
 

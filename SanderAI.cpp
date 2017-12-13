@@ -126,12 +126,6 @@ void SanderAI::update_army(Tile field[10][10], Turn turn)
 	}
 }
 
-//give a score of a field
-int evaluate(Tile field[10][10])
-{
-	return 2;
-}
-
 // gives the base game the starting position.
 Start_pos SanderAI::startPos()
 {
