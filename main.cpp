@@ -13,51 +13,6 @@ using namespace std;
 
 const int MAXGAMES = 1;
 const int NUM_OF_AI = 3;
-
-
-/*
- * Prints a board of Tiles
- * Input: a 10 by 10 array of Tiles.
- * Output: nothing.
- */
-void printField(const Tile field[10][10]) {
-	for (int T1 = 0; T1 < 10; T1++) {
-		for (int T2 = 0; T2 < 10; T2++) {
-			//the value of a empty tile is -1 so then the land type needs to be printed
-			if (field[T1][T2].piece.value == -1) {
-				printf(" %c", field[T1][T2].land);
-			}
-			//If the Tile is not empty the piece will be represented by its name. 
-			//With F being the flag, B being the bom and T being the ten so the program does not need to print dubble digits.
-			else {
-				printf(" %c", field[T1][T2].piece.name);
-			}
-		}
-		printf("\n");
-	}
-}
-
-/*
- * Hides the data the AI should not be able to see from its opponent
- * Input: The 10 by 10 field of Tiles that the game keeps track on.
- * Input: The player number of the player that is going to recieve the board.
- * Output: The field that the player gets to see.
- */
-void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile playerField[10][10]) {
-	for (int T1 = 0; T1 < 10; T1++) {
-		for (int T2 = 0; T2 < 10; T2++) {
-			if (!(field[T1][T2].piece.owner == playerNumber || field[T1][T2].piece.visible)) {
-				playerField[T1][T2].piece.name = '?';
-				// -2 means that it is not visible what the value is
-				playerField[T1][T2].piece.value = -2;
-			}
-			else {
-				// is visible or is owned by the player, all data is visible
-				playerField[T1][T2] = field[T1][T2];
-			}
-		}
-	}
-}
 /*
  * Evaluates combat
  * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
