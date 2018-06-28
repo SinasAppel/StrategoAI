@@ -1,5 +1,6 @@
 #include "field.h"
 #include <stdio.h>
+#include "generating.cpp"
 
 /**
  * Constructor for the Field class, for making a main field, with start positions
@@ -42,8 +43,7 @@ void Field::print() {
     for (int T1 = 0; T1 < 10; T1++) {
         for (int T2 = 0; T2 < 10; T2++) {
             //the value of a empty tile is -1 so then the land type needs to be printed
-            //TODO: -1 is a magic number
-            if (this->mainField[T1][T2].piece.value == -1) {
+            if (this->mainField[T1][T2].piece.value == EMPTY_PIECE_VALUE) {
                 printf(" %c", this->mainField[T1][T2].land);
             }
                 //If the Tile is not empty the piece will be represented by its name.
@@ -76,10 +76,8 @@ void PlayerField::updateField(Field field) {
     for (int T1 = 0; T1 < 10; T1++) {
         for (int T2 = 0; T2 < 10; T2++) {
             if (!(field.mainField[T1][T2].piece.owner == this->playerNumber || field.mainField[T1][T2].piece.visible)) {
-                this->playerField[T1][T2].piece.name = '?';
-                // -2 means that it is not visible what the value is
-                //TODO -2 is a magic number
-                this->playerField[T1][T2].piece.value = -2;
+                this->playerField[T1][T2].piece.name = INVISIBLE_PIECE_NAME;
+                this->playerField[T1][T2].piece.value = INVISIBLE_PIECE_VALUE;
             } else {
                 // is visible or is owned by the player, all data is visible
                 this->playerField[T1][T2] = field.mainField[T1][T2];

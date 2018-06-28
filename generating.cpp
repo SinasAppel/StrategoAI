@@ -3,13 +3,14 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include "definitions.cpp"
 #include "generating.h"
 #include "AI1.h"
 
 // Standard constructor for a Piece, creates an empty piece.
 Piece::Piece() {
-	value = -1;
-	name = 'E';
+	value = EMPTY_PIECE_VALUE;
+	name = EMPTY_PIECE_NAME;
 	owner = 0;
 	visible = false;
 }

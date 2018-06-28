@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <time.h>
+#include "definitions.cpp"
 #include "generating.h"
 #include "AI1.h"
 #include "SanderAI.h"
@@ -11,38 +12,36 @@
 
 using namespace std;
 
-const int MAXGAMES = 1;
-const int NUM_OF_AI = 3;
-/*
+/**
  * Evaluates combat
- * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
  */
 int combatScore(Tile attacker, Tile defender) {
-	// if defender is the vlag
+	// if defender is the Flag
 	if (defender.piece.name == 'F') {
-		return 2;
+		return COMBAT_FLAG_HIT;
 	}
 	// 3 against bomb:
 	if (attacker.piece.value == 3 && defender.piece.value == 12) {
-		return 1;
+		return COMBAT_WIN;
 	}
 	// 1 against 10:
 	if (attacker.piece.value == 1 && defender.piece.value == 10) {
-		return 1;
+		return COMBAT_WIN;
 	}
 	// normal combat
 	if (attacker.piece.value > defender.piece.value) {
 		// win
-		return 1;
+		return COMBAT_WIN;
 	} else if (attacker.piece.value == defender.piece.value) {
 		// tie
-		return 0;
+		return COMBAT_DRAW;
 	} else {
 		// loss
-		return -1;
+		return COMBAT_LOST;
 	}
 }
-/*
+
+/**
  * Handles the move from the AI or player
  * returns the player who won or 0, if the flag has not beed attacked
  */
@@ -64,6 +63,7 @@ int handleMove(Tile field[10][10], Move move) {
 		newX = move.x - 1;
 		break;
 	default:
+        //TODO: Better error handling (by the use of exceptions)
 		printf("Error, not a valid cardinal\n");
 		break;
 	}
@@ -71,27 +71,40 @@ int handleMove(Tile field[10][10], Move move) {
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
+	    //TODO: Better error handling (by the use of exceptions)
 		printf("Error, move is out of bounds");
 		return currectTile.piece.owner == 1 ? 2 : 1;
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
+        //TODO: Better error handling (by the use of exceptions)
 		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
 		return currectTile.piece.owner == 1 ? 2 : 1;
 	}
+
 	switch (combatScore(currectTile, targetTile)) {
-	case 2:  return currectTile.piece.owner; break;
-	case 1:  field[newY][newX] = currectTile;
-		field[move.y][move.x] = cleanGrassTile(); break;
-	case 0:  field[newY][newX] = cleanGrassTile(); break;
-	case -1: field[newY][newX].piece.visible = true;
-		field[move.y][move.x] = cleanGrassTile(); break;
-	default: printf("Not a valid combat score!\n"); break;
+	    case COMBAT_FLAG_HIT:
+	        return currectTile.piece.owner;
+	    case COMBAT_WIN:
+	        field[newY][newX] = currectTile;
+	        field[move.y][move.x] = cleanGrassTile();
+	        break;
+	    case COMBAT_DRAW:
+	        field[newY][newX] = cleanGrassTile();
+	        break;
+	    case COMBAT_LOST:
+	        field[newY][newX].piece.visible = true;
+	        field[move.y][move.x] = cleanGrassTile();
+	        break;
+	    default:
+	        //TODO: Better error handling (by the use of exceptions)
+	        printf("Not a valid combat score!\n");
+	        break;
 	}
 	return 0;
 }
 
-/*
+/**
  * movecheck checks if an AI is not doing the same move
  * in an infinite loop
  */
@@ -116,7 +129,9 @@ int moveCheck(Move move, Move movestore[]) {
 	return 0;
 }
 
-// Prints the options the player can choose from
+/**
+ * Prints the options the player can choose from
+ */
 void printOptions(int pNum) {
 	printf("Which AI is going to be player %d?\n", pNum);
 	printf("1: AI1\n");
@@ -124,8 +139,10 @@ void printOptions(int pNum) {
 	printf("3: JurAI\n");
 }
 
-// Handles the input of the user choosing
-// which AI they want to use.
+/**
+ * Handles the input of the user choosing
+ * which AI they want to use.
+ */
 int getAiId() {
 	int AiId = 0;
 	try {
@@ -140,7 +157,7 @@ int getAiId() {
 	return AiId;
 }
 
-/*
+/**
  * plays game of two Ai's
  */
 Game playAiGame(AI *player1, AI *player2) {
