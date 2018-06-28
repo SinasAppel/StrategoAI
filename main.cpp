@@ -63,13 +63,13 @@ int handleMove(Tile field[10][10], Move move) {
 		newX = move.x - 1;
 		break;
 	default:
-        throw "Error, not a valid cardinal\n";
+        throw string("Error, not a valid cardinal\n");
 	}
 	Tile currectTile = field[move.y][move.x], targetTile = field[newY][newX];
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
-	    throw "Error, move is out of bounds";
+	    throw string("Error, move is out of bounds");
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
@@ -93,7 +93,7 @@ int handleMove(Tile field[10][10], Move move) {
 	        field[move.y][move.x] = cleanGrassTile();
 	        break;
 	    default:
-            throw "Not a valid combat score";
+            throw string("Not a valid combat score");
 	}
 	return 0;
 }
@@ -198,8 +198,8 @@ Game playAiGame(AI *player1, AI *player2) {
 		int winningPlayer = 0;
 		try {
             int winningPlayer = handleMove(field.mainField, move);
-		} catch (char* message) {
-		    printf(message);
+		} catch (string message) {
+		    cout << message;
 		}
 
 		if (winningPlayer != 0) {
