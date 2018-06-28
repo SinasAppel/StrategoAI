@@ -1,6 +1,6 @@
 #include "field.h"
 #include <stdio.h>
-#include "generating.cpp"
+#include "definitions.cpp"
 
 /**
  * Constructor for the Field class, for making a main field, with start positions
