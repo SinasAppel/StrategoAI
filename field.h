@@ -25,6 +25,9 @@ class PlayerField {
 public:
     Tile playerField[10][10] = {};
     PlayerField(int playerNumber, Field mainField);
+    void updateField(Field mainField);
+private:
+    int playerNumber;
 };
 
 #endif

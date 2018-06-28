@@ -64,9 +64,18 @@ void Field::print() {
  * Output: The field that the player gets to see.
  */
 PlayerField::PlayerField(int playerNumber, Field field) {
+    this->playerNumber = playerNumber;
+    this->updateField(field);
+}
+
+/*
+ * Call this when you want an updated version of the
+ * playerField data
+ */
+void PlayerField::updateField(Field field) {
     for (int T1 = 0; T1 < 10; T1++) {
         for (int T2 = 0; T2 < 10; T2++) {
-            if (!(field.mainField[T1][T2].piece.owner == playerNumber || field.mainField[T1][T2].piece.visible)) {
+            if (!(field.mainField[T1][T2].piece.owner == this->playerNumber || field.mainField[T1][T2].piece.visible)) {
                 this->playerField[T1][T2].piece.name = '?';
                 // -2 means that it is not visible what the value is
                 //TODO -2 is a magic number
