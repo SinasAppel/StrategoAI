@@ -194,10 +194,10 @@ int JurAI::evaluate_tile(Tile target, int piece_falue) {
 void JurAI::updateHasMoved(Move opponent_move) {
 	if (opponent_move.x != -1) {
 		int opp_des_x, opp_des_y;
-		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
-		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
-		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
-		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		if (opponent_move.cardinal == NORTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
+		else if (opponent_move.cardinal == EAST){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
+		else if (opponent_move.cardinal == SOUTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
+		else if (opponent_move.cardinal == WEST){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 }
