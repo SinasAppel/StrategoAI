@@ -1,4 +1,5 @@
-#define	Generating_H
+#ifndef STRATEGOAI_GENERATING_H
+#define	STRATEGOAI_GENERATING_H
 
 // General piece, can be a F, B, 1, 2, 3, etc.
 struct Piece {
@@ -76,3 +77,5 @@ void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2);
 Tile cleanGrassTile();
 Tile cleanWaterTile();
+
+#endif
