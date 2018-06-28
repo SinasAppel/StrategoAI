@@ -63,21 +63,17 @@ int handleMove(Tile field[10][10], Move move) {
 		newX = move.x - 1;
 		break;
 	default:
-        //TODO: Better error handling (by the use of exceptions)
-		printf("Error, not a valid cardinal\n");
-		break;
+        throw "Error, not a valid cardinal\n";
 	}
 	Tile currectTile = field[move.y][move.x], targetTile = field[newY][newX];
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
-	    //TODO: Better error handling (by the use of exceptions)
-		printf("Error, move is out of bounds");
-		return currectTile.piece.owner == 1 ? 2 : 1;
+	    throw "Error, move is out of bounds";
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
-        //TODO: Better error handling (by the use of exceptions)
+        //TODO: Make a special exception for this error message
 		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
 		return currectTile.piece.owner == 1 ? 2 : 1;
 	}
@@ -97,9 +93,7 @@ int handleMove(Tile field[10][10], Move move) {
 	        field[move.y][move.x] = cleanGrassTile();
 	        break;
 	    default:
-	        //TODO: Better error handling (by the use of exceptions)
-	        printf("Not a valid combat score!\n");
-	        break;
+            throw "Not a valid combat score";
 	}
 	return 0;
 }
@@ -200,7 +194,14 @@ Game playAiGame(AI *player1, AI *player2) {
 			turn--;
 			turns_done++;
 		}
-		int winningPlayer = handleMove(field.mainField, move);
+
+		int winningPlayer = 0;
+		try {
+            int winningPlayer = handleMove(field.mainField, move);
+		} catch (char* message) {
+		    printf(message);
+		}
+
 		if (winningPlayer != 0) {
 			printf("AI%i: %i, %i, %c\n", winningPlayer, move.x, move.y, move.cardinal);
 			field.print();
