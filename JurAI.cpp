@@ -4,6 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include "generating.h"
+#include "definitions.cpp"
 #include "JurAI.h"
 using namespace std;
 
