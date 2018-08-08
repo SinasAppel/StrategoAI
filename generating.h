@@ -42,7 +42,7 @@ struct Move {
 	char cardinal;
 	int tiles;
 	bool no_moves;
-	Move::Move();
+	Move();
 };
 
 struct Turn{
@@ -54,8 +54,8 @@ struct Turn{
 	Piece you_revealed;
 	Piece opponent_revealed;
 	bool error;
-	Turn::Turn();
-	Turn::Turn(Turn players_turn, Turn opponents_turn);
+	Turn();
+	Turn(Turn players_turn, Turn opponents_turn);
 };
 
 // A way to pass the starting positions easely

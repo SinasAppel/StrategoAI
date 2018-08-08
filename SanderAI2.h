@@ -24,11 +24,11 @@ class SanderAI2 : public AI {
 public:
 	Start_pos startPos();
 	Move move(Tile field[10][10], Move opponent_move, Turn turn);
-	SanderAI2::SanderAI2(int p /*playernumber*/);
+	SanderAI2(int p /*playernumber*/);
 private:
-	void SanderAI2::update_army(Tile field[10][10], Turn turn);
-	float SanderAI2::evaluate_armies(void);
-	float SanderAI2::evaluate_trade(Piece M, FractPiece T);
+	void update_army(Tile field[10][10], Turn turn);
+	float evaluate_armies(void);
+	float evaluate_trade(Piece M, FractPiece T);
 	FractPiece Fractfield[10][10];
 	Scores Points;
 	Army2 Enemy;

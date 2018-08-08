@@ -216,7 +216,7 @@ void printOptions(int pNum) {
 int getAiId() {
 	int AiId = 0;
 	try {
-		scanf_s("%d", &AiId);
+		scanf("%d", &AiId);
 		if (AiId < 1 || AiId > NUM_OF_AI) {
 			throw;
 		}
