@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,8 +10,8 @@
 #include "ScoreAI.h"
 #include "JurAI.h"
 
-using namespace std;
 
+using namespace std;
 const int MAXGAMES = 1;
 const int NUM_OF_AI = 4;
 
@@ -207,7 +208,7 @@ void printOptions(int pNum) {
 	printf("Which AI is going to be player %d?\n", pNum);
 	printf("1: AI1\n");
 	printf("2: SanderAI\n");
-	printf("3: SanderAI2\n");
+	printf("3: ScoreAI\n");
 	printf("4: JurAI\n");
 }
 
@@ -242,7 +243,7 @@ Game playAiGame() {
 	AI *player1;
 	switch (AiId) {
 	case 2: player1 = new SanderAI(1); break;
-	case 3: player1 = new SanderAI2(1); break;
+	case 3: player1 = new ScoreAI(1); break;
 	case 4: player1 = new JurAI(1); break;
 	default: player1 = new AI1(1); break;
 	}
@@ -251,7 +252,7 @@ Game playAiGame() {
 	AiId = getAiId();
 	switch (AiId) {
 	case 2: player2 = new SanderAI(2); break;
-	case 3: player2 = new SanderAI2(2); break;
+	case 3: player2 = new ScoreAI(2); break;
 	case 4: player2 = new JurAI(2); break;
 	default: player2 = new AI1(2); break;
 	}
