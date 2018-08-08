@@ -17,7 +17,8 @@ const static char INVISIBLE_PIECE_NAME = '?';
 
 const static int BOMB_VALUE = 11;
 const static int FLAG_VALUE = 0;
-
+const static char FLAG_NAME = 'F';
+const static char BOMB_NAME = 'B';
 
 
 

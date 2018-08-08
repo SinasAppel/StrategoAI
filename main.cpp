@@ -22,12 +22,12 @@ using namespace std;
 int combatScore(Tile attacker, Tile defender) {
 
 	// if defender is the flag
-	if (defender.piece.name == 'F') {
+	if (defender.piece.name == FLAG_NAME) {
 		return COMBAT_WON;
 	}
 
 	// 3 against bomb:
-	if (attacker.piece.value == 3 && defender.piece.name == 'B') {
+	if (attacker.piece.value == 3 && defender.piece.name == BOMB_NAME) {
 		return COMBAT_WON;
 	}
 
@@ -37,7 +37,7 @@ int combatScore(Tile attacker, Tile defender) {
 	}
 
 	// combat versus bomb
-	if (defender.piece.name == 'B') {
+	if (defender.piece.name == BOMB_NAME) {
 		return COMBAT_LOST;
 	}
 
@@ -56,28 +56,27 @@ int combatScore(Tile attacker, Tile defender) {
  * returns the player who won or 0, if the flag has not been attacked
  * If a unit is killed it returns the unit so the AI can see what it has killed
  */
-Turn handleMove(Tile field[10][10], Turn players_turn) {
-	Move move = players_turn.you_moved;
-	int AI_turn = players_turn.count +1 %2 +1;
+Turn handleMove(Tile field[10][10], Turn playersTurn) {
+	Move move = playersTurn.you_moved;
 	if (move.no_moves) {
-		players_turn.error = true;
-		return players_turn;
+		playersTurn.error = true;
+		return playersTurn;
 	}// checks if it was the forfeit move
 
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
 	case NORTH:
-		newY = move.y - players_turn.you_moved.tiles;
+		newY = move.y - playersTurn.you_moved.tiles;
 		break;
 	case EAST:
-		newX = move.x + players_turn.you_moved.tiles;
+		newX = move.x + playersTurn.you_moved.tiles;
 		break;
 	case SOUTH:
-		newY = move.y + players_turn.you_moved.tiles;
+		newY = move.y + playersTurn.you_moved.tiles;
 		break;
 	case WEST:
-		newX = move.x - players_turn.you_moved.tiles;
+		newX = move.x - playersTurn.you_moved.tiles;
 		break;
 	default:
 		printf("Error, not a valid cardinal\n");
@@ -88,56 +87,56 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == 'W') {
 		printf("Error, move is out of bounds\n");
-		players_turn.error = true;
-		return players_turn;
+		playersTurn.error = true;
+		return playersTurn;
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
 		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c\n", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
-		players_turn.error = true;
-		return players_turn;
+		playersTurn.error = true;
+		return playersTurn;
 	}
 	//check if the AI does not move an empty piece.
 	if (currectTile.piece.name == 'E'){
 		printf("no piece to move\n"); 
-		players_turn.error = true;
-		return players_turn;
+		playersTurn.error = true;
+		return playersTurn;
 	}
 
 	switch (combatScore(currectTile, targetTile)) {
 
-	case 1:  players_turn.you_killed[0] = field[newY][newX].piece;
-		players_turn.you_killed[1] = Piece();
+	case 1:  playersTurn.you_killed[0] = field[newY][newX].piece;
+		playersTurn.you_killed[1] = Piece();
 		if (field[newY][newX].piece.name != 'E' && currectTile.piece.visible != true){
-			players_turn.you_revealed = currectTile.piece;
+			playersTurn.you_revealed = currectTile.piece;
 			currectTile.piece.visible = true;
 		}
 		else {
-			players_turn.you_revealed = Piece();
+			playersTurn.you_revealed = Piece();
 		}
 		field[newY][newX] = currectTile;
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y);  break;
 
-	case 0:  players_turn.you_killed[0] = field[newY][newX].piece;
-		players_turn.you_killed[1] = field[move.y][move.x].piece;
-		players_turn.you_revealed = Piece();
+	case 0:  playersTurn.you_killed[0] = field[newY][newX].piece;
+		playersTurn.you_killed[1] = field[move.y][move.x].piece;
+		playersTurn.you_revealed = Piece();
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y);
 		field[newY][newX] = cleanGrassTile(move.x, move.y); break;
 
-	case -1: players_turn.you_killed[0] = Piece();
-		players_turn.you_killed[1] = field[move.y][move.x].piece;
+	case -1: playersTurn.you_killed[0] = Piece();
+		playersTurn.you_killed[1] = field[move.y][move.x].piece;
 		if (field[newY][newX].piece.visible != true){
-			players_turn.you_revealed = field[newY][newX].piece;
+			playersTurn.you_revealed = field[newY][newX].piece;
 			field[newY][newX].piece.visible = true;
 		}
 		else {
-			players_turn.you_revealed = Piece();
+			playersTurn.you_revealed = Piece();
 		}
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y); break;
 
 	default: printf("Not a valid combat score!\n"); break;
 	}
-	return players_turn;
+	return playersTurn;
 }
 
 /**
