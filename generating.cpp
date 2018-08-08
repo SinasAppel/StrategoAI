@@ -55,14 +55,14 @@ Piece::Piece(int v, int o) {
 
 // Default constructor for a Grass tile
 Grass::Grass() {
-	land = 'G';
+	land = GRASS;
 	Piece p;
 	piece = p;
 }
 
 // Default constructor for a Water tile
 Water::Water() {
-	land = 'W';
+	land = WATER;
 	Piece p;
 	piece = p;
 }

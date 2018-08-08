@@ -26,12 +26,14 @@ struct Water: public Tile {
 	Water();
 };
 
-/*
+/**
  * Move struct that an AI returns when called for it's next move
  * x and y are the coordinates of the current position.
  * cardinal is the direction the piece should go.
  * cardinal can be 'N' for north, 'E' for east,
- * 'W' for west and 'S' for south
+ * 'W' for west and 'S' for south. Preferable
+ * you would use the constants in definitions.cpp
+ * NORTH, EAST, SOUTH, WEST
  */
 struct Move {
 	int x;

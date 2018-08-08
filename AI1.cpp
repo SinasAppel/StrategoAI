@@ -4,6 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include "generating.h"
+#include "definitions.cpp"
 #include "AI1.h"
 using namespace std;
 
@@ -70,7 +71,7 @@ Start_pos AI1::startPos() {
 int AI1::evaluate_tile(Tile target, int piece_falue)
 {
 	if (target.piece.owner == playerNumber){ return -900; }
-	if (target.land == 'W'){ return -900; }
+	if (target.land == WATER){ return -900; }
 	if (target.piece.value > piece_falue){ return -900; }
 	if (target.piece.value == -1){ return 2; }
 	if (target.piece.value == -2)
@@ -92,10 +93,10 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 	//update de hasmoved map
 	if (opponent_move.x != -1){
 		int opp_des_x, opp_des_y;
-		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
-		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
-		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
-		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		if (opponent_move.cardinal == NORTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
+		else if (opponent_move.cardinal == EAST){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
+		else if (opponent_move.cardinal == SOUTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
+		else if (opponent_move.cardinal == WEST){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 
@@ -109,32 +110,32 @@ Move AI1::move(Tile field[10][10], Move opponent_move)
 				if (T1 != 0){
 					target = field[T1 - 1][T2];// get the target field to evaluate
 					value = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
-					if (value >= max && value > -10 && value < 100){ max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'N'; M++; }
+					if (value >= max && value > -10 && value < 100){ max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = NORTH; M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1 + 1][T2];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'S';  M++; }
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = SOUTH;  M++; }
 				}
 
 				if (T2 != 0){
 					target = field[T1][T2 - 1];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'W';  M++; }
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = WEST;  M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1][T2 + 1];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = 'E';  M++; }
+					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = EAST;  M++; }
 				}
 			}
 		}
 	}
 	
 	int R1, D = 0;
-	if (M == 0){ output = { 42, playerNumber, 'N', true }; return output; }// nomoves so forfit
+	if (M == 0){ output = { 42, playerNumber, NORTH, true }; return output; }// nomoves so forfit
 	for (int T3 = 0; T3 < M; T3++)
 	{
 		if (rating[T3] != max){ D++; }

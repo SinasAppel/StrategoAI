@@ -17,6 +17,16 @@ const static int COMBAT_WIN = 1;
 const static int COMBAT_DRAW = 0;
 const static int COMBAT_LOST = -1;
 
+// Cardinal definitions
+const static char NORTH = 'N';
+const static char EAST = 'E';
+const static char SOUTH = 'S';
+const static char WEST = 'W';
+
+// Land definitions
+const static char WATER = 'W';
+const static char GRASS  = 'G';
+
 
 
 

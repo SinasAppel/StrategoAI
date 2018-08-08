@@ -46,20 +46,24 @@ int combatScore(Tile attacker, Tile defender) {
  * returns the player who won or 0, if the flag has not beed attacked
  */
 int handleMove(Tile field[10][10], Move move) {
-	if (move.no_moves == true){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
+	// checks if it was a forfeit move
+	if (move.no_moves) {
+		return move.y == 1 ? 2 : 1;
+	}
+	
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
-	case 'N': // Piece should be moved North
+	case NORTH: // Piece should be moved North
 		newY = move.y - 1;
 		break;
-	case 'E': // Piece should be moved East
+	case EAST: // Piece should be moved East
 		newX = move.x + 1;
 		break;
-	case 'S': // Piece should be moved South
+	case SOUTH: // Piece should be moved South
 		newY = move.y + 1;
 		break;
-	case 'W': // Piece should be moved West
+	case WEST: // Piece should be moved West
 		newX = move.x - 1;
 		break;
 	default:
@@ -68,8 +72,8 @@ int handleMove(Tile field[10][10], Move move) {
 	Tile currectTile = field[move.y][move.x], targetTile = field[newY][newX];
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
-		targetTile.land == 'W') {
-	    throw string("Error, move is out of bounds");
+		targetTile.land == WATER) {
+		throw string("Error, move is out of bounds");
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
@@ -165,7 +169,7 @@ Game playAiGame(AI *player1, AI *player2) {
 	bool isFinished = false;
 	int turn = 1, end = 0, turns_done =0;
 	Move move, movestore1[10], movestore2[10];
-	Move previous_move = {-1, -1, 'N'};
+	Move previous_move = {-1, -1, NORTH};
 	field.print();
 
 	// Make custom private fields for AI's to prevent cheating
