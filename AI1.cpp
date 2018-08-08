@@ -134,7 +134,7 @@ Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
 	}
 	
 	int R1, D = 0;
-	if (M == 0){ output.no_moves = true; return output; }// nomoves so forfit
+	if (M == 0){ output.noMoves = true; return output; }// nomoves so forfit
 	for (int T3 = 0; T3 < M; T3++)
 	{
 		if (rating[T3] != max){ D++; }
@@ -142,7 +142,7 @@ Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
 
 	R1 = (rand() % (M - D)) + D;
 	value2 = rating[R1];
-	moveCat[R1].no_moves = false;
+	moveCat[R1].noMoves = false;
 	output = moveCat[R1];
 
 	//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);

@@ -60,68 +60,68 @@ void SanderAI::update_army(Tile field[10][10], Turn turn)
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
 	// you killed piece of opponent
-	if (turn.you_killed[0].owner == opponent){
-		Enemy.Dead[turn.you_killed[0].value]++;
-		if (turn.you_killed[0].visible){
-			Enemy.Revealed[turn.you_killed[0].value]--;
+	if (turn.youKilled[0].owner == opponent){
+		Enemy.Dead[turn.youKilled[0].value]++;
+		if (turn.youKilled[0].visible){
+			Enemy.Revealed[turn.youKilled[0].value]--;
 		}
 		else {
-			Enemy.Hidden[turn.you_killed[0].value]--;
+			Enemy.Hidden[turn.youKilled[0].value]--;
 		}
 	}
 	// opponend killed your piece
-	if (turn.opponent_killed[1].owner == opponent){
-		Enemy.Dead[turn.opponent_killed[1].value]++;
-		if (turn.opponent_killed[1].visible){
-			Enemy.Revealed[turn.opponent_killed[1].value]--;
+	if (turn.opponentKilled[1].owner == opponent){
+		Enemy.Dead[turn.opponentKilled[1].value]++;
+		if (turn.opponentKilled[1].visible){
+			Enemy.Revealed[turn.opponentKilled[1].value]--;
 		}
 		else {
-			Enemy.Hidden[turn.opponent_killed[1].value]--;
+			Enemy.Hidden[turn.opponentKilled[1].value]--;
 		}
 	}
 	// you revealed opponents piece
-	if (turn.you_revealed.owner == opponent){
-		Enemy.Revealed[turn.you_revealed.value]++;
-		Enemy.Hidden[turn.you_revealed.value]--;
+	if (turn.youRevealed.owner == opponent){
+		Enemy.Revealed[turn.youRevealed.value]++;
+		Enemy.Hidden[turn.youRevealed.value]--;
 		
 	}
 	// opponend revealed his piece
-	if (turn.opponent_revealed.owner == opponent){
-		Enemy.Revealed[turn.opponent_revealed.value]++;
-		Enemy.Hidden[turn.opponent_revealed.value]--;
+	if (turn.opponentRevealed.owner == opponent){
+		Enemy.Revealed[turn.opponentRevealed.value]++;
+		Enemy.Hidden[turn.opponentRevealed.value]--;
 
 	}
 
 	// you killed your piece 
-	if (turn.you_killed[1].owner == you) {
-		Soldiers.Dead[turn.you_killed[1].value]++;
-		if (turn.you_killed[1].visible) {
-			Soldiers.Revealed[turn.you_killed[1].value]--;
+	if (turn.youKilled[1].owner == you) {
+		Soldiers.Dead[turn.youKilled[1].value]++;
+		if (turn.youKilled[1].visible) {
+			Soldiers.Revealed[turn.youKilled[1].value]--;
 		}
 		else {
-			Soldiers.Hidden[turn.you_killed[1].value]--;
+			Soldiers.Hidden[turn.youKilled[1].value]--;
 		}
 	}
 	// opponend killed your piece
-	if (turn.opponent_killed[0].owner == you) {
-		Soldiers.Dead[turn.opponent_killed[0].value]++;
-		if (turn.opponent_killed[0].visible) {
-			Soldiers.Revealed[turn.opponent_killed[0].value]--;
+	if (turn.opponentKilled[0].owner == you) {
+		Soldiers.Dead[turn.opponentKilled[0].value]++;
+		if (turn.opponentKilled[0].visible) {
+			Soldiers.Revealed[turn.opponentKilled[0].value]--;
 		}
 		else {
-			Soldiers.Hidden[turn.opponent_killed[0].value]--;
+			Soldiers.Hidden[turn.opponentKilled[0].value]--;
 		}
 	}
 	// you revealed your piece
-	if (turn.you_revealed.owner == you) {
-		Soldiers.Revealed[turn.you_revealed.value]++;
-		Soldiers.Hidden[turn.you_revealed.value]--;
+	if (turn.youRevealed.owner == you) {
+		Soldiers.Revealed[turn.youRevealed.value]++;
+		Soldiers.Hidden[turn.youRevealed.value]--;
 
 	}
 	// opponend reveales your piece
-	if (turn.opponent_revealed.owner == you) {
-		Soldiers.Revealed[turn.opponent_revealed.value]++;
-		Soldiers.Hidden[turn.opponent_revealed.value]--;
+	if (turn.opponentRevealed.owner == you) {
+		Soldiers.Revealed[turn.opponentRevealed.value]++;
+		Soldiers.Hidden[turn.opponentRevealed.value]--;
 
 	}
 }
@@ -201,17 +201,17 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 				if (My.Line[T1].value > 5 && My.Line[T1].value < 9){
 					if (My.Ypos[T1] != 9){
 						if (My.Line[T1].value >= Opponent.Line[T1].value){
-							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false;
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.noMoves = false;
 							return output;
 						}
 					}
 					else {
 						if (T1 != 0){
-							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'W'; output.no_moves = false;
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'W'; output.noMoves = false;
 							return output;
 						}
 						else{
-							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'E'; output.no_moves = false;
+							output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'E'; output.noMoves = false;
 							return output;
 						}
 					}
@@ -232,7 +232,7 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 			if (My.Line[T1].value == 2){
 				if (My.Ypos[T1] != 9 && field[My.Ypos[T1] + 1][T1].land != 'W'){
 					if (Opponent.Line[T1].visible == false){
-						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.no_moves = false; output.tiles = 9 - Opponent.Ypos[T1] - My.Ypos[T1];
+						output.x = T1; output.y = My.Ypos[T1]; output.cardinal = 'S'; output.noMoves = false; output.tiles = 9 - Opponent.Ypos[T1] - My.Ypos[T1];
 						return output;
 					}
 				}
@@ -252,7 +252,7 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 	
 	}
 
-	output.no_moves = true;
+	output.noMoves = true;
 	//printf("AI%i: %i, %i, %c\n", playerNumber, output.x, output.y, output.cardinal);
 	return output;
 }
