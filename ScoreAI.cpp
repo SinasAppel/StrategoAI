@@ -11,8 +11,8 @@ ScoreAI::ScoreAI(int p) : AI(p) {
 }
 
 // default constructor for Army
-Army2::Army2() {
-	int hid[11] = { 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1 };
+ArmyState::ArmyState() {
+	int hid[11] = { 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1 };// amount of pieces that the games starts with for eatch type
 	for (int T1 = 0; T1 < 11; T1++) {
 		Hidden[T1] = hid[T1];
 		Revealed[T1] = 0;
@@ -23,104 +23,105 @@ Army2::Army2() {
 // default constructor for Fract_Piece
 FractPiece::FractPiece() {
 	
-	pro[0] = 0;
-	pro[1] = 0;
-	pro[2] = 0;
-	pro[3] = 0;
-	pro[4] = 0;
-	pro[5] = 0;
-	pro[6] = 0;
-	pro[7] = 0;
-	pro[8] = 0;
-	pro[9] = 0;
-	pro[10] = 0;
-	pro[11] = 0;
+	frac[0] = 0;
+	frac[1] = 0;
+	frac[2] = 0;
+	frac[3] = 0;
+	frac[4] = 0;
+	frac[5] = 0;
+	frac[6] = 0;
+	frac[7] = 0;
+	frac[8] = 0;
+	frac[9] = 0;
+	frac[10] = 0;
+	frac[11] = 0;
 }
 
 // default constructor for scores
 Scores::Scores() {
-	int HPi[12] = { 22, 31, 13, 13, 15, 17, 20, 23, 27, 31, 40 , 70};
-	int RPi[12] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 0};
-	int DPi[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0};
+	int HPi[12] = { 22, 31, 13, 13, 15, 17, 20, 23, 27, 31, 40 , 70}; // points for a hidden piece
+	int RPi[12] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 0};// points for a revealed piece
+	int DPi[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0};// points for a dead piece
 	for (int T1 = 0; T1 < 12; T1++) {
-		HP[T1] = HPi[T1];
-		RP[T1] = RPi[T1];
-		DP[T1] = DPi[T1];
+		HiddenPoints[T1] = HPi[T1];
+		RevealedPoints[T1] = RPi[T1];
+		DeadPoints[T1] = DPi[T1];
 	}
 }
 
+//update the ArmyStates with the information of the previous turns
 void ScoreAI::update_army(Tile field[10][10], Turn turn)
 {
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
 	// you killed piece of opponent
 	if (turn.you_killed[0].owner == opponent) {
-		Enemy.Dead[turn.you_killed[0].value]++;
+		ArmyStateOpponent.Dead[turn.you_killed[0].value]++;
 		if (turn.you_killed[0].visible) {
-			Enemy.Revealed[turn.you_killed[0].value]--;
+			ArmyStateOpponent.Revealed[turn.you_killed[0].value]--;
 		}
 		else {
-			Enemy.Hidden[turn.you_killed[0].value]--;
+			ArmyStateOpponent.Hidden[turn.you_killed[0].value]--;
 		}
 	}
 	// opponend killed your piece
 	if (turn.opponent_killed[1].owner == opponent) {
-		Enemy.Dead[turn.opponent_killed[1].value]++;
+		ArmyStateOpponent.Dead[turn.opponent_killed[1].value]++;
 		if (turn.opponent_killed[1].visible) {
-			Enemy.Revealed[turn.opponent_killed[1].value]--;
+			ArmyStateOpponent.Revealed[turn.opponent_killed[1].value]--;
 		}
 		else {
-			Enemy.Hidden[turn.opponent_killed[1].value]--;
+			ArmyStateOpponent.Hidden[turn.opponent_killed[1].value]--;
 		}
 	}
 	// you revealed opponents piece
 	if (turn.you_revealed.owner == opponent) {
-		Enemy.Revealed[turn.you_revealed.value]++;
-		Enemy.Hidden[turn.you_revealed.value]--;
+		ArmyStateOpponent.Revealed[turn.you_revealed.value]++;
+		ArmyStateOpponent.Hidden[turn.you_revealed.value]--;
 
 	}
 	// opponend revealed his piece
 	if (turn.opponent_revealed.owner == opponent) {
-		Enemy.Revealed[turn.opponent_revealed.value]++;
-		Enemy.Hidden[turn.opponent_revealed.value]--;
+		ArmyStateOpponent.Revealed[turn.opponent_revealed.value]++;
+		ArmyStateOpponent.Hidden[turn.opponent_revealed.value]--;
 
 	}
 
 	// you killed your piece 
 	if (turn.you_killed[1].owner == you) {
-		Soldiers.Dead[turn.you_killed[1].value]++;
+		ArmyStateMy.Dead[turn.you_killed[1].value]++;
 		if (turn.you_killed[1].visible) {
-			Soldiers.Revealed[turn.you_killed[1].value]--;
+			ArmyStateMy.Revealed[turn.you_killed[1].value]--;
 		}
 		else {
-			Soldiers.Hidden[turn.you_killed[1].value]--;
+			ArmyStateMy.Hidden[turn.you_killed[1].value]--;
 		}
 	}
 	// opponend killed your piece
 	if (turn.opponent_killed[0].owner == you) {
-		Soldiers.Dead[turn.opponent_killed[0].value]++;
+		ArmyStateMy.Dead[turn.opponent_killed[0].value]++;
 		if (turn.opponent_killed[0].visible) {
-			Soldiers.Revealed[turn.opponent_killed[0].value]--;
+			ArmyStateMy.Revealed[turn.opponent_killed[0].value]--;
 		}
 		else {
-			Soldiers.Hidden[turn.opponent_killed[0].value]--;
+			ArmyStateMy.Hidden[turn.opponent_killed[0].value]--;
 		}
 	}
 	// you revealed your piece
 	if (turn.you_revealed.owner == you) {
-		Soldiers.Revealed[turn.you_revealed.value]++;
-		Soldiers.Hidden[turn.you_revealed.value]--;
+		ArmyStateMy.Revealed[turn.you_revealed.value]++;
+		ArmyStateMy.Hidden[turn.you_revealed.value]--;
 
 	}
 	// opponend reveales your piece
 	if (turn.opponent_revealed.owner == you) {
-		Soldiers.Revealed[turn.opponent_revealed.value]++;
-		Soldiers.Hidden[turn.opponent_revealed.value]--;
+		ArmyStateMy.Revealed[turn.opponent_revealed.value]++;
+		ArmyStateMy.Hidden[turn.opponent_revealed.value]--;
 
 	}
 }
 
-//give a score of a field
+//give a score of a army in contrast to the opponents army
 float ScoreAI::evaluate_armies(void)
 {
 	// waardes van de stukken
@@ -129,25 +130,34 @@ float ScoreAI::evaluate_armies(void)
 	//Revealed	0	1	2	3	4	5	6	7	8	9	10
 	//Dead		0	0	0	0	0	0	0	0	0	0	0
 	float total = 0;
-	for (int T1 = 0; T1 < 11; T1++) 
+	for (int T1 = 0; T1 < 11; T1++) // go though all the pieces (not the flag)
 	{
-		total = total + Soldiers.Hidden[T1] * Points.HP[T1] + Soldiers.Revealed[T1] * Points.RP[T1] + Soldiers.Dead[T1] * Points.DP[T1] - Enemy.Hidden[T1] * Points.HP[T1] - Enemy.Revealed[T1] * Points.RP[T1] - Enemy.Dead[T1] * Points.DP[T1];
+		total = total 
+			+ ArmyStateMy.Hidden[T1]		 * Points.HiddenPoints[T1] // amount of pieces of a type that are hidden multipplied by the points for a single hidden piece
+			+ ArmyStateMy.Revealed[T1]	     * Points.RevealedPoints[T1] 
+			+ ArmyStateMy.Dead[T1]		     * Points.DeadPoints[T1] 
+			- ArmyStateOpponent.Hidden[T1]   * Points.HiddenPoints[T1] 
+			- ArmyStateOpponent.Revealed[T1] * Points.RevealedPoints[T1] 
+			- ArmyStateOpponent.Dead[T1]     * Points.DeadPoints[T1];
 	}
 
 	return total;	
 }
 
+// returs float with the expected score difference of the trade
 float ScoreAI::evaluate_trade(Piece M, FractPiece T) {
 	float P = 0;
 	return P;
 }
 
+//generates starting position
 Start_pos ScoreAI::startPos() {
 
 	Start_pos r;
 	return r;
 }
 
+//make a move
 Move ScoreAI::move(Tile field[10][10], Move opponent_move, Turn turn) {
 	update_army(field, turn);
 	Move r;
