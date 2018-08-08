@@ -2,6 +2,11 @@
 #define STRATEGOAI_BOARD_H
 #include "generating.h"
 
+/**
+ * Class Board contains the data and logic concerning the playing field of the game
+ * It can give you fields for specific players (these fields only have the information they should know, not more)
+ * It creates the starting field when you construct the object, using start positions
+ */
 class Board {
 
 public:
