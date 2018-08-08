@@ -211,7 +211,7 @@ Game playAiGame(AI *player1, AI *player2) {
 	Board board(player1->startPos(), player2->startPos());
 	
 	bool isFinished = false;
-	int AIturn = 1, end = 0, turns_done =0;
+	int AIsTurn = 1, end = 0, turnsDone = 0;
 	Move move, previous_move;
 	printf("start board\n");
 	board.print(board.field);
@@ -221,8 +221,8 @@ Game playAiGame(AI *player1, AI *player2) {
 	Tile player1_field[10][10] = {};
 	Tile player2_field[10][10] = {};
 	Turn AI1_turn, AI2_turn;
-	while (!isFinished) {
-		if (AIturn == 1) { // player1's turn
+	while (turnsDone < 1000000) {
+		if (AIsTurn == 1) { // player1's turn
 			AI1_turn.count++;
 			AI1_turn = Turn(AI1_turn, AI2_turn);
 			board.updatePlayerBoard(1);
@@ -240,8 +240,8 @@ Game playAiGame(AI *player1, AI *player2) {
 			board.print(board.field);
 			printf("\n");
 
-			AIturn++;
-			turns_done = AI1_turn.count;
+			AIsTurn++;
+			turnsDone = AI1_turn.count;
 		} else { // player2's turn
 			AI2_turn = Turn(AI2_turn, AI1_turn);
 			board.updatePlayerBoard(2);
@@ -260,26 +260,25 @@ Game playAiGame(AI *player1, AI *player2) {
 			board.print(board.field);//print the output of the AI
 			printf("\n");
 
-			AIturn--;
-			turns_done = AI2_turn.count;
+			AIsTurn--;
+			turnsDone = AI2_turn.count;
 		}
 
-		if (AI1_turn.youKilled[0].name == 'F' || AI2_turn.youKilled[0].name == 'F' || AI1_turn.error || AI2_turn.error) {
-			AI1avr = AI1tot / (turns_done / 2);
-			AI2avr = AI2tot / (turns_done / 2);
-			return{ AIturn == 1 ? 2 : 1 , turns_done, AI1avr, AI2avr };
-			isFinished = true;
+		if (AI1_turn.youKilled[0].name == FLAG_NAME || AI2_turn.youKilled[0].name == FLAG_NAME || AI1_turn.error || AI2_turn.error) {
+			AI1avr = AI1tot / (turnsDone / 2);
+			AI2avr = AI2tot / (turnsDone / 2);
+			return{ AIsTurn == 1 ? 2 : 1 , turnsDone, AI1avr, AI2avr };
 		}
-		if (turns_done > 1000000 ) {
-			printf("This game is taking to long\n"); 
-			board.print(board.field);
-			AI1avr = AI1tot / (turns_done / 2);
-			AI2avr = AI2tot / (turns_done / 2);
-			return{ AIturn, turns_done, AI1avr, AI2avr };
-			isFinished = true;
-		}
+
 		move = previous_move;
 	}
+
+	printf("This game is taking to long\n");
+	board.print(board.field);
+	AI1avr = AI1tot / (turnsDone / 2);
+	AI2avr = AI2tot / (turnsDone / 2);
+
+	return{ AIsTurn, turnsDone, AI1avr, AI2avr };
 }
 
 void playGames() {

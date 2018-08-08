@@ -2,3 +2,5 @@ Todo:
 
 Put files in directories based on category (for example, all the AI's in an AI directory)
 the function playAIGame; make it shorter, more easy to read
+
+in AI->move the parameter previous_move should be removed (the previous move is included in the turn structure also given as a param)
