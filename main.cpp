@@ -17,7 +17,7 @@ const int MAXGAMES = 1;
 const int NUM_OF_AI = 4;
 
 
-/*
+/**
  * Prints a board of Tiles
  * Input: a 10 by 10 array of Tiles.
  * Output: nothing.
@@ -25,13 +25,9 @@ const int NUM_OF_AI = 4;
 void printField(const Tile field[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
-			//the value of a empty tile is -1 so then the land type needs to be printed
-			if (field[T1][T2].piece.value == -1) {
+			if (field[T1][T2].piece.value == EMPTY_PIECE) {
 				printf(" %c", field[T1][T2].land);
-			}
-			//If the Tile is not empty the piece will be represented by its name. 
-			//With F being the flag, B being the bom and T being the ten so the program does not need to print dubble digits.
-			else {
+			} else {
 				printf(" %c", field[T1][T2].piece.name);
 			}
 		}
@@ -39,7 +35,7 @@ void printField(const Tile field[10][10]) {
 	}
 }
 
-/*
+/**
  * Hides the data the AI should not be able to see from its opponent
  * Input: The 10 by 10 field of Tiles that the game keeps track on.
  * Input: The player number of the player that is going to recieve the board.
@@ -56,56 +52,59 @@ void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile pl
 				playerField[T1][T2].piece.value = -2;
 			}
 		}
-		}
+	}
+
 	if (playerNumber == 2){
 		Tile temp;
+
 		for (int T3 = 0; T3 < 5; T3++) {
 			for (int T4 = 0; T4 < 10; T4++) {
 				temp = playerField[T3][T4];
 				playerField[T3][T4] = playerField[9 - T3][9 - T4];
 				playerField[9 - T3][9 - T4] = temp;
-				}
 			}
 		}
 	}
+}
 
-/*
+/**
  * Evaluates combat
- * Returns -1 if lost, 0 if draw, 1 if win and 2 if flag is hit.
  */
 int combatScore(Tile attacker, Tile defender) {
-	// if defender is the vlag
+
+	// if defender is the flag
 	if (defender.piece.name == 'F') {
-		return 1;
+		return COMBAT_WON;
 	}
+
 	// 3 against bomb:
-	if (attacker.piece.value == 3 && defender.piece.name== 'B') {
-		return 1;
+	if (attacker.piece.value == 3 && defender.piece.name == 'B') {
+		return COMBAT_WON;
 	}
+
 	// 1 against 10:
 	if (attacker.piece.value == 1 && defender.piece.value == 10) {
-		return 1;
+		return COMBAT_WON;
 	}
-	// combat agains bomb
+
+	// combat versus bomb
 	if (defender.piece.name == 'B') {
-		return -1;
+		return COMBAT_LOST;
 	}
 
 	// normal combat
 	if (attacker.piece.value > defender.piece.value) {
-		// win
-		return 1;
+		return COMBAT_WON;
 	} else if (attacker.piece.value == defender.piece.value) {
-		// tie
-		return 0;
+		return COMBAT_DRAW;
 	} else {
-		// loss
-		return -1;
+		return COMBAT_LOST;
 	}
 }
-/*
+/**
+ * TODO: UPDATE THIS COMMENT
  * Handles the move from the AI or player
- * returns the player who won or 0, if the flag has not beed attacked
+ * returns the player who won or 0, if the flag has not been attacked
  * If a unit is killed it returns the unit so the AI can see what it has killed
  */
 Turn handleMove(Tile field[10][10], Turn players_turn) {
@@ -192,9 +191,9 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 	return players_turn;
 }
 
-/*
+/**
  * corrects the cardinal and the x and x of the move given by player 2 becaus it thinks it is player 1
-*/
+ */
 Move turnaround_Move(Move move)
 {
 	switch(move.cardinal){
@@ -208,7 +207,9 @@ Move turnaround_Move(Move move)
 	return move;
 }
 
-// Prints the options the player can choose from
+/**
+ * Prints the options the player can choose from
+ */
 void printOptions(int pNum) {
 	printf("Which AI is going to be player %d?\n", pNum);
 	printf("1: AI1\n");
@@ -217,8 +218,10 @@ void printOptions(int pNum) {
 	printf("4: JurAI\n");
 }
 
-// Handles the input of the user choosing
-// which AI they want to use.
+/**
+ * Handles the input of the user choosing
+ * which AI they want to use.
+ */
 int getAiId() {
 	int AiId = 0;
 	try {
@@ -233,7 +236,7 @@ int getAiId() {
 	return AiId;
 }
 
-/*
+/**
  * plays game of two Ai's
  */
 Game playAiGame() {
