@@ -10,7 +10,8 @@ const static int COMBAT_WON = 1;
 const static int COMBAT_DRAW = 0;
 const static int COMBAT_LOST = -1;
 
-const static char EMPTY_PIECE = 'E';
+const static char EMPTY_PIECE_NAME = 'E';
+const static char EMPTY_PIECE_VALUE = -1;
 
 const static int INVISIBLE_PIECE_VALUE = 2;
 const static char INVISIBLE_PIECE_NAME = '?';

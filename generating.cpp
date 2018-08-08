@@ -5,11 +5,12 @@
 #include <ctime>
 #include "generating.h"
 #include "AI1.h"
+#include "definitions.cpp"
 
 // Standard constructor for a Piece, creates an empty piece.
 Piece::Piece() {
-	value = -1;
-	name = 'E';
+	value = EMPTY_PIECE_VALUE;
+	name = EMPTY_PIECE_NAME;
 	owner = 0;
 	visible = false;
 }

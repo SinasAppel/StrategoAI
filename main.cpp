@@ -98,7 +98,7 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 		return playersTurn;
 	}
 	// check if the AI does not move an empty piece.
-	if (currentTile.piece.name == EMPTY_PIECE) {
+	if (currentTile.piece.name == EMPTY_PIECE_NAME) {
 		printf("no piece to move\n");
 		playersTurn.error = true;
 		return playersTurn;
@@ -108,7 +108,7 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 		case COMBAT_WON:
 			playersTurn.youKilled[0] = field[newY][newX].piece;
 			playersTurn.youKilled[1] = Piece();
-			if (field[newY][newX].piece.name != EMPTY_PIECE && !currentTile.piece.visible) {
+			if (field[newY][newX].piece.name != EMPTY_PIECE_NAME && !currentTile.piece.visible) {
 				playersTurn.youRevealed = currentTile.piece;
 				currentTile.piece.visible = true;
 			} else {

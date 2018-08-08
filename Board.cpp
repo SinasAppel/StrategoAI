@@ -67,7 +67,7 @@ void Board::updatePlayerBoard(int playerNumber) {
 void Board::print(const Tile board[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
-			if (board[T1][T2].piece.name == EMPTY_PIECE) {
+			if (board[T1][T2].piece.name == EMPTY_PIECE_NAME) {
 				printf(" %c", board[T1][T2].land);
 			} else {
 				printf(" %c", board[T1][T2].piece.name);
