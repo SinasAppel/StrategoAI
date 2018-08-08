@@ -126,6 +126,10 @@ void SanderAI::update_army(Tile field[10][10], Turn turn)
 	}
 }
 
+Tile SanderAI::search_near(Piece target, Tile begin) {
+
+}
+
 // gives the base game the starting position.
 Start_pos SanderAI::startPos()
 {

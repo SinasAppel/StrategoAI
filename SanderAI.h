@@ -21,6 +21,7 @@ private:
 	Piece rand_from_array(int in[], int size);
 	void update_frontline(Tile field[10][10]);
 	void update_army(Tile field[10][10], Turn turn);
+	Tile search_near(Piece target, Tile begin);
 	int hasmoved[10][10] = {};
 	Frontline My;
 	Frontline Opponent;
