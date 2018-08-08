@@ -1,0 +1,4 @@
+Todo:
+
+Put files in directories based on category (for example, all the AI's in an AI directory)
+the function playAIGame; make it shorter, more easy to read

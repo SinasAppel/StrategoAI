@@ -15,55 +15,6 @@
 
 using namespace std;
 
-/**
- * Prints a board of Tiles
- * Input: a 10 by 10 array of Tiles.
- * Output: nothing.
- */
-void printField(const Tile field[10][10]) {
-	for (int T1 = 0; T1 < 10; T1++) {
-		for (int T2 = 0; T2 < 10; T2++) {
-			if (field[T1][T2].piece.value == EMPTY_PIECE) {
-				printf(" %c", field[T1][T2].land);
-			} else {
-				printf(" %c", field[T1][T2].piece.name);
-			}
-		}
-		printf("\n");
-	}
-}
-
-/**
- * Hides the data the AI should not be able to see from its opponent
- * Input: The 10 by 10 field of Tiles that the game keeps track on.
- * Input: The player number of the player that is going to recieve the board.
- * Output: The field that the player gets to see.
- * it now also turn the field arround for player2 so the Ai always plays on top
- */
-void makeDataInvisible(const Tile field[10][10], const int playerNumber, Tile playerField[10][10]) {
-	for (int T1 = 0; T1 < 10; T1++) {
-		for (int T2 = 0; T2 < 10; T2++) {
-			playerField[T1][T2] = field[T1][T2];
-			if (field[T1][T2].piece.owner != playerNumber && !field[T1][T2].piece.visible && field[T1][T2].piece.owner != 0) {
-				playerField[T1][T2].piece.name = '?';
-				// -2 means that it is not visible what the value is
-				playerField[T1][T2].piece.value = -2;
-			}
-		}
-	}
-
-	if (playerNumber == 2){
-		Tile temp;
-
-		for (int T3 = 0; T3 < 5; T3++) {
-			for (int T4 = 0; T4 < 10; T4++) {
-				temp = playerField[T3][T4];
-				playerField[T3][T4] = playerField[9 - T3][9 - T4];
-				playerField[9 - T3][9 - T4] = temp;
-			}
-		}
-	}
-}
 
 /**
  * Evaluates combat
