@@ -8,6 +8,7 @@
 #include "SanderAI.h"
 #include "ScoreAI.h"
 #include "JurAI.h"
+#include "definitions.cpp"
 
 using namespace std;
 
@@ -109,20 +110,24 @@ int combatScore(Tile attacker, Tile defender) {
 Turn handleMove(Tile field[10][10], Turn players_turn) {
 	Move move = players_turn.you_moved;
 	int AI_turn = players_turn.count +1 %2 +1;
-	if (move.no_moves == true){ players_turn.error = true; return players_turn; }// checks if it was the forfit move
+	if (move.no_moves) {
+		players_turn.error = true;
+		return players_turn;
+	}// checks if it was the forfeit move
+
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
-	case 'N': // Piece should be moved North
+	case NORTH:
 		newY = move.y - players_turn.you_moved.tiles;
 		break;
-	case 'E': // Piece should be moved East
+	case EAST:
 		newX = move.x + players_turn.you_moved.tiles;
 		break;
-	case 'S': // Piece should be moved South
+	case SOUTH:
 		newY = move.y + players_turn.you_moved.tiles;
 		break;
-	case 'W': // Piece should be moved West
+	case WEST:
 		newX = move.x - players_turn.you_moved.tiles;
 		break;
 	default:
@@ -192,10 +197,10 @@ Turn handleMove(Tile field[10][10], Turn players_turn) {
 Move turnaround_Move(Move move)
 {
 	switch(move.cardinal){
-	case 'N': move.cardinal = 'S'; break;
-	case 'S': move.cardinal = 'N'; break;
-	case 'W': move.cardinal = 'E'; break;
-	case 'E': move.cardinal = 'W'; break;
+	case NORTH: move.cardinal = SOUTH; break;
+	case SOUTH: move.cardinal = NORTH; break;
+	case WEST: move.cardinal = EAST; break;
+	case EAST: move.cardinal = WEST; break;
 	}
 	move.x = 9 - move.x;
 	move.y = 9 - move.y;
