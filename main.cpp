@@ -57,8 +57,8 @@ int combatScore(Tile attacker, Tile defender) {
  * If a unit is killed it returns the unit so the AI can see what it has killed
  */
 Turn handleMove(Tile field[10][10], Turn playersTurn) {
-	Move move = playersTurn.you_moved;
-	if (move.no_moves) {
+	Move move = playersTurn.youMoved;
+	if (move.noMoves) {
 		playersTurn.error = true;
 		return playersTurn;
 	}// checks if it was the forfeit move
@@ -67,16 +67,16 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 	int newY = move.y;
 	switch (move.cardinal) {
 	case NORTH:
-		newY = move.y - playersTurn.you_moved.tiles;
+		newY = move.y - playersTurn.youMoved.tiles;
 		break;
 	case EAST:
-		newX = move.x + playersTurn.you_moved.tiles;
+		newX = move.x + playersTurn.youMoved.tiles;
 		break;
 	case SOUTH:
-		newY = move.y + playersTurn.you_moved.tiles;
+		newY = move.y + playersTurn.youMoved.tiles;
 		break;
 	case WEST:
-		newX = move.x - playersTurn.you_moved.tiles;
+		newX = move.x - playersTurn.youMoved.tiles;
 		break;
 	default:
 		printf("Error, not a valid cardinal\n");
@@ -105,32 +105,32 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 
 	switch (combatScore(currectTile, targetTile)) {
 
-	case 1:  playersTurn.you_killed[0] = field[newY][newX].piece;
-		playersTurn.you_killed[1] = Piece();
+	case 1:  playersTurn.youKilled[0] = field[newY][newX].piece;
+		playersTurn.youKilled[1] = Piece();
 		if (field[newY][newX].piece.name != 'E' && currectTile.piece.visible != true){
-			playersTurn.you_revealed = currectTile.piece;
+			playersTurn.youRevealed = currectTile.piece;
 			currectTile.piece.visible = true;
 		}
 		else {
-			playersTurn.you_revealed = Piece();
+			playersTurn.youRevealed = Piece();
 		}
 		field[newY][newX] = currectTile;
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y);  break;
 
-	case 0:  playersTurn.you_killed[0] = field[newY][newX].piece;
-		playersTurn.you_killed[1] = field[move.y][move.x].piece;
-		playersTurn.you_revealed = Piece();
+	case 0:  playersTurn.youKilled[0] = field[newY][newX].piece;
+		playersTurn.youKilled[1] = field[move.y][move.x].piece;
+		playersTurn.youRevealed = Piece();
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y);
 		field[newY][newX] = cleanGrassTile(move.x, move.y); break;
 
-	case -1: playersTurn.you_killed[0] = Piece();
-		playersTurn.you_killed[1] = field[move.y][move.x].piece;
+	case -1: playersTurn.youKilled[0] = Piece();
+		playersTurn.youKilled[1] = field[move.y][move.x].piece;
 		if (field[newY][newX].piece.visible != true){
-			playersTurn.you_revealed = field[newY][newX].piece;
+			playersTurn.youRevealed = field[newY][newX].piece;
 			field[newY][newX].piece.visible = true;
 		}
 		else {
-			playersTurn.you_revealed = Piece();
+			playersTurn.youRevealed = Piece();
 		}
 		field[move.y][move.x] = cleanGrassTile(move.x, move.y); break;
 
@@ -236,13 +236,13 @@ Game playAiGame() {
 			board.print(board.player1Field);
 
 			AI11 = clock();
-			AI1_turn.you_moved = player1->move(board.player1Field, previous_move, AI1_turn);
+			AI1_turn.youMoved = player1->move(board.player1Field, previous_move, AI1_turn);
 			AI12 = clock();
 
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 
-			printf("AI1: %i, %i, %c %i\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal, AI1_turn.you_moved.tiles);//print the move of the AI
+			printf("AI1: %i, %i, %c %i\n", AI1_turn.youMoved.x, AI1_turn.youMoved.y, AI1_turn.youMoved.cardinal, AI1_turn.youMoved.tiles);//print the move of the AI
 			AI1_turn = handleMove(board.field, AI1_turn);
 			board.print(board.field);
 			printf("\n");
@@ -255,14 +255,14 @@ Game playAiGame() {
 			board.print(board.player2Field); // print what the AI sees
 
 			AI21 = clock();
-			AI2_turn.you_moved = player2->move(board.player2Field, previous_move, AI2_turn);
+			AI2_turn.youMoved = player2->move(board.player2Field, previous_move, AI2_turn);
 			AI22 = clock();
 
 			float diff ((float)AI22 - (float)AI21);
 			AI2tot = AI2tot + (diff / CLOCKS_PER_SEC);
 
-			AI2_turn.you_moved = turnaround_Move(AI2_turn.you_moved);
-			printf("AI2: %i, %i, %c %i\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal, AI2_turn.you_moved.tiles);//print the move of the AI
+			AI2_turn.youMoved = turnaround_Move(AI2_turn.youMoved);
+			printf("AI2: %i, %i, %c %i\n", AI2_turn.youMoved.x, AI2_turn.youMoved.y, AI2_turn.youMoved.cardinal, AI2_turn.youMoved.tiles);//print the move of the AI
 			AI2_turn = handleMove(board.field, AI2_turn);
 			board.print(board.field);//print the output of the AI
 			printf("\n");
@@ -271,7 +271,7 @@ Game playAiGame() {
 			turns_done = AI2_turn.count;
 		}
 
-		if (AI1_turn.you_killed[0].name == 'F' || AI2_turn.you_killed[0].name == 'F' || AI1_turn.error || AI2_turn.error) {
+		if (AI1_turn.youKilled[0].name == 'F' || AI2_turn.youKilled[0].name == 'F' || AI1_turn.error || AI2_turn.error) {
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
 			return{ AIturn == 1 ? 2 : 1 , turns_done, AI1avr, AI2avr };
@@ -303,8 +303,8 @@ void playGames() {
 		P2 = clock();
 		float diff((float)P2 - (float)P1);
 		gameTime += diff / CLOCKS_PER_SEC;
-		AI1Total += game.AI1_time;
-		AI2Total += game.AI2_time;
+		AI1Total += game.AI1Time;
+		AI2Total += game.AI2Time;
 	}
 	averageTurns = totalTurns / MAXGAMES;
 	gameTimeAverage = gameTime / MAXGAMES;

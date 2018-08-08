@@ -41,18 +41,18 @@ struct Move {
 	int y;
 	char cardinal;
 	int tiles;
-	bool no_moves;
+	bool noMoves;
 	Move();
 };
 
 struct Turn{
 	int count;
-	Move you_moved;
-	Move opponent_moved;
-	Piece you_killed[2];//[0]: opponent piece [1] own piece
-	Piece opponent_killed[2];//[0]: your piece [1] own piece
-	Piece you_revealed;
-	Piece opponent_revealed;
+	Move youMoved;
+	Move opponentMoved;
+	Piece youKilled[2];//[0]: opponent piece [1] own piece
+	Piece opponentKilled[2];//[0]: your piece [1] own piece
+	Piece youRevealed;
+	Piece opponentRevealed;
 	bool error;
 	Turn();
 	Turn(Turn players_turn, Turn opponents_turn);
@@ -73,8 +73,8 @@ struct Start_pos {
 struct Game {
 	int playerWon;
 	int turns;
-	float AI1_time;
-	float AI2_time;
+	float AI1Time;
+	float AI2Time;
 };
 
 class AI {

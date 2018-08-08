@@ -55,68 +55,68 @@ void ScoreAI::update_army(Tile field[10][10], Turn turn)
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
 	// you killed piece of opponent
-	if (turn.you_killed[0].owner == opponent) {
-		ArmyStateOpponent.Dead[turn.you_killed[0].value]++;
-		if (turn.you_killed[0].visible) {
-			ArmyStateOpponent.Revealed[turn.you_killed[0].value]--;
+	if (turn.youKilled[0].owner == opponent) {
+		ArmyStateOpponent.Dead[turn.youKilled[0].value]++;
+		if (turn.youKilled[0].visible) {
+			ArmyStateOpponent.Revealed[turn.youKilled[0].value]--;
 		}
 		else {
-			ArmyStateOpponent.Hidden[turn.you_killed[0].value]--;
+			ArmyStateOpponent.Hidden[turn.youKilled[0].value]--;
 		}
 	}
 	// opponend killed your piece
-	if (turn.opponent_killed[1].owner == opponent) {
-		ArmyStateOpponent.Dead[turn.opponent_killed[1].value]++;
-		if (turn.opponent_killed[1].visible) {
-			ArmyStateOpponent.Revealed[turn.opponent_killed[1].value]--;
+	if (turn.opponentKilled[1].owner == opponent) {
+		ArmyStateOpponent.Dead[turn.opponentKilled[1].value]++;
+		if (turn.opponentKilled[1].visible) {
+			ArmyStateOpponent.Revealed[turn.opponentKilled[1].value]--;
 		}
 		else {
-			ArmyStateOpponent.Hidden[turn.opponent_killed[1].value]--;
+			ArmyStateOpponent.Hidden[turn.opponentKilled[1].value]--;
 		}
 	}
 	// you revealed opponents piece
-	if (turn.you_revealed.owner == opponent) {
-		ArmyStateOpponent.Revealed[turn.you_revealed.value]++;
-		ArmyStateOpponent.Hidden[turn.you_revealed.value]--;
+	if (turn.youRevealed.owner == opponent) {
+		ArmyStateOpponent.Revealed[turn.youRevealed.value]++;
+		ArmyStateOpponent.Hidden[turn.youRevealed.value]--;
 
 	}
 	// opponend revealed his piece
-	if (turn.opponent_revealed.owner == opponent) {
-		ArmyStateOpponent.Revealed[turn.opponent_revealed.value]++;
-		ArmyStateOpponent.Hidden[turn.opponent_revealed.value]--;
+	if (turn.opponentRevealed.owner == opponent) {
+		ArmyStateOpponent.Revealed[turn.opponentRevealed.value]++;
+		ArmyStateOpponent.Hidden[turn.opponentRevealed.value]--;
 
 	}
 
 	// you killed your piece 
-	if (turn.you_killed[1].owner == you) {
-		ArmyStateMy.Dead[turn.you_killed[1].value]++;
-		if (turn.you_killed[1].visible) {
-			ArmyStateMy.Revealed[turn.you_killed[1].value]--;
+	if (turn.youKilled[1].owner == you) {
+		ArmyStateMy.Dead[turn.youKilled[1].value]++;
+		if (turn.youKilled[1].visible) {
+			ArmyStateMy.Revealed[turn.youKilled[1].value]--;
 		}
 		else {
-			ArmyStateMy.Hidden[turn.you_killed[1].value]--;
+			ArmyStateMy.Hidden[turn.youKilled[1].value]--;
 		}
 	}
 	// opponend killed your piece
-	if (turn.opponent_killed[0].owner == you) {
-		ArmyStateMy.Dead[turn.opponent_killed[0].value]++;
-		if (turn.opponent_killed[0].visible) {
-			ArmyStateMy.Revealed[turn.opponent_killed[0].value]--;
+	if (turn.opponentKilled[0].owner == you) {
+		ArmyStateMy.Dead[turn.opponentKilled[0].value]++;
+		if (turn.opponentKilled[0].visible) {
+			ArmyStateMy.Revealed[turn.opponentKilled[0].value]--;
 		}
 		else {
-			ArmyStateMy.Hidden[turn.opponent_killed[0].value]--;
+			ArmyStateMy.Hidden[turn.opponentKilled[0].value]--;
 		}
 	}
 	// you revealed your piece
-	if (turn.you_revealed.owner == you) {
-		ArmyStateMy.Revealed[turn.you_revealed.value]++;
-		ArmyStateMy.Hidden[turn.you_revealed.value]--;
+	if (turn.youRevealed.owner == you) {
+		ArmyStateMy.Revealed[turn.youRevealed.value]++;
+		ArmyStateMy.Hidden[turn.youRevealed.value]--;
 
 	}
 	// opponend reveales your piece
-	if (turn.opponent_revealed.owner == you) {
-		ArmyStateMy.Revealed[turn.opponent_revealed.value]++;
-		ArmyStateMy.Hidden[turn.opponent_revealed.value]--;
+	if (turn.opponentRevealed.owner == you) {
+		ArmyStateMy.Revealed[turn.opponentRevealed.value]++;
+		ArmyStateMy.Hidden[turn.opponentRevealed.value]--;
 
 	}
 }

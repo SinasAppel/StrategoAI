@@ -20,32 +20,32 @@ Move::Move() {
 	y = -1;
 	cardinal = '0';
 	tiles = 1;
-	no_moves = false;
+	noMoves = false;
 }
 // Standard constructor for a Turn, creates an empty Turn.
 Turn::Turn() {
 	count = 0;
-	you_moved = Move();
-	opponent_moved = Move();
-	you_killed[0] = Piece();
-	you_killed[1] = Piece();
-	opponent_killed[0] = Piece();
-	opponent_killed[1] = Piece();
-	you_revealed = Piece();
-	opponent_revealed = Piece();
+	youMoved = Move();
+	opponentMoved = Move();
+	youKilled[0] = Piece();
+	youKilled[1] = Piece();
+	opponentKilled[0] = Piece();
+	opponentKilled[1] = Piece();
+	youRevealed = Piece();
+	opponentRevealed = Piece();
 	error = false;
 }
 // special constructor to call each new turn
 Turn::Turn(Turn players_turn, Turn opponents_turn) {
 	count = opponents_turn.count + 1;
-	you_moved = players_turn.you_moved;
-	opponent_moved = opponents_turn.you_moved;
-	you_killed[0] = players_turn.you_killed[0];
-	you_killed[1] = players_turn.you_killed[1];
-	opponent_killed[0] = opponents_turn.you_killed[0];
-	opponent_killed[1] = opponents_turn.you_killed[1];
-	you_revealed = players_turn.you_revealed;
-	opponent_revealed = opponents_turn.you_revealed;
+	youMoved = players_turn.youMoved;
+	opponentMoved = opponents_turn.youMoved;
+	youKilled[0] = players_turn.youKilled[0];
+	youKilled[1] = players_turn.youKilled[1];
+	opponentKilled[0] = opponents_turn.youKilled[0];
+	opponentKilled[1] = opponents_turn.youKilled[1];
+	youRevealed = players_turn.youRevealed;
+	opponentRevealed = opponents_turn.youRevealed;
 	error = false;
 }
 
