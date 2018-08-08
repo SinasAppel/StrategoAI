@@ -51,10 +51,9 @@ int combatScore(Tile attacker, Tile defender) {
 	}
 }
 /**
- * TODO: UPDATE THIS COMMENT
  * Handles the move from the AI or player
- * returns the player who won or 0, if the flag has not been attacked
- * If a unit is killed it returns the unit so the AI can see what it has killed
+ * Edits the board according to the move and
+ * updates the turn structs of the AI that is doing the current turn
  */
 Turn handleMove(Tile field[10][10], Turn playersTurn) {
 	Move move = playersTurn.youMoved;
