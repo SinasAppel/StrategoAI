@@ -6,7 +6,7 @@
 #include "generating.h"
 #include "AI1.h"
 #include "SanderAI.h"
-#include "SanderAI2.h"
+#include "ScoreAI.h"
 #include "JurAI.h"
 
 using namespace std;

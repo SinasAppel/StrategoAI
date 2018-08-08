@@ -4,7 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include "generating.h"
-#include "SanderAI2.h"
+#include "ScoreAI.h"
 using namespace std;
 
 SanderAI2::SanderAI2(int p) : AI(p) {
