@@ -98,7 +98,7 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 		return playersTurn;
 	}
 	// check if the AI does not move an empty piece.
-	if (currentTile.piece.name == 'E'){
+	if (currentTile.piece.name == EMPTY_PIECE) {
 		printf("no piece to move\n");
 		playersTurn.error = true;
 		return playersTurn;
