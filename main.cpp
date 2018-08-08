@@ -13,9 +13,6 @@
 
 
 using namespace std;
-const int MAXGAMES = 1;
-const int NUM_OF_AI = 4;
-
 
 /**
  * Prints a board of Tiles

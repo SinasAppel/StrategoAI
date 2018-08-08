@@ -1,3 +1,6 @@
+const int MAXGAMES = 1;
+const int NUM_OF_AI = 4;
+
 const static char NORTH = 'N';
 const static char EAST = 'E';
 const static char SOUTH = 'S';
