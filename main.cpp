@@ -10,6 +10,7 @@
 #include "ScoreAI.h"
 #include "JurAI.h"
 #include "definitions.cpp"
+#include "Board.h"
 
 
 using namespace std;
@@ -264,15 +265,13 @@ Game playAiGame() {
 
 
 	// Create the board and fill with starting positions
-	Tile field[10][10];
-	createBoard(field);
-	fillBoard(field, player1->startPos(), player2->startPos());
+	Board board(player1->startPos(), player2->startPos());
 	
 	bool isFinished = false;
 	int AIturn = 1, end = 0, turns_done =0;
 	Move move, previous_move;
 	printf("start board\n");
-	printField(field);
+	board.print(board.field);
 	printf("\n");
 
 	// Make custom private fields for AI's to prevent cheating
@@ -283,30 +282,30 @@ Game playAiGame() {
 		if (AIturn == 1) { // player1's turn
 			AI1_turn.count++;
 			AI1_turn = Turn(AI1_turn, AI2_turn);
-			makeDataInvisible(field, 1, player1_field);
-			printField(player1_field);// print the input of the AI
+			board.updatePlayerBoard(1);
+			board.print(board.player1Field);
 
 			AI11 = clock();
-			AI1_turn.you_moved = player1->move(player1_field, previous_move, AI1_turn);
+			AI1_turn.you_moved = player1->move(board.player1Field, previous_move, AI1_turn);
 			AI12 = clock();
 
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 
 			printf("AI1: %i, %i, %c %i\n", AI1_turn.you_moved.x, AI1_turn.you_moved.y, AI1_turn.you_moved.cardinal, AI1_turn.you_moved.tiles);//print the move of the AI
-			AI1_turn = handleMove(field, AI1_turn);
-			printField(field);//print the output of the AI
+			AI1_turn = handleMove(board.field, AI1_turn);
+			board.print(board.field);
 			printf("\n");
 
 			AIturn++;
 			turns_done = AI1_turn.count;
 		} else { // player2's turn
 			AI2_turn = Turn(AI2_turn, AI1_turn);
-			makeDataInvisible(field, 2, player2_field);
-			printField(player2_field);// print the input of the AI
+			board.updatePlayerBoard(2);
+			board.print(board.player2Field); // print what the AI sees
 
 			AI21 = clock();
-			AI2_turn.you_moved = player2->move(player2_field, previous_move, AI2_turn);
+			AI2_turn.you_moved = player2->move(board.player2Field, previous_move, AI2_turn);
 			AI22 = clock();
 
 			float diff ((float)AI22 - (float)AI21);
@@ -314,15 +313,15 @@ Game playAiGame() {
 
 			AI2_turn.you_moved = turnaround_Move(AI2_turn.you_moved);
 			printf("AI2: %i, %i, %c %i\n", AI2_turn.you_moved.x, AI2_turn.you_moved.y, AI2_turn.you_moved.cardinal, AI2_turn.you_moved.tiles);//print the move of the AI
-			AI2_turn = handleMove(field, AI2_turn);
-			printField(field);//print the output of the AI
+			AI2_turn = handleMove(board.field, AI2_turn);
+			board.print(board.field);//print the output of the AI
 			printf("\n");
 
 			AIturn--;
 			turns_done = AI2_turn.count;
 		}
 
-		if (AI1_turn.you_killed[0].name == 'F' || AI2_turn.you_killed[0].name == 'F' || AI1_turn.error == true || AI2_turn.error == true) {
+		if (AI1_turn.you_killed[0].name == 'F' || AI2_turn.you_killed[0].name == 'F' || AI1_turn.error || AI2_turn.error) {
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
 			return{ AIturn == 1 ? 2 : 1 , turns_done, AI1avr, AI2avr };
@@ -330,7 +329,7 @@ Game playAiGame() {
 		}
 		if (turns_done > 1000000 ) {
 			printf("This game is taking to long\n"); 
-			printField(field);
+			board.print(board.field);
 			AI1avr = AI1tot / (turns_done / 2);
 			AI2avr = AI2tot / (turns_done / 2);
 			return{ AIturn, turns_done, AI1avr, AI2avr };

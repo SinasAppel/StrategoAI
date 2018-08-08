@@ -1,5 +1,5 @@
-#define	Generating_H
-
+#ifndef Generating_H
+#define Generating_H
 // General piece, can be a F, B, 1, 2, 3, etc.
 struct Piece {
 	int value;
@@ -95,3 +95,4 @@ void createBoard(Tile field[10][10]);
 void fillBoard(Tile field[10][10], Start_pos startPos1, Start_pos startPos2);
 Tile cleanGrassTile(int X, int Y);
 Tile cleanWaterTile(int X, int Y);
+#endif
