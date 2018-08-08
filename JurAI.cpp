@@ -203,8 +203,8 @@ void JurAI::updateHasMoved(Move opponent_move) {
 	}
 }
 
-Move JurAI::move(Tile field[10][10], Move opponent_move) {
-	updateHasMoved(opponent_move);
+Move JurAI::move(Tile field[10][10], Turn turn) {
+	updateHasMoved(turn.opponentMoved);
 	Move output;
 	output.x = 0;
 	output.y = 0;

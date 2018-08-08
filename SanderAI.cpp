@@ -170,7 +170,7 @@ Start_pos SanderAI::startPos()
 	return output;
 }
 
-Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
+Move SanderAI::move(Tile field[10][10], Turn turn)
 {
 	Move output;
 	update_frontline(field);
@@ -183,12 +183,12 @@ Move SanderAI::move(Tile field[10][10], Move opponent_move, Turn turn)
 	printf("REVEALED: bom:%i 1:%i 2:%i 3:%i 4:%i 5:%i 6:%i 7:%i 8:%i 9:%i 10:%i\n", Soldiers.Revealed[0], Soldiers.Revealed[1], Soldiers.Revealed[2], Soldiers.Revealed[3], Soldiers.Revealed[4], Soldiers.Revealed[5], Soldiers.Revealed[6], Soldiers.Revealed[7], Soldiers.Revealed[8], Soldiers.Revealed[9], Soldiers.Revealed[10]);
 	printf("DEAD:     bom:%i 1:%i 2:%i 3:%i 4:%i 5:%i 6:%i 7:%i 8:%i 9:%i 10:%i\n", Soldiers.Dead[0], Soldiers.Dead[1], Soldiers.Dead[2], Soldiers.Dead[3], Soldiers.Dead[4], Soldiers.Dead[5], Soldiers.Dead[6], Soldiers.Dead[7], Soldiers.Dead[8], Soldiers.Dead[9], Soldiers.Dead[10]);
 	//update de hasmoved map
-	if (opponent_move.x != -1){
+	if (turn.opponentMoved.x != -1){
 		int opp_des_x, opp_des_y;
-		if (opponent_move.cardinal == 'N'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
-		else if (opponent_move.cardinal == 'E'){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
-		else if (opponent_move.cardinal == 'S'){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
-		else if (opponent_move.cardinal == 'W'){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		if (turn.opponentMoved.cardinal == 'N'){ opp_des_x = turn.opponentMoved.x; opp_des_y = turn.opponentMoved.y - 1; }
+		else if (turn.opponentMoved.cardinal == 'E'){ opp_des_x = turn.opponentMoved.x + 1; opp_des_y = turn.opponentMoved.y; }
+		else if (turn.opponentMoved.cardinal == 'S'){ opp_des_x = turn.opponentMoved.x; opp_des_y = turn.opponentMoved.y + 1; }
+		else if (turn.opponentMoved.cardinal == 'W'){ opp_des_x = turn.opponentMoved.x - 1; opp_des_y = turn.opponentMoved.y; }
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 

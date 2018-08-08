@@ -85,17 +85,17 @@ int AI1::evaluate_tile(Tile target, int piece_falue)
 	 return 0; 
 }
 
-Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
+Move AI1::move(Tile field[10][10], Turn turn)
 {
 	Move output;
 
 	//update de hasmoved map
-	if (opponent_move.x != -1){
+	if (turn.opponentMoved.x != -1) {
 		int opp_des_x, opp_des_y;
-		if (opponent_move.cardinal == NORTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y - 1; }
-		else if (opponent_move.cardinal == EAST){ opp_des_x = opponent_move.x + 1; opp_des_y = opponent_move.y; }
-		else if (opponent_move.cardinal == SOUTH){ opp_des_x = opponent_move.x; opp_des_y = opponent_move.y + 1; }
-		else if (opponent_move.cardinal == WEST){ opp_des_x = opponent_move.x - 1; opp_des_y = opponent_move.y; }
+		if (turn.opponentMoved.cardinal == 'N') { opp_des_x = turn.opponentMoved.x; opp_des_y = turn.opponentMoved.y - 1; }
+		else if (turn.opponentMoved.cardinal == 'E') { opp_des_x = turn.opponentMoved.x + 1; opp_des_y = turn.opponentMoved.y; }
+		else if (turn.opponentMoved.cardinal == 'S') { opp_des_x = turn.opponentMoved.x; opp_des_y = turn.opponentMoved.y + 1; }
+		else if (turn.opponentMoved.cardinal == 'W') { opp_des_x = turn.opponentMoved.x - 1; opp_des_y = turn.opponentMoved.y; }
 		hasmoved[opp_des_x][opp_des_y] = 1;
 	}
 
@@ -109,25 +109,29 @@ Move AI1::move(Tile field[10][10], Move opponent_move, Turn turn)
 				if (T1 != 0){
 					target = field[T1 - 1][T2];// get the target field to evaluate
 					value = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
-					if (value >= max && value > -10 && value < 100){ max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = NORTH; M++; }
+					if (value >= max && value > -10 && value < 100){ 
+						max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = NORTH; M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1 + 1][T2];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = SOUTH;  M++; }
+					if (value >= max && value > -10 && value < 100){ 
+						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = SOUTH;  M++; }
 				}
 
 				if (T2 != 0){
 					target = field[T1][T2 - 1];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = WEST;  M++; }
+					if (value >= max && value > -10 && value < 100){ 
+						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = WEST;  M++; }
 				}
 
 				if (T1 != 10){
 					target = field[T1][T2 + 1];
 					value = evaluate_tile(target, field[T1][T2].piece.value);
-					if (value >= max && value > -10 && value < 100){ max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = EAST;  M++; }
+					if (value >= max && value > -10 && value < 100){ 
+						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = EAST;  M++; }
 				}
 			}
 		}

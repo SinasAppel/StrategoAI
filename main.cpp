@@ -228,7 +228,7 @@ Game playAiGame(AI *player1, AI *player2) {
 			board.print(board.player1Field);
 
 			AI11 = clock();
-			AI1_turn.youMoved = player1->move(board.player1Field, previous_move, AI1_turn);
+			AI1_turn.youMoved = player1->move(board.player1Field, AI1_turn);
 			AI12 = clock();
 
 			float diff ((float)AI12 - (float)AI11);
@@ -247,7 +247,7 @@ Game playAiGame(AI *player1, AI *player2) {
 			board.print(board.player2Field); // print what the AI sees
 
 			AI21 = clock();
-			AI2_turn.youMoved = player2->move(board.player2Field, previous_move, AI2_turn);
+			AI2_turn.youMoved = player2->move(board.player2Field, AI2_turn);
 			AI22 = clock();
 
 			float diff ((float)AI22 - (float)AI21);

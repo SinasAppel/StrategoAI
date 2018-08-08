@@ -15,7 +15,7 @@ struct Army {
 class SanderAI : public AI {
 public:
 	Start_pos startPos();
-	Move move(Tile field[10][10], Move opponent_move, Turn turn);
+	Move move(Tile field[10][10], Turn turn);
 	SanderAI(int p /*playernumber*/);
 private:
 	Piece rand_from_array(int in[], int size);

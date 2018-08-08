@@ -22,7 +22,7 @@ struct Scores {
 class ScoreAI : public AI {
 public:
 	Start_pos startPos();
-	Move move(Tile field[10][10], Move opponent_move, Turn turn);
+	Move move(Tile field[10][10], Turn turn);
 	ScoreAI(int p /*playernumber*/);
 private:
 	void update_army(Tile field[10][10], Turn turn);

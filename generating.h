@@ -85,7 +85,7 @@ class AI {
 			Start_pos output;
 			return output;
 		}
-		virtual Move move(Tile field[10][10], Move opponent_move, Turn turn) {
+		virtual Move move(Tile field[10][10], Turn turn) {
 			Move move = Move();
 			return move;
 		}

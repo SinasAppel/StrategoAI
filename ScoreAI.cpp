@@ -158,7 +158,7 @@ Start_pos ScoreAI::startPos() {
 }
 
 //make a move
-Move ScoreAI::move(Tile field[10][10], Move opponent_move, Turn turn) {
+Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
 	Move r;
 	return r;

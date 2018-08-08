@@ -3,7 +3,7 @@
 class JurAI : public AI {
 	public:
 		Start_pos startPos();
-		Move move(Tile field[10][10], Move opponent_move);
+		Move move(Tile field[10][10], Turn turn);
 		JurAI(int p /*playernumber*/);
 	private:
 		int hasmoved[10][10] = {};
