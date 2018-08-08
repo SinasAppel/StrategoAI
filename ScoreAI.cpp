@@ -7,7 +7,7 @@
 #include "ScoreAI.h"
 using namespace std;
 
-SanderAI2::SanderAI2(int p) : AI(p) {
+ScoreAI::ScoreAI(int p) : AI(p) {
 }
 
 // default constructor for Army
@@ -49,7 +49,7 @@ Scores::Scores() {
 	}
 }
 
-void SanderAI2::update_army(Tile field[10][10], Turn turn)
+void ScoreAI::update_army(Tile field[10][10], Turn turn)
 {
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
@@ -121,7 +121,7 @@ void SanderAI2::update_army(Tile field[10][10], Turn turn)
 }
 
 //give a score of a field
-float SanderAI2::evaluate_armies(void)
+float ScoreAI::evaluate_armies(void)
 {
 	// waardes van de stukken
 	//Stukken	b	1	2	3	4	5	6	7	8	9	10
@@ -137,18 +137,18 @@ float SanderAI2::evaluate_armies(void)
 	return total;	
 }
 
-float SanderAI2::evaluate_trade(Piece M, FractPiece T) {
+float ScoreAI::evaluate_trade(Piece M, FractPiece T) {
 	float P = 0;
 	return P;
 }
 
-Start_pos SanderAI2::startPos() {
+Start_pos ScoreAI::startPos() {
 
 	Start_pos r;
 	return r;
 }
 
-Move SanderAI2::move(Tile field[10][10], Move opponent_move, Turn turn) {
+Move ScoreAI::move(Tile field[10][10], Move opponent_move, Turn turn) {
 	update_army(field, turn);
 	Move r;
 	return r;

@@ -20,11 +20,11 @@ struct Scores {
 	Scores();
 };
 
-class SanderAI2 : public AI {
+class ScoreAI : public AI {
 public:
 	Start_pos startPos();
 	Move move(Tile field[10][10], Move opponent_move, Turn turn);
-	SanderAI2(int p /*playernumber*/);
+	ScoreAI(int p /*playernumber*/);
 private:
 	void update_army(Tile field[10][10], Turn turn);
 	float evaluate_armies(void);
