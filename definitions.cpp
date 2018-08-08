@@ -20,5 +20,6 @@ const static int FLAG_VALUE = 0;
 const static char FLAG_NAME = 'F';
 const static char BOMB_NAME = 'B';
 
-
+const static char TILE_WATER = 'W';
+const static char TILE_GRASS = 'G';
 

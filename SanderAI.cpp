@@ -72,7 +72,7 @@ void SanderAI::update_army(Tile field[10][10], Turn turn)
 	// opponend killed your piece
 	if (turn.opponent_killed[1].owner == opponent){
 		Enemy.Dead[turn.opponent_killed[1].value]++;
-		if (turn.opponent_killed[1].visible){
+		if (turn.opponent_killed[1].visible){git
 			Enemy.Revealed[turn.opponent_killed[1].value]--;
 		}
 		else {

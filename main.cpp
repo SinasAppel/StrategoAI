@@ -65,93 +65,107 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 
 	int newX = move.x;
 	int newY = move.y;
+
 	switch (move.cardinal) {
-	case NORTH:
-		newY = move.y - playersTurn.youMoved.tiles;
-		break;
-	case EAST:
-		newX = move.x + playersTurn.youMoved.tiles;
-		break;
-	case SOUTH:
-		newY = move.y + playersTurn.youMoved.tiles;
-		break;
-	case WEST:
-		newX = move.x - playersTurn.youMoved.tiles;
-		break;
-	default:
-		printf("Error, not a valid cardinal\n");
-		break;
+		case NORTH:
+			newY = move.y - playersTurn.youMoved.tiles;
+			break;
+		case EAST:
+			newX = move.x + playersTurn.youMoved.tiles;
+			break;
+		case SOUTH:
+			newY = move.y + playersTurn.youMoved.tiles;
+			break;
+		case WEST:
+			newX = move.x - playersTurn.youMoved.tiles;
+			break;
+		default:
+			throw("Error, not a valid cardinal\n");
 	}
-	Tile currectTile = field[move.y][move.x], targetTile = field[newY][newX];
+
+	Tile currentTile = field[move.y][move.x], targetTile = field[newY][newX];
+
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
-		targetTile.land == 'W') {
+		targetTile.land == TILE_WATER) {
 		printf("Error, move is out of bounds\n");
 		playersTurn.error = true;
 		return playersTurn;
 	}
 	// check if AI is not attacking it's own pieces.
-	if (currectTile.piece.owner == targetTile.piece.owner) {
-		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c\n", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
+	if (currentTile.piece.owner == targetTile.piece.owner) {
+		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c\n", currentTile.piece.owner, move.x, move.y, currentTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
 		playersTurn.error = true;
 		return playersTurn;
 	}
-	//check if the AI does not move an empty piece.
-	if (currectTile.piece.name == 'E'){
-		printf("no piece to move\n"); 
+	// check if the AI does not move an empty piece.
+	if (currentTile.piece.name == 'E'){
+		printf("no piece to move\n");
 		playersTurn.error = true;
 		return playersTurn;
 	}
 
-	switch (combatScore(currectTile, targetTile)) {
-
-	case 1:  playersTurn.youKilled[0] = field[newY][newX].piece;
-		playersTurn.youKilled[1] = Piece();
-		if (field[newY][newX].piece.name != 'E' && currectTile.piece.visible != true){
-			playersTurn.youRevealed = currectTile.piece;
-			currectTile.piece.visible = true;
-		}
-		else {
+	switch (combatScore(currentTile, targetTile)) {
+		case COMBAT_WON:
+			playersTurn.youKilled[0] = field[newY][newX].piece;
+			playersTurn.youKilled[1] = Piece();
+			if (field[newY][newX].piece.name != EMPTY_PIECE && !currentTile.piece.visible) {
+				playersTurn.youRevealed = currentTile.piece;
+				currentTile.piece.visible = true;
+			} else {
+				playersTurn.youRevealed = Piece();
+			}
+			field[newY][newX] = currentTile;
+			field[move.y][move.x] = cleanGrassTile(move.x, move.y);
+			break;
+		case COMBAT_DRAW:
+			playersTurn.youKilled[0] = field[newY][newX].piece;
+			playersTurn.youKilled[1] = field[move.y][move.x].piece;
 			playersTurn.youRevealed = Piece();
-		}
-		field[newY][newX] = currectTile;
-		field[move.y][move.x] = cleanGrassTile(move.x, move.y);  break;
-
-	case 0:  playersTurn.youKilled[0] = field[newY][newX].piece;
-		playersTurn.youKilled[1] = field[move.y][move.x].piece;
-		playersTurn.youRevealed = Piece();
-		field[move.y][move.x] = cleanGrassTile(move.x, move.y);
-		field[newY][newX] = cleanGrassTile(move.x, move.y); break;
-
-	case -1: playersTurn.youKilled[0] = Piece();
-		playersTurn.youKilled[1] = field[move.y][move.x].piece;
-		if (field[newY][newX].piece.visible != true){
-			playersTurn.youRevealed = field[newY][newX].piece;
-			field[newY][newX].piece.visible = true;
-		}
-		else {
-			playersTurn.youRevealed = Piece();
-		}
-		field[move.y][move.x] = cleanGrassTile(move.x, move.y); break;
-
-	default: printf("Not a valid combat score!\n"); break;
+			field[move.y][move.x] = cleanGrassTile(move.x, move.y);
+			field[newY][newX] = cleanGrassTile(move.x, move.y);
+			break;
+		case COMBAT_LOST:
+			playersTurn.youKilled[0] = Piece();
+			playersTurn.youKilled[1] = field[move.y][move.x].piece;
+			if (!field[newY][newX].piece.visible) {
+				playersTurn.youRevealed = field[newY][newX].piece;
+				field[newY][newX].piece.visible = true;
+			} else {
+				playersTurn.youRevealed = Piece();
+			}
+			field[move.y][move.x] = cleanGrassTile(move.x, move.y);
+			break;
+		default:
+			throw("Not a valid combat score!\n");
 	}
 	return playersTurn;
 }
 
 /**
- * corrects the cardinal and the x and x of the move given by player 2 becaus it thinks it is player 1
+ * Corrects the cardinal, the y and the x of the move given by
+ * player 2 because it thinks it is player 1
  */
 Move turnaround_Move(Move move)
 {
-	switch(move.cardinal){
-	case NORTH: move.cardinal = SOUTH; break;
-	case SOUTH: move.cardinal = NORTH; break;
-	case WEST: move.cardinal = EAST; break;
-	case EAST: move.cardinal = WEST; break;
+	switch (move.cardinal) {
+		case NORTH:
+			move.cardinal = SOUTH;
+			break;
+		case SOUTH:
+			move.cardinal = NORTH;
+			break;
+		case WEST:
+			move.cardinal = EAST;
+			break;
+		case EAST:
+			move.cardinal = WEST;
+			break;
 	}
+
 	move.x = 9 - move.x;
 	move.y = 9 - move.y;
+
 	return move;
 }
 
@@ -185,34 +199,13 @@ int getAiId() {
 }
 
 /**
- * plays game of two Ai's
+ * Plays game of two Ai's
  */
-Game playAiGame() {
-	//timing
+Game playAiGame(AI *player1, AI *player2) {
+	// Timing
 	srand(time(0));
 	clock_t AI11, AI12, AI21, AI22;
 	float AI1tot = 0, AI2tot = 0, AI1avr = 0, AI2avr = 0;
-	
-	// Get AI's to play the games with
-	printOptions(1);
-	int AiId = getAiId();
-	AI *player1;
-	switch (AiId) {
-	case 2: player1 = new SanderAI(1); break;
-	case 3: player1 = new ScoreAI(1); break;
-	case 4: player1 = new JurAI(1); break;
-	default: player1 = new AI1(1); break;
-	}
-	AI *player2;
-	printOptions(2);
-	AiId = getAiId();
-	switch (AiId) {
-	case 2: player2 = new SanderAI(2); break;
-	case 3: player2 = new ScoreAI(2); break;
-	case 4: player2 = new JurAI(2); break;
-	default: player2 = new AI1(2); break;
-	}
-
 
 	// Create the board and fill with starting positions
 	Board board(player1->startPos(), player2->startPos());
@@ -294,10 +287,30 @@ void playGames() {
 	float gameTime = 0, gameTimeAverage = 0, AI1Total = 0, AI2Total = 0, AI1Average = 0, AI2Average = 0;
 	clock_t P1, P2;
 
+	// Get AI's to play the games with
+	printOptions(1);
+	int AiId = getAiId();
+	AI *player1;
+	switch (AiId) {
+		case 2: player1 = new SanderAI(1); break;
+		case 3: player1 = new ScoreAI(1); break;
+		case 4: player1 = new JurAI(1); break;
+		default: player1 = new AI1(1); break;
+	}
+	AI *player2;
+	printOptions(2);
+	AiId = getAiId();
+	switch (AiId) {
+		case 2: player2 = new SanderAI(2); break;
+		case 3: player2 = new ScoreAI(2); break;
+		case 4: player2 = new JurAI(2); break;
+		default: player2 = new AI1(2); break;
+	}
+
 	// Play the games
 	for (int games = 0; games < MAXGAMES; games++) {
 		P1 = clock();
-		Game game = playAiGame();
+		Game game = playAiGame(player1, player2);
 		game.playerWon == 1 ? P1wins++ : P2wins++;
 		totalTurns += game.turns;
 		P2 = clock();
@@ -306,6 +319,7 @@ void playGames() {
 		AI1Total += game.AI1Time;
 		AI2Total += game.AI2Time;
 	}
+
 	averageTurns = totalTurns / MAXGAMES;
 	gameTimeAverage = gameTime / MAXGAMES;
 	AI1Average = AI1Total / MAXGAMES * 1000;
