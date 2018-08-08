@@ -46,7 +46,11 @@ int combatScore(Tile attacker, Tile defender) {
  * returns the player who won or 0, if the flag has not beed attacked
  */
 int handleMove(Tile field[10][10], Move move) {
-	if (move.no_moves == true){ return move.y == 1 ? 2 : 1; }// checks if it was the forfit move
+	// checks if it was a forfeit move
+	if (move.no_moves) {
+		return move.y == 1 ? 2 : 1;
+	}
+	
 	int newX = move.x;
 	int newY = move.y;
 	switch (move.cardinal) {
@@ -63,21 +67,17 @@ int handleMove(Tile field[10][10], Move move) {
 		newX = move.x - 1;
 		break;
 	default:
-        //TODO: Better error handling (by the use of exceptions)
-		printf("Error, not a valid cardinal\n");
-		break;
+        throw string("Error, not a valid cardinal\n");
 	}
 	Tile currectTile = field[move.y][move.x], targetTile = field[newY][newX];
 	// check if the move is not out of bounds (out of array or water)
 	if (newX < 0 || newX > 10 || newY < 0 || newY > 10 ||
 		targetTile.land == WATER) {
-	    //TODO: Better error handling (by the use of exceptions)
-		printf("Error, move is out of bounds");
-		return currectTile.piece.owner == 1 ? 2 : 1;
+		throw string("Error, move is out of bounds");
 	}
 	// check if AI is not attacking it's own pieces.
 	if (currectTile.piece.owner == targetTile.piece.owner) {
-        //TODO: Better error handling (by the use of exceptions)
+        //TODO: Make a special exception for this error message
 		printf("Error, AI%d used friendly fire!\nMoved from %i, %i owner:%i to %i, %i owner:%i piece:%c", currectTile.piece.owner, move.x, move.y, currectTile.piece.owner, newX, newY, targetTile.piece.owner, targetTile.piece.name);
 		return currectTile.piece.owner == 1 ? 2 : 1;
 	}
@@ -97,9 +97,7 @@ int handleMove(Tile field[10][10], Move move) {
 	        field[move.y][move.x] = cleanGrassTile();
 	        break;
 	    default:
-	        //TODO: Better error handling (by the use of exceptions)
-	        printf("Not a valid combat score!\n");
-	        break;
+            throw string("Not a valid combat score");
 	}
 	return 0;
 }
@@ -200,7 +198,14 @@ Game playAiGame(AI *player1, AI *player2) {
 			turn--;
 			turns_done++;
 		}
-		int winningPlayer = handleMove(field.mainField, move);
+
+		int winningPlayer = 0;
+		try {
+            int winningPlayer = handleMove(field.mainField, move);
+		} catch (string message) {
+		    cout << message;
+		}
+
 		if (winningPlayer != 0) {
 			printf("AI%i: %i, %i, %c\n", winningPlayer, move.x, move.y, move.cardinal);
 			field.print();
