@@ -219,9 +219,168 @@ float ScoreAI::evaluate_FractTrade(Piece M, FractPiece T, Scores score) {
 
 //generates starting position
 Start_pos ScoreAI::startPos() {
+	srand(time(0));
+	// Create eventual output variable
+	Start_pos output;
 
-	Start_pos r;
-	return r;
+	// Array that stores the pieces left to place
+	// 0 = flag, 11 = bomb
+	int piecesLeft[12] = {1, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1, 6};
+
+	/*
+
+	 */
+	// Place flag
+	int flagPos = rand() % 10;
+	if (piecesLeft[0]) {
+		Piece flag('F', playerNumber);
+		output.row0[flagPos] = flag;
+		piecesLeft[0]--;
+	}
+	// Place bombs around flag
+	if (flagPos > 0 && piecesLeft[11]) {
+		Piece bomb('B', playerNumber);
+		output.row0[flagPos-1] = bomb;
+		piecesLeft[11]--;
+	}
+	if (flagPos < 9 && piecesLeft[11]) {
+		Piece bomb('B', playerNumber);
+		output.row0[flagPos+1] = bomb;
+		piecesLeft[11]--;
+	}
+	if (piecesLeft[11]) {
+		Piece bomb('B', playerNumber);
+		output.row1[flagPos] = bomb;
+		piecesLeft[11]--;
+
+	}
+
+	// Place Scouts on non water columns
+	for (int i = 0; i < 8; i++) {
+		// Get column
+		int twoColumn = rand () % 6;
+		if (twoColumn >= 4) {
+			twoColumn += 4;
+		} else if (twoColumn >= 2) {
+			twoColumn += 2;
+		}
+
+		// Get row
+		int twoRow = rand() % 4;
+		Piece two('2', playerNumber);
+		// Find out if there is a piece already placed on random position
+		// If empty, place piece in there, if not try again
+		if (twoRow == 0) {
+			if (output.row0[twoColumn].value == -1) {
+				if (piecesLeft[2]) {
+					output.row0[twoColumn] = two;
+					piecesLeft[2]--;
+				} else {
+					printf("Error, JurAI tried to place 2 while not having a 2 left\n");
+				}
+			} else {
+				i--;
+			}
+		} else if (twoRow == 1) {
+			if (output.row1[twoColumn].value == -1) {
+				if (piecesLeft[2]) {
+					output.row1[twoColumn] = two;
+					piecesLeft[2]--;
+				} else {
+					printf("Error, JurAI tried to place 2 while not having a 2 left\n");
+				}
+			} else {
+				i--;
+			}
+		} else if (twoRow == 2) {
+			if (output.row2[twoColumn].value == -1) {
+				if (piecesLeft[2]) {
+					output.row2[twoColumn] = two;
+					piecesLeft[2]--;
+				} else {
+					printf("Error, JurAI tried to place 2 while not having a 2 left\n");
+				}
+			} else {
+				i--;
+			}
+		} else {
+			if (output.row3[twoColumn].value == -1) {
+				if (piecesLeft[2]) {
+					output.row3[twoColumn] = two;
+					piecesLeft[2]--;
+				} else {
+					printf("Error, JurAI tried to place 2 while not having a 2 left\n");
+				}
+			} else {
+				i--;
+			}
+		}
+	}
+
+	// Fill rest of the board randomly
+
+	// Row 0
+	for (int i=0; i < 10; i++) {
+		if (output.row0[i].value == -1) { // place is empty
+			int r = rand() % 12;
+			if (piecesLeft[r]) {
+				// Still pieces left of chosen piece, place
+				Piece randomPiece(r, playerNumber);
+				output.row0[i] = randomPiece;
+				piecesLeft[r]--;
+			} else {
+				// No piece left of chosen piece, try to fill this space again
+				i--;
+			}
+		}
+	}
+	// Row 1
+	for (int i=0; i < 10; i++) {
+		if (output.row1[i].value == -1) { // place is empty
+			int r = rand() % 12;
+			if (piecesLeft[r]) {
+				// Still pieces left of chosen piece, place
+				Piece randomPiece(r, playerNumber);
+				output.row1[i] = randomPiece;
+				piecesLeft[r]--;
+			} else {
+				// No piece left of chosen piece, try to fill this space again
+				i--;
+			}
+		}
+	}
+	// Row 2
+	for (int i=0; i < 10; i++) {
+		if (output.row2[i].value == -1) { // place is empty
+			int r = rand() % 12;
+			if (piecesLeft[r]) {
+				// Still pieces left of chosen piece, place
+				Piece randomPiece(r, playerNumber);
+				output.row2[i] = randomPiece;
+				piecesLeft[r]--;
+			} else {
+				// No piece left of chosen piece, try to fill this space again
+				i--;
+			}
+		}
+	}
+	// Row 3
+	for (int i=0; i < 10; i++) {
+		if (output.row3[i].value == -1) { // place is empty
+			int r = rand() % 12;
+			if (piecesLeft[r]) {
+				// Still pieces left of chosen piece, place
+				Piece randomPiece(r, playerNumber);
+				output.row3[i] = randomPiece;
+				piecesLeft[r]--;
+			} else {
+				// No piece left of chosen piece, try to fill this space again
+				i--;
+			}
+		}
+	}
+
+	return output;
 }
 
 //make a move
