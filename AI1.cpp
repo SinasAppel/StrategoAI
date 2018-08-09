@@ -101,37 +101,37 @@ Move AI1::move(Tile field[10][10], Turn turn)
 
 	int rating[100] = {}, M = 0, value, max = -10000, value2 = -10;
 	Move moveCat[100];
-	for (int T1 = 0; T1 < 10; T1++){
-		for (int T2 = 0; T2 < 10; T2++){
-			if (field[T1][T2].piece.owner == playerNumber && field[T1][T2].piece.value != 0)//evaluate the moves of the piece it the Ai ownse it and it is not a flag or a bom
+	for (int Ty = 0; Ty < 10; Ty++){
+		for (int Tx = 0; Tx < 10; Tx++){
+			if (field[Ty][Tx].piece.owner == playerNumber && field[Ty][Tx].piece.value != 0)//evaluate the moves of the piece it the Ai ownse it and it is not a flag or a bom
 			{
 				Tile target;
-				if (T1 != 0){
-					target = field[T1 - 1][T2];// get the target field to evaluate
-					value = evaluate_tile(target, field[T1][T2].piece.value);// get the avaluation
+				if (Ty != 0){
+					target = field[Ty - 1][Tx];// get the target field to evaluate
+					value = evaluate_tile(target, field[Ty][Tx].piece.value);// get the avaluation
 					if (value >= max && value > -10 && value < 100){ 
-						max = value;  rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = NORTH; M++; }
+						max = value;  rating[M] = value; moveCat[M].x = Tx; moveCat[M].y = Ty; moveCat[M].cardinal = NORTH; M++; }
 				}
 
-				if (T1 != 10){
-					target = field[T1 + 1][T2];
-					value = evaluate_tile(target, field[T1][T2].piece.value);
+				if (Ty != 9){
+					target = field[Ty + 1][Tx];
+					value = evaluate_tile(target, field[Ty][Tx].piece.value);
 					if (value >= max && value > -10 && value < 100){ 
-						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = SOUTH;  M++; }
+						max = value; rating[M] = value; moveCat[M].x = Tx; moveCat[M].y = Ty; moveCat[M].cardinal = SOUTH;  M++; }
 				}
 
-				if (T2 != 0){
-					target = field[T1][T2 - 1];
-					value = evaluate_tile(target, field[T1][T2].piece.value);
+				if (Tx != 0){
+					target = field[Ty][Tx - 1];
+					value = evaluate_tile(target, field[Ty][Tx].piece.value);
 					if (value >= max && value > -10 && value < 100){ 
-						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = WEST;  M++; }
+						max = value; rating[M] = value; moveCat[M].x = Tx; moveCat[M].y = Ty; moveCat[M].cardinal = WEST;  M++; }
 				}
 
-				if (T1 != 10){
-					target = field[T1][T2 + 1];
-					value = evaluate_tile(target, field[T1][T2].piece.value);
+				if (Tx != 9){
+					target = field[Ty][Tx + 1];
+					value = evaluate_tile(target, field[Ty][Tx].piece.value);
 					if (value >= max && value > -10 && value < 100){ 
-						max = value; rating[M] = value; moveCat[M].x = T2; moveCat[M].y = T1; moveCat[M].cardinal = EAST;  M++; }
+						max = value; rating[M] = value; moveCat[M].x = Tx; moveCat[M].y = Ty; moveCat[M].cardinal = EAST;  M++; }
 				}
 			}
 		}

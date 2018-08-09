@@ -1,4 +1,4 @@
-const int MAXGAMES = 1;
+//const int MAXGAMES = 5;
 const int NUM_OF_AI = 4;
 
 const static char NORTH = 'N';

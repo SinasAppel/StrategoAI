@@ -12,6 +12,7 @@
 #include "definitions.cpp"
 #include "Board.h"
 
+#define MAXGAMES 5
 
 using namespace std;
 
