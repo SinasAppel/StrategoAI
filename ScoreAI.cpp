@@ -19,6 +19,9 @@ ArmyState::ArmyState() {
 		Revealed[T1] = 0;
 		Dead[T1] = 0;
 	}
+	totalHidden = 40;
+	totalRevealed = 0;
+	totalDead = 0;
 }
 
 // default constructor for Fract_Piece
@@ -55,70 +58,95 @@ void ScoreAI::update_army(Tile field[10][10], Turn turn)
 {
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
+
 	// you killed piece of opponent
 	if (turn.youKilled[0].owner == opponent) {
 		ArmyStateOpponent.Dead[turn.youKilled[0].value]++;
+		ArmyStateOpponent.totalDead++;
 		if (turn.youKilled[0].visible) {
 			ArmyStateOpponent.Revealed[turn.youKilled[0].value]--;
+			ArmyStateOpponent.totalRevealed--;
 		}
 		else {
 			ArmyStateOpponent.Hidden[turn.youKilled[0].value]--;
+			ArmyStateOpponent.totalHidden--;
 		}
 	}
+
 	// opponend killed your piece
 	if (turn.opponentKilled[1].owner == opponent) {
 		ArmyStateOpponent.Dead[turn.opponentKilled[1].value]++;
+		ArmyStateOpponent.totalDead++;
 		if (turn.opponentKilled[1].visible) {
 			ArmyStateOpponent.Revealed[turn.opponentKilled[1].value]--;
+			ArmyStateOpponent.totalRevealed--;
 		}
 		else {
 			ArmyStateOpponent.Hidden[turn.opponentKilled[1].value]--;
+			ArmyStateOpponent.totalHidden--;
 		}
 	}
+
 	// you revealed opponents piece
 	if (turn.youRevealed.owner == opponent) {
 		ArmyStateOpponent.Revealed[turn.youRevealed.value]++;
+		ArmyStateOpponent.totalRevealed++;
 		ArmyStateOpponent.Hidden[turn.youRevealed.value]--;
-
+		ArmyStateOpponent.totalHidden--;
 	}
+
 	// opponend revealed his piece
 	if (turn.opponentRevealed.owner == opponent) {
 		ArmyStateOpponent.Revealed[turn.opponentRevealed.value]++;
+		ArmyStateOpponent.totalRevealed++;
 		ArmyStateOpponent.Hidden[turn.opponentRevealed.value]--;
+		ArmyStateOpponent.totalHidden--;
 
 	}
 
 	// you killed your piece 
 	if (turn.youKilled[1].owner == you) {
 		ArmyStateMy.Dead[turn.youKilled[1].value]++;
+		ArmyStateMy.totalDead++;
 		if (turn.youKilled[1].visible) {
 			ArmyStateMy.Revealed[turn.youKilled[1].value]--;
+			ArmyStateMy.totalRevealed--;
+			
 		}
 		else {
 			ArmyStateMy.Hidden[turn.youKilled[1].value]--;
+			ArmyStateMy.totalHidden--;
 		}
 	}
+
 	// opponend killed your piece
 	if (turn.opponentKilled[0].owner == you) {
 		ArmyStateMy.Dead[turn.opponentKilled[0].value]++;
+		ArmyStateMy.totalDead++;
 		if (turn.opponentKilled[0].visible) {
 			ArmyStateMy.Revealed[turn.opponentKilled[0].value]--;
+			ArmyStateMy.totalRevealed--;
 		}
 		else {
 			ArmyStateMy.Hidden[turn.opponentKilled[0].value]--;
+			ArmyStateMy.totalHidden--;
 		}
 	}
+
 	// you revealed your piece
 	if (turn.youRevealed.owner == you) {
 		ArmyStateMy.Revealed[turn.youRevealed.value]++;
+		ArmyStateMy.totalRevealed++;
 		ArmyStateMy.Hidden[turn.youRevealed.value]--;
-
+		ArmyStateMy.totalHidden--;
 	}
+
 	// opponend reveales your piece
 	if (turn.opponentRevealed.owner == you) {
 		ArmyStateMy.Revealed[turn.opponentRevealed.value]++;
+		ArmyStateMy.totalRevealed++;
 		ArmyStateMy.Hidden[turn.opponentRevealed.value]--;
-
+		ArmyStateMy.totalHidden--;
 	}
 }
 
@@ -233,7 +261,7 @@ float ScoreAI::evaluateFractTrade(Piece attacker, FractPiece defender, Scores sc
 
 	for (int i=0; i < 12; i++) {
 		Piece defendingPiece(i, playerNumber);
-		p += defender.frac[i] * evaluate_trade(attacker, defendingPiece, score)
+		p += defender.frac[i] * evaluate_trade(attacker, defendingPiece, score);
 	}
 
 	return p;
@@ -413,7 +441,7 @@ Start_pos ScoreAI::startPos() {
 	return output;
 }
 
-void make_FractField(Tile field[10][10]) {
+void ScoreAI::make_FractField(Tile field[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
 			FractPiece piece;
@@ -421,7 +449,7 @@ void make_FractField(Tile field[10][10]) {
 				piece.frac[field[T1][T2].piece.value] = 1;
 			} else {
 				for (int T3 = 0; T3 < 12; T3++) {
-					piece.frac[T3] = ArmyStateOpponent
+					piece.frac[T3] = ArmyStateOpponent.Hidden[T3] / ArmyStateOpponent.totalHidden;
 				}
 			}
 		}
