@@ -8,7 +8,7 @@ struct ArmyState {
 };
 
 struct FractPiece {
-	float frac[12]; // The change of that piece being a F,1,2,3,4,5,6,7,8,9,10,B
+	float frac[12]; // The chance(0 - 1) of that piece being a F,1,2,3,4,5,6,7,8,9,10,B
 	FractPiece();
 };
 
@@ -29,7 +29,7 @@ private:
 	float evaluate_armies(void);
 	float ScoreAI::evaluate_trade(Piece M, Piece T, Scores score);
 	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
-	FractPiece Fractfield[10][10];
+	FractPiece FractField[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;
 	ArmyState ArmyStateMy;

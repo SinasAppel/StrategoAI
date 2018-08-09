@@ -403,6 +403,21 @@ Start_pos ScoreAI::startPos() {
 	return output;
 }
 
+void make_FractField(Tile field[10][10]) {
+	for (int T1 = 0; T1 < 10; T1++) {
+		for (int T2 = 0; T2 < 10; T2++) {
+			FractPiece piece;
+			if (field[T1][T2].piece.visible = true) {
+				piece.frac[field[T1][T2].piece.value] = 1;
+			} else {
+				for (int T3 = 0; T3 < 12; T3++) {
+					piece.frac[T3] = ArmyStateOpponent
+				}
+			}
+		}
+	}
+}
+
 //make a move
 Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
