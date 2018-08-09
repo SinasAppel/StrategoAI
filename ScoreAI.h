@@ -4,6 +4,9 @@ struct ArmyState {
 	int Hidden[12];// F,1,2,3,4,5,6,7,8,9,10,B
 	int Revealed[12];
 	int Dead[12];
+	int totalHidden;
+	int totalRevealed;
+	int totalDead;
 	ArmyState();
 };
 
@@ -29,6 +32,7 @@ private:
 	float evaluate_armies(void);
 	float evaluate_trade(Piece attacker, Piece defender, Scores score);
 	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
+	void make_FractField(Tile field[10][10]);
 	FractPiece FractField[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;
