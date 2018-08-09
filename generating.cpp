@@ -59,8 +59,10 @@ Piece::Piece(char n, int o) {
 	name = n;
 	owner = o;
 	visible = false;
-	if (n == 'B' || n == 'F') { // Bomb or flag, both have the same value
-		value = 0;
+	if (n == BOMB_NAME) { 
+		value = BOMB_VALUE;
+	} else if (n == FLAG_NAME) {
+		value = FLAG_VALUE;
 	} else if (n == 'T') { // Ten (AKA Marshal)
 		value = 10;
 	} else { // Name equals value for all other pieces
@@ -74,13 +76,13 @@ Piece::Piece(char n, int o) {
  * In this case, 0 is the flag and 11 is the bomb
  */
 Piece::Piece(int v, int o) {
-	v == 11 ? value = 0 : value = v;
+	value = v;
 	owner = o;
 	visible = false;
-	if (v == 11) {
-		name = 'B';
-	} else if (v == 0) {
-		name = 'F';
+	if (v == BOMB_VALUE) {
+		name = BOMB_NAME;
+	} else if (v == FLAG_VALUE) {
+		name = FLAG_NAME;
 	} else if (v == 10) {
 		name = 'T';
 	} else {

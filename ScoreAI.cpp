@@ -13,8 +13,8 @@ ScoreAI::ScoreAI(int p) : AI(p) {
 
 // default constructor for Army
 ArmyState::ArmyState() {
-	int hid[11] = { 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1 };// amount of pieces that the games starts with for eatch type
-	for (int T1 = 0; T1 < 11; T1++) {
+	int hid[12] = { 1, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1, 6 };// amount of pieces that the games starts with for eatch type F,1,2,3,4,5,6,7,8,9,10,B
+	for (int T1 = 0; T1 < 12; T1++) {
 		Hidden[T1] = hid[T1];
 		Revealed[T1] = 0;
 		Dead[T1] = 0;
@@ -40,8 +40,8 @@ FractPiece::FractPiece() {
 
 // default constructor for scores
 Scores::Scores() {
-	int HPi[12] = { 22, 31, 13, 13, 15, 17, 20, 23, 27, 31, 40 , 70}; // points for a hidden piece
-	int RPi[12] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 0};// points for a revealed piece
+	int HPi[12] = { 70 , 31, 13, 13, 15, 17, 20, 23, 27, 31, 40, 22 }; // points for a hidden piece F,1,2,3,4,5,6,7,8,9,10,B
+	int RPi[12] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 0};// points for a revealed piece 
 	int DPi[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0};// points for a dead piece
 	for (int T1 = 0; T1 < 12; T1++) {
 		HiddenPoints[T1] = HPi[T1];
@@ -147,65 +147,76 @@ float ScoreAI::evaluate_armies(void)
 
 
 //gives the score change for the attacker
-float ScoreAI::evaluate_trade(Piece Attack, Piece Defence, Scores score) {
+float ScoreAI::evaluate_trade(Piece attack, Piece defence, Scores score) {
 	float P = 0;
 	int combatState;
 	// if defender is the flag
-	if (Defence.name == FLAG_NAME) {
+	if (defence.name == FLAG_NAME) {
 		combatState = COMBAT_WON;
 	}
 
 		// 3 against bomb:
-	else if (Attack.value == 3 && Defence.name == BOMB_NAME) {
+	else if (attack.value == 3 && defence.name == BOMB_NAME) {
 		combatState = COMBAT_WON;
 	}
 
 		// 1 against 10:
-	else if (Attack.value == 1 && Defence.value == 10) {
+	else if (attack.value == 1 && defence.value == 10) {
 		combatState = COMBAT_WON;
 	}
 
 		// combat versus bomb
-	else if (Defence.name == BOMB_NAME) {
+	else if (defence.name == BOMB_NAME) {
 		combatState = COMBAT_LOST;
 	}
 
 		// normal combat
-	else if (Attack.value > Defence.value) {
+	else if (attack.value > defence.value) {
 		combatState = COMBAT_WON;
 	}
-	else if (Attack.value == Defence.value) {
+	else if (attack.value == defence.value) {
 		combatState = COMBAT_DRAW;
 	}
 	else {
 		combatState = COMBAT_LOST;
 	}
 
-	if (combatState == 1) {
-		if (Defence.visible == false) {
-			P = score.HiddenPoints[Defence.value];
+	if (combatState == COMBAT_WON) {
+		if (defence.visible == false) {
+			P = P + score.HiddenPoints[defence.value];
 		}
 		else {
-			P = score.RevealedPoints[Defence.value];
+			P = P + score.RevealedPoints[defence.value];
 		}
-		if (Attack.visible == false) {
-			P = P - score.HiddenPoints[Attack.value] + score.RevealedPoints[Attack.value];
+		if (attack.visible == false) {
+			P = P - score.HiddenPoints[attack.value] + score.RevealedPoints[attack.value];
 		}
 
 	}
-	else if (combatState == -1) {
-		if (Attack.visible == false) {
-			P = P - score.HiddenPoints[Attack.value];
+	else if (combatState == COMBAT_LOST) {
+		if (attack.visible == false) {
+			P = P - score.HiddenPoints[attack.value];
 		}
 		else {
-			P = P - score.RevealedPoints[Attack.value];
+			P = P - score.RevealedPoints[attack.value];
 		}
-		if (Defence.visible == false) {
-			P = P - score.HiddenPoints[Attack.value] + score.RevealedPoints[Attack.value];
+		if (defence.visible == false) {
+			P = P + score.HiddenPoints[attack.value] - score.RevealedPoints[attack.value];
 		}
 	}
 	else {
-
+		if (attack.visible == false) {
+			P = P - score.HiddenPoints[attack.value];
+		}
+		else {
+			P = P - score.RevealedPoints[attack.value];
+		}
+		if (defence.visible == false) {
+			P = P + score.HiddenPoints[defence.value];
+		}
+		else {
+			P = P + score.RevealedPoints[defence.value];
+		}
 	}
 
 	return P;

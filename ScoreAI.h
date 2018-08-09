@@ -1,14 +1,14 @@
 #define	SANDERAI2_H
 
 struct ArmyState {
-	int Hidden[11];// 0 is bombs and 1 is number of ones and so on
-	int Revealed[11];
-	int Dead[11];
+	int Hidden[12];// F,1,2,3,4,5,6,7,8,9,10,B
+	int Revealed[12];
+	int Dead[12];
 	ArmyState();
 };
 
 struct FractPiece {
-	float frac[12]; // The change of that piece being a flag 1,2,3,4,5,6,7,8,9,10 or a bomb
+	float frac[12]; // The change of that piece being a F,1,2,3,4,5,6,7,8,9,10,B
 	FractPiece();
 };
 
