@@ -222,9 +222,19 @@ float ScoreAI::evaluate_trade(Piece attack, Piece defence, Scores score) {
 	return P;
 }
 
-// returns float with the expected score difference of the trade
+/**
+ * @param attacker
+ * @param defender
+ * @param score
+ * @return (float) the sum of (chance of a certain piece * points gained/lost by attacking that piece)
+ */
 float ScoreAI::evaluateFractTrade(Piece attacker, FractPiece defender, Scores score) {
 	float p = 0;
+
+	for (int i=0; i < 12; i++) {
+		Piece defendingPiece(i, playerNumber);
+		p += defender.frac[i] * evaluate_trade(attacker, defendingPiece, score)
+	}
 
 	return p;
 }
