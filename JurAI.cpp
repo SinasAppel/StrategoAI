@@ -14,7 +14,7 @@ using namespace std;
 JurAI::JurAI(int p) : AI(p){
 }
 
-/*
+/**
  * Start_pos startPos() returns the starting position when called.
  * Place certain pieces on strategic places.
  * 

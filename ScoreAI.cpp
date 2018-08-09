@@ -211,13 +211,22 @@ float ScoreAI::evaluate_trade(Piece Attack, Piece Defence, Scores score) {
 	return P;
 }
 
-// returs float with the expected score difference of the trade
-float ScoreAI::evaluate_FractTrade(Piece M, FractPiece T, Scores score) {
-	float P = 0;
-	return P;
+// returns float with the expected score difference of the trade
+float ScoreAI::evaluateFractTrade(Piece attacker, FractPiece defender, Scores score) {
+	float p = 0;
+
+	return p;
 }
 
-//generates starting position
+/**
+ * Start_pos startPos() returns the starting position when called.
+ * Place certain pieces on strategic places.
+ *
+ * Currently implements the following rules:
+ * Flag on the backmost row, bombs around it.
+ * Scouts on non water columns
+ * The rest of the pieces are placed randomly
+ */
 Start_pos ScoreAI::startPos() {
 	srand(time(0));
 	// Create eventual output variable
