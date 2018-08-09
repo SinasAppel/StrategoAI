@@ -5,6 +5,7 @@
 #include <ctime>
 #include "generating.h"
 #include "ScoreAI.h"
+#include "definitions.cpp"
 using namespace std;
 
 ScoreAI::ScoreAI(int p) : AI(p) {
@@ -144,8 +145,74 @@ float ScoreAI::evaluate_armies(void)
 	return total;	
 }
 
+
+//gives the score change for the attacker
+float ScoreAI::evaluate_trade(Piece Attack, Piece Defence, Scores score) {
+	float P = 0;
+	int combatState;
+	// if defender is the flag
+	if (Defence.name == FLAG_NAME) {
+		combatState = COMBAT_WON;
+	}
+
+		// 3 against bomb:
+	else if (Attack.value == 3 && Defence.name == BOMB_NAME) {
+		combatState = COMBAT_WON;
+	}
+
+		// 1 against 10:
+	else if (Attack.value == 1 && Defence.value == 10) {
+		combatState = COMBAT_WON;
+	}
+
+		// combat versus bomb
+	else if (Defence.name == BOMB_NAME) {
+		combatState = COMBAT_LOST;
+	}
+
+		// normal combat
+	else if (Attack.value > Defence.value) {
+		combatState = COMBAT_WON;
+	}
+	else if (Attack.value == Defence.value) {
+		combatState = COMBAT_DRAW;
+	}
+	else {
+		combatState = COMBAT_LOST;
+	}
+
+	if (combatState == 1) {
+		if (Defence.visible == false) {
+			P = score.HiddenPoints[Defence.value];
+		}
+		else {
+			P = score.RevealedPoints[Defence.value];
+		}
+		if (Attack.visible == false) {
+			P = P - score.HiddenPoints[Attack.value] + score.RevealedPoints[Attack.value];
+		}
+
+	}
+	else if (combatState == -1) {
+		if (Attack.visible == false) {
+			P = P - score.HiddenPoints[Attack.value];
+		}
+		else {
+			P = P - score.RevealedPoints[Attack.value];
+		}
+		if (Defence.visible == false) {
+			P = P - score.HiddenPoints[Attack.value] + score.RevealedPoints[Attack.value];
+		}
+	}
+	else {
+
+	}
+
+	return P;
+}
+
 // returs float with the expected score difference of the trade
-float ScoreAI::evaluate_trade(Piece M, FractPiece T) {
+float ScoreAI::evaluate_FractTrade(Piece M, FractPiece T, Scores score) {
 	float P = 0;
 	return P;
 }
@@ -160,6 +227,7 @@ Start_pos ScoreAI::startPos() {
 //make a move
 Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
+	Scores score;
 	Move r;
 	return r;
 }

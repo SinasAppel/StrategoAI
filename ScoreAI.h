@@ -27,7 +27,8 @@ public:
 private:
 	void update_army(Tile field[10][10], Turn turn);
 	float evaluate_armies(void);
-	float evaluate_trade(Piece M, FractPiece T);
+	float ScoreAI::evaluate_trade(Piece M, Piece T, Scores score);
+	float evaluate_FractTrade(Piece M, FractPiece T, Scores score);
 	FractPiece Fractfield[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;
