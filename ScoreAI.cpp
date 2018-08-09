@@ -147,39 +147,39 @@ float ScoreAI::evaluate_armies(void)
 
 
 //gives the score change for the attacker
-float ScoreAI::evaluate_trade(Piece attack, Piece defence, Scores score) {
-	float P = 0;
-	int combatState;
+float ScoreAI::evaluateTrade(Piece attacker, Piece defence, Scores score) {
+	float p = 0;
+	int combatResult;
+
 	// if defender is the flag
-	if (defence.name == FLAG_NAME) {
-		combatState = COMBAT_WON;
+	if (defender.piece.name == FLAG_NAME) {
+		combatResult = COMBAT_WON;
 	}
 
-		// 3 against bomb:
-	else if (attack.value == 3 && defence.name == BOMB_NAME) {
-		combatState = COMBAT_WON;
+	// 3 against bomb:
+	if (attacker.piece.value == 3 && defender.piece.name == BOMB_NAME) {
+		combatResult = COMBAT_WON;
 	}
 
-		// 1 against 10:
-	else if (attack.value == 1 && defence.value == 10) {
-		combatState = COMBAT_WON;
+	// 1 against 10:
+	if (attacker.piece.value == 1 && defender.piece.value == 10) {
+		combatResult = COMBAT_WON;
 	}
 
-		// combat versus bomb
-	else if (defence.name == BOMB_NAME) {
-		combatState = COMBAT_LOST;
+	// combat versus bomb
+	if (defender.piece.name == BOMB_NAME) {
+		combatResult = COMBAT_LOST;
 	}
 
-		// normal combat
-	else if (attack.value > defence.value) {
-		combatState = COMBAT_WON;
+	// normal combat
+	if (attacker.piece.value > defender.piece.value) {
+		combatResult = COMBAT_WON;
 	}
-	else if (attack.value == defence.value) {
-		combatState = COMBAT_DRAW;
+	if (attacker.piece.value == defender.piece.value) {
+		combatResult = COMBAT_DRAW;
 	}
-	else {
-		combatState = COMBAT_LOST;
-	}
+	combatResult = COMBAT_LOST;
+
 
 	if (combatState == COMBAT_WON) {
 		if (defence.visible == false) {
@@ -188,28 +188,28 @@ float ScoreAI::evaluate_trade(Piece attack, Piece defence, Scores score) {
 		else {
 			P = P + score.RevealedPoints[defence.value];
 		}
-		if (attack.visible == false) {
-			P = P - score.HiddenPoints[attack.value] + score.RevealedPoints[attack.value];
+		if (attacker.visible == false) {
+			P = P - score.HiddenPoints[attacker.value] + score.RevealedPoints[attacker.value];
 		}
 
 	}
 	else if (combatState == COMBAT_LOST) {
-		if (attack.visible == false) {
-			P = P - score.HiddenPoints[attack.value];
+		if (attacker.visible == false) {
+			P = P - score.HiddenPoints[attacker.value];
 		}
 		else {
-			P = P - score.RevealedPoints[attack.value];
+			P = P - score.RevealedPoints[attacker.value];
 		}
 		if (defence.visible == false) {
-			P = P + score.HiddenPoints[attack.value] - score.RevealedPoints[attack.value];
+			P = P + score.HiddenPoints[attacker.value] - score.RevealedPoints[attacker.value];
 		}
 	}
 	else {
-		if (attack.visible == false) {
-			P = P - score.HiddenPoints[attack.value];
+		if (attacker.visible == false) {
+			P = P - score.HiddenPoints[attacker.value];
 		}
 		else {
-			P = P - score.RevealedPoints[attack.value];
+			P = P - score.RevealedPoints[attacker.value];
 		}
 		if (defence.visible == false) {
 			P = P + score.HiddenPoints[defence.value];

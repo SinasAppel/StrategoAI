@@ -27,7 +27,7 @@ public:
 private:
 	void update_army(Tile field[10][10], Turn turn);
 	float evaluate_armies(void);
-	float evaluate_trade(Piece attacker, Piece defender, Scores score);
+	float evaluateTrade(Piece attacker, Piece defender, Scores score);
 	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
 	FractPiece FractField[10][10];
 	Scores Points;
