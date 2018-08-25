@@ -39,6 +39,7 @@ FractPiece::FractPiece() {
 	frac[9] = 0;
 	frac[10] = 0;
 	frac[11] = 0;
+	canMove = false;
 }
 
 // default constructor for scores
@@ -440,6 +441,7 @@ Start_pos ScoreAI::startPos() {
 	return output;
 }
 
+// constructs a fract field from the current field
 void ScoreAI::make_FractField(Tile field[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
@@ -451,6 +453,7 @@ void ScoreAI::make_FractField(Tile field[10][10]) {
 					piece.frac[T3] = ArmyStateOpponent.Hidden[T3] / ArmyStateOpponent.totalHidden;
 				}
 			}
+			FractField[T1][T2] = piece;
 		}
 	}
 }
@@ -458,7 +461,8 @@ void ScoreAI::make_FractField(Tile field[10][10]) {
 //make a move
 Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
-	Scores score;
+	make_FractField(field);
+
 	Move r;
 	return r;
 }

@@ -12,6 +12,7 @@ struct ArmyState {
 
 struct FractPiece {
 	float frac[12]; // The chance(0 - 1) of that piece being a F,1,2,3,4,5,6,7,8,9,10,B
+	bool canMove;// true if the spiece can move
 	FractPiece();
 };
 
