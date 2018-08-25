@@ -12,7 +12,9 @@ struct ArmyState {
 
 struct FractPiece {
 	float frac[12]; // The chance(0 - 1) of that piece being a F,1,2,3,4,5,6,7,8,9,10,B
-	bool canMove;// true if the spiece can move
+	bool canMove;// true if the piece can move
+	int x;
+	int y;
 	FractPiece();
 };
 
@@ -34,7 +36,7 @@ private:
 	float evaluateTrade(Piece attacker, Piece defender, Scores score);
 	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
 	void make_FractField(Tile field[10][10]);
-	void check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40], Turn turn);
+	void check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40]);
 	FractPiece FractField[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;

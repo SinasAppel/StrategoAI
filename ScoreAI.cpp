@@ -40,6 +40,8 @@ FractPiece::FractPiece() {
 	frac[10] = 0;
 	frac[11] = 0;
 	canMove = false;
+	x = EMPTY_FRACTPIECE_X;
+	y = EMPTY_FRACTPIECE_Y;
 }
 
 // default constructor for scores
@@ -453,11 +455,14 @@ void ScoreAI::make_FractField(Tile field[10][10]) {
 					FractField[T1][T2].frac[T3] = FractField[T1][T2].frac[T3] / ArmyStateOpponent.totalHidden;
 				}
 			}
+			FractField[T1][T2].x = T2;
+			FractField[T1][T2].y = T1;
 		}
 	}
 }
 
-void ScoreAI::check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40], Turn turn){
+// computes witch pieces can move and adds them to the Moves array
+void ScoreAI::check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40]){
 	for (int T1 = 0; T1 < 10; T1++){
 		for (int T2 = 0; T2 < 10; T2++){// Go though the field
 			int neighbours = 0;// begin with zero neighbours
@@ -489,7 +494,7 @@ Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
 	make_FractField(field);
 	FractPiece myMoves[40], opponentMoves[40];
-	check_for_moves(field, myMoves, opponentMoves, turn);
+	check_for_moves(field, myMoves, opponentMoves);
 	Move r;
 	r.noMoves = true;
 	return r;

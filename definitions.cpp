@@ -13,6 +13,9 @@ const static int COMBAT_LOST = -1;
 const static char EMPTY_PIECE_NAME = 'E';
 const static char EMPTY_PIECE_VALUE = -1;
 
+const static int EMPTY_FRACTPIECE_X = -1;
+const static int EMPTY_FRACTPIECE_Y = -1;
+
 const static int INVISIBLE_PIECE_VALUE = 2;
 const static char INVISIBLE_PIECE_NAME = '?';
 
