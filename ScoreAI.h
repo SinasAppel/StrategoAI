@@ -34,6 +34,7 @@ private:
 	float evaluateTrade(Piece attacker, Piece defender, Scores score);
 	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
 	void make_FractField(Tile field[10][10]);
+	void check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40], Turn turn);
 	FractPiece FractField[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;

@@ -444,16 +444,42 @@ Start_pos ScoreAI::startPos() {
 // constructs a fract field from the current field
 void ScoreAI::make_FractField(Tile field[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
-		for (int T2 = 0; T2 < 10; T2++) {
-			FractPiece piece;
-			if (field[T1][T2].piece.visible = true) {
-				piece.frac[field[T1][T2].piece.value] = 1;
-			} else {
-				for (int T3 = 0; T3 < 12; T3++) {
-					piece.frac[T3] = ArmyStateOpponent.Hidden[T3] / ArmyStateOpponent.totalHidden;
+		for (int T2 = 0; T2 < 10; T2++) {// Go though the field
+			if (field[T1][T2].piece.name != INVISIBLE_PIECE_NAME) {// if the piece is fisible you know the value
+				FractField[T1][T2].frac[field[T1][T2].piece.value] = 1;// set the correct value
+			} else { // else try to guess the value
+				for (int T3 = 0; T3 < 12; T3++) {// go though all the chances of a piece
+					FractField[T1][T2].frac[T3] = ArmyStateOpponent.Hidden[T3];// make a guess with the amount of hidden pieces of the kind
+					FractField[T1][T2].frac[T3] = FractField[T1][T2].frac[T3] / ArmyStateOpponent.totalHidden;
 				}
 			}
-			FractField[T1][T2] = piece;
+		}
+	}
+}
+
+void ScoreAI::check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40], Turn turn){
+	for (int T1 = 0; T1 < 10; T1++){
+		for (int T2 = 0; T2 < 10; T2++){// Go though the field
+			int neighbours = 0;// begin with zero neighbours
+			if (T1 == 0 || field[T1 - 1][T2].piece.name != EMPTY_PIECE_NAME){ neighbours++; }// If a piece can't move in a direction add a neighbour
+			if (T1 == 9 || field[T1 + 1][T2].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
+			if (T2 == 0 || field[T1][T2 - 1].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
+			if (T2 == 9 || field[T1][T2 + 1].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
+			if (neighbours != 4){ 
+				FractField[T1][T2].canMove = true; // if the amount of neighbours is not four set it can move
+				for (int T3 = 0; T3 < 40; T3++){// go though the list of pieces that can move
+					if (field[T1][T2].piece.owner == playerNumber){// if it is your piece check myMoves
+						if (myMoves[T3].canMove == false){// only place the piece if there is an empty spot
+							myMoves[T3] = FractField[T1][T2];
+						}
+					}
+					if (field[T1][T2].piece.owner == (playerNumber == 1 ? 2 : 1)){// if it is not your piece check opponentMoves
+						if (opponentMoves[T3].canMove == false){// only place the piece if there is an empty spot
+							opponentMoves[T3] = FractField[T1][T2];
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -462,7 +488,9 @@ void ScoreAI::make_FractField(Tile field[10][10]) {
 Move ScoreAI::move(Tile field[10][10], Turn turn) {
 	update_army(field, turn);
 	make_FractField(field);
-
+	FractPiece myMoves[40], opponentMoves[40];
+	check_for_moves(field, myMoves, opponentMoves, turn);
 	Move r;
+	r.noMoves = true;
 	return r;
 }
