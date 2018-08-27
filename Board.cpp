@@ -5,6 +5,8 @@
 #include <termcolor.hpp>
 #include <stdio.h>
 
+using namespace std;
+
 Board::Board(Start_pos startPos1, Start_pos startPos2) {
 	// create tiles
 	for (int i = 0; i < 10; i++) {
@@ -67,15 +69,23 @@ void Board::updatePlayerBoard(int playerNumber) {
 }
 
 void Board::print(const Tile board[10][10]) {
-	std::cout << termcolor::red << "Hello, Colorful World!" << std::endl;
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
+
+			if (board[T1][T2].land == TILE_GRASS){ cout << termcolor::on_green; }
+			if (board[T1][T2].land == TILE_WATER){ cout << termcolor::on_blue; }
+			if (board[T1][T2].piece.owner == 1){ cout << termcolor::white; }
+			if (board[T1][T2].piece.owner == 2){ cout << termcolor::grey; }
+			if (board[T1][T2].piece.name == FLAG_NAME){ cout << termcolor::red; }
+
 			if (board[T1][T2].piece.name == EMPTY_PIECE_NAME) {
-				printf(" %c", board[T1][T2].land);
+				//cout << board[T1][T2].land <<" ";
+				cout << "  ";
 			} else {
-				printf(" %c", board[T1][T2].piece.name);
+				cout << board[T1][T2].piece.name << " ";
 			}
 		}
+		cout << termcolor::reset;
 		printf("\n");
 	}
 }
