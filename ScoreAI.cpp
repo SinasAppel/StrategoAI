@@ -40,6 +40,7 @@ FractPiece::FractPiece() {
 	frac[10] = 0;
 	frac[11] = 0;
 	canMove = false;
+	empty = true;
 	x = EMPTY_FRACTPIECE_X;
 	y = EMPTY_FRACTPIECE_Y;
 }
@@ -57,7 +58,7 @@ Scores::Scores() {
 }
 
 //update the ArmyStates with the information of the previous turns
-void ScoreAI::update_army(Tile field[10][10], Turn turn)
+void ScoreAI::update_army(Turn turn)
 {
 	int opponent = playerNumber == 1 ? 2 : 1;
 	int you = playerNumber;
@@ -178,9 +179,10 @@ float ScoreAI::evaluate_armies(void)
 
 
 //gives the score change for the attacker
-float ScoreAI::evaluateTrade(Piece attacker, Piece defender, Scores score) {
+float ScoreAI::evaluateTrade(Piece attacker, Piece defender) {
 	float p = 0;
 	int combatResult = -10;
+	Scores score;
 
 	// if defender is the flag
 	if (defender.name == FLAG_NAME) {
@@ -258,12 +260,12 @@ float ScoreAI::evaluateTrade(Piece attacker, Piece defender, Scores score) {
  * @param score
  * @return (float) the sum of (chance of a certain piece * points gained/lost by attacking that piece)
  */
-float ScoreAI::evaluateFractTrade(Piece attacker, FractPiece defender, Scores score) {
+float ScoreAI::evaluateFractTrade(Piece attacker, FractPiece defender) {
 	float p = 0;
 
 	for (int i=0; i < 12; i++) {
 		Piece defendingPiece(i, playerNumber);
-		p += defender.frac[i] * evaluateTrade(attacker, defendingPiece, score);
+		p += defender.frac[i] * evaluateTrade(attacker, defendingPiece);
 	}
 
 	return p;
@@ -447,13 +449,19 @@ Start_pos ScoreAI::startPos() {
 void ScoreAI::make_FractField(Tile field[10][10]) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {// Go though the field
-			if (field[T1][T2].piece.name != INVISIBLE_PIECE_NAME) {// if the piece is fisible you know the value
-				FractField[T1][T2].frac[field[T1][T2].piece.value] = 1;// set the correct value
-			} else { // else try to guess the value
-				for (int T3 = 0; T3 < 12; T3++) {// go though all the chances of a piece
-					FractField[T1][T2].frac[T3] = ArmyStateOpponent.Hidden[T3];// make a guess with the amount of hidden pieces of the kind
-					FractField[T1][T2].frac[T3] = FractField[T1][T2].frac[T3] / ArmyStateOpponent.totalHidden;
+			if (field[T1][T2].piece.name != EMPTY_PIECE_NAME){// only give real pieces a value
+				FractField[T1][T2].empty = false;
+				if (field[T1][T2].piece.name != INVISIBLE_PIECE_NAME) {// if the piece is fisible you know the value
+					FractField[T1][T2].frac[field[T1][T2].piece.value] = 1;// set the correct value
 				}
+				else { // else try to guess the value
+					for (int T3 = 0; T3 < 12; T3++) {// go though all the chances of a piece
+						FractField[T1][T2].frac[T3] = ArmyStateOpponent.Hidden[T3];// make a guess with the amount of hidden pieces of the kind
+						FractField[T1][T2].frac[T3] = FractField[T1][T2].frac[T3] / ArmyStateOpponent.totalHidden;
+					}
+				}
+			} else {// if the piece is empty set empty to true on the fractpiece
+				FractField[T1][T2].empty = true;
 			}
 			FractField[T1][T2].x = T2;
 			FractField[T1][T2].y = T1;
@@ -462,25 +470,28 @@ void ScoreAI::make_FractField(Tile field[10][10]) {
 }
 
 // computes witch pieces can move and adds them to the Moves array
-void ScoreAI::check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40]){
+void ScoreAI::check_for_moves(Tile field[10][10], Tile myMoves[40], FractPiece opponentMoves[40]){
+	int opponentNumber = playerNumber == 1 ? 2 : 1;
 	for (int T1 = 0; T1 < 10; T1++){
 		for (int T2 = 0; T2 < 10; T2++){// Go though the field
 			int neighbours = 0;// begin with zero neighbours
-			if (T1 == 0 || field[T1 - 1][T2].piece.name != EMPTY_PIECE_NAME){ neighbours++; }// If a piece can't move in a direction add a neighbour
-			if (T1 == 9 || field[T1 + 1][T2].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
-			if (T2 == 0 || field[T1][T2 - 1].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
-			if (T2 == 9 || field[T1][T2 + 1].piece.name != EMPTY_PIECE_NAME){ neighbours++; }
-			if (neighbours != 4){ 
+			if (T1 == 0 || field[T1 - 1][T2].piece.name != EMPTY_PIECE_NAME || field[T1 - 1][T2].land == TILE_WATER){ neighbours++; }// If a piece can't move in a direction add a neighbour
+			if (T1 == 9 || field[T1 + 1][T2].piece.name != EMPTY_PIECE_NAME || field[T1 + 1][T2].land == TILE_WATER){ neighbours++; }
+			if (T2 == 0 || field[T1][T2 - 1].piece.name != EMPTY_PIECE_NAME || field[T1][T2 - 1].land == TILE_WATER){ neighbours++; }
+			if (T2 == 9 || field[T1][T2 + 1].piece.name != EMPTY_PIECE_NAME || field[T1][T2 + 1].land == TILE_WATER){ neighbours++; }
+			if (neighbours != 4 && field[T1][T2].piece.name != FLAG_NAME && field[T1][T2].piece.name != BOMB_NAME){// it can move if it does not have four neighbours and is not a flag and not a bomb
 				FractField[T1][T2].canMove = true; // if the amount of neighbours is not four set it can move
 				for (int T3 = 0; T3 < 40; T3++){// go though the list of pieces that can move
 					if (field[T1][T2].piece.owner == playerNumber){// if it is your piece check myMoves
-						if (myMoves[T3].canMove == false){// only place the piece if there is an empty spot
-							myMoves[T3] = FractField[T1][T2];
+						if (myMoves[T3].piece.name == EMPTY_PIECE_NAME){// only place the piece if there is an empty spot
+							myMoves[T3] = field[T1][T2];
+							break;
 						}
 					}
-					if (field[T1][T2].piece.owner == (playerNumber == 1 ? 2 : 1)){// if it is not your piece check opponentMoves
-						if (opponentMoves[T3].canMove == false){// only place the piece if there is an empty spot
+					if (field[T1][T2].piece.owner == opponentNumber){// if it is not your piece check opponentMoves
+						if (opponentMoves[T3].empty){// only place the piece if there is an empty spot
 							opponentMoves[T3] = FractField[T1][T2];
+							break;
 						}
 					}
 				}
@@ -489,13 +500,63 @@ void ScoreAI::check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractP
 	}
 }
 
+//scores all the possible combinations of combat with distance
+void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float scoreMatrix[40][40]){
+	int bestT1 = 0, bestT2 = 0;// keep track of the best trade
+	for (int T1 = 0; T1 < 40; T1++){
+		if (myMoves[T1].piece.name != 'E'){ printf("\n"); printf("%c\n", myMoves[T1].piece.name); }
+		for (int T2 = 0; T2 < 40; T2++){// go though all the combinations
+			if (myMoves[T1].piece.name != EMPTY_PIECE_NAME && !opponentMoves[T2].empty){// if they are both falid pieces compute trade value
+				float disMod = 1 / sqrt(abs(myMoves[T1].x - opponentMoves[T2].x) + abs(myMoves[T1].y - opponentMoves[T2].y));// calculate a distance modifier
+				scoreMatrix[T1][T2] = evaluateFractTrade(myMoves[T1].piece, opponentMoves[T2]) * disMod;
+				if (scoreMatrix[T1][T2] > scoreMatrix[bestT1][bestT2]){// if this combat has a higher score than the record make that the record
+					bestT1 = T1;
+					bestT2 = T2;
+				}
+				printf("%.2f ", scoreMatrix[T1][T2]);
+			}
+		}
+	}
+	myMoves[0] = myMoves[bestT1];// move the best combat option to the front to pass pass it on
+	opponentMoves[0] = opponentMoves[bestT2];
+}
+
+Move ScoreAI::generate_move(Tile field[10][10], Tile Attacker, FractPiece Target){
+	int xdif = Target.x - Attacker.x, ydif = Target.y - Attacker.y;// calculate the directions the attacker wants to move in
+	int N = -10000, S = -10000, E = -10000, W = -10000, best = -1000;
+	char cardinal = SOUTH;
+	if (Attacker.piece.name == EMPTY_PIECE_NAME){ Move outputMove; outputMove.noMoves = true; return outputMove; }// if the piece is empty there are no pissible moves 
+	//check the availeble cardinals
+	// if the piece can move in that direction set the points to that option equal to the amount it wants to move in that direction
+	// inbetween the biggest score is updated
+	if (Attacker.y != 0 && field[Attacker.y - 1][Attacker.x].piece.owner != playerNumber && field[Attacker.y - 1][Attacker.x].land != TILE_WATER){ N = -1*ydif; }
+	if (N > best){ cardinal = NORTH; best = N; }
+	if (Attacker.y != 9 && field[Attacker.y + 1][Attacker.x].piece.owner != playerNumber && field[Attacker.y + 1][Attacker.x].land != TILE_WATER){ S = ydif; }
+	if (S > best){ cardinal = SOUTH; best = S; }
+	if (Attacker.x != 0 && field[Attacker.y][Attacker.x - 1].piece.owner != playerNumber && field[Attacker.y][Attacker.x - 1].land != TILE_WATER){ W = -1 * xdif; }
+	if (W > best){ cardinal = WEST; best = W; }
+	if (Attacker.x != 9 && field[Attacker.y][Attacker.x + 1].piece.owner != playerNumber && field[Attacker.y][Attacker.x + 1].land != TILE_WATER){ E = xdif; }
+	if (E > best){ cardinal = EAST; best = E; }
+
+	Move outputMove;
+	outputMove.noMoves = false;
+	outputMove.x = Attacker.x;
+	outputMove.y = Attacker.y;
+	outputMove.tiles = 1; //asume 1 step(for 2's this will be changed)
+	outputMove.cardinal = cardinal;
+	if (best == -1000){ outputMove.noMoves = true; }// kill the move if the best is still -1000, that means it can not move. Some weird code but it works
+	return outputMove;
+}
+
 //make a move
 Move ScoreAI::move(Tile field[10][10], Turn turn) {
-	update_army(field, turn);
+	update_army(turn);
 	make_FractField(field);
-	FractPiece myMoves[40], opponentMoves[40];
+	FractPiece opponentMoves[40];
+	Tile myMoves[40];
+	float scoreMatrix[40][40] = {};
 	check_for_moves(field, myMoves, opponentMoves);
-	Move r;
-	r.noMoves = true;
+	score_moves(myMoves, opponentMoves, scoreMatrix);
+	Move r = generate_move(field, myMoves[0], opponentMoves[0]);
 	return r;
 }

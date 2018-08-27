@@ -53,12 +53,12 @@ void Board::updatePlayerBoard(int playerNumber) {
 
 	if (playerNumber == 2) {
 		// if player 2, turn the field upside down so the AI is always on top.
-		Tile temp;
+		Piece temp;
 		for (int T3 = 0; T3 < 5; T3++) {
 			for (int T4 = 0; T4 < 10; T4++) {
-				temp = player2Field[T3][T4];
-				player2Field[T3][T4] = player2Field[9 - T3][9 - T4];
-				player2Field[9 - T3][9 - T4] = temp;
+				temp = player2Field[T3][T4].piece;
+				player2Field[T3][T4].piece = player2Field[9 - T3][9 - T4].piece;
+				player2Field[9 - T3][9 - T4].piece = temp;
 			}
 		}
 	}

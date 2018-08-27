@@ -15,6 +15,7 @@ struct FractPiece {
 	bool canMove;// true if the piece can move
 	int x;
 	int y;
+	bool empty;
 	FractPiece();
 };
 
@@ -31,12 +32,14 @@ public:
 	Move move(Tile field[10][10], Turn turn);
 	ScoreAI(int p /*playernumber*/);
 private:
-	void update_army(Tile field[10][10], Turn turn);
+	void update_army(Turn turn);
 	float evaluate_armies(void);
-	float evaluateTrade(Piece attacker, Piece defender, Scores score);
-	float evaluateFractTrade(Piece M, FractPiece T, Scores score);
+	float evaluateTrade(Piece attacker, Piece defender);
+	float evaluateFractTrade(Piece M, FractPiece T);
 	void make_FractField(Tile field[10][10]);
-	void check_for_moves(Tile field[10][10], FractPiece myMoves[40], FractPiece opponentMoves[40]);
+	void check_for_moves(Tile field[10][10], Tile myMoves[40], FractPiece opponentMoves[40]);
+	void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float scoreMatrix[40][40]);
+	Move generate_move(Tile field[10][10], Tile Attacker, FractPiece Target);
 	FractPiece FractField[10][10];
 	Scores Points;
 	ArmyState ArmyStateOpponent;

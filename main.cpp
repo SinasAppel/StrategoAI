@@ -12,7 +12,7 @@
 #include "definitions.cpp"
 #include "Board.h"
 
-#define MAXGAMES 5
+#define MAXGAMES 1
 
 using namespace std;
 
@@ -115,7 +115,7 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 			} else {
 				playersTurn.youRevealed = Piece();
 			}
-			field[newY][newX] = currentTile;
+			field[newY][newX].piece = currentTile.piece;
 			field[move.y][move.x] = cleanGrassTile(move.x, move.y);
 			break;
 		case COMBAT_DRAW:
@@ -123,7 +123,7 @@ Turn handleMove(Tile field[10][10], Turn playersTurn) {
 			playersTurn.youKilled[1] = field[move.y][move.x].piece;
 			playersTurn.youRevealed = Piece();
 			field[move.y][move.x] = cleanGrassTile(move.x, move.y);
-			field[newY][newX] = cleanGrassTile(move.x, move.y);
+			field[newY][newX] = cleanGrassTile(newX, newY);
 			break;
 		case COMBAT_LOST:
 			playersTurn.youKilled[0] = Piece();
