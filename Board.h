@@ -11,7 +11,7 @@ class Board {
 
 public:
     Board(Start_pos startPos1, Start_pos startPos2);
-    void print(const Tile board[10][10]);
+    void print(const Tile board[10][10], Move move);
     Tile field[10][10];
 
     // playerfields; fields with only the information an AI is allowed to know

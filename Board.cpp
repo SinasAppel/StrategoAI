@@ -68,15 +68,40 @@ void Board::updatePlayerBoard(int playerNumber) {
 	}
 }
 
-void Board::print(const Tile board[10][10]) {
+void Board::print(const Tile board[10][10], Move move) {
 	for (int T1 = 0; T1 < 10; T1++) {
 		for (int T2 = 0; T2 < 10; T2++) {
+			if (board[T1][T2].land == TILE_GRASS){ cout << termcolor::on_green; }// green underground for grass
+			else if (board[T1][T2].land == TILE_WATER){ cout << termcolor::on_blue; }// blue for water
 
-			if (board[T1][T2].land == TILE_GRASS){ cout << termcolor::on_green; }
-			if (board[T1][T2].land == TILE_WATER){ cout << termcolor::on_blue; }
-			if (board[T1][T2].piece.owner == 1){ cout << termcolor::white; }
-			if (board[T1][T2].piece.owner == 2){ cout << termcolor::grey; }
-			if (board[T1][T2].piece.name == FLAG_NAME){ cout << termcolor::red; }
+			if (move.cardinal != '0') {// only if there is a move to highlight
+				int newX = move.x;
+				int newY = move.y;
+
+				switch (move.cardinal) {
+				case NORTH:
+					newY = move.y - move.tiles;
+					break;
+				case EAST:
+					newX = move.x + move.tiles;
+					break;
+				case SOUTH:
+					newY = move.y + move.tiles;
+					break;
+				case WEST:
+					newX = move.x - move.tiles;
+					break;
+				default:
+					throw("Error, not a valid cardinal\n");
+				}
+				if (T1 == move.y && T2 == move.x) { cout << termcolor::on_yellow; }
+				if (T1 == newY && T2 == newX) { cout << termcolor::on_yellow; }
+			}
+
+			if (board[T1][T2].piece.name == FLAG_NAME) { cout << termcolor::red; }// red letter for the flag
+			else if (board[T1][T2].piece.owner == 1){ cout << termcolor::white; }// white letters for player 1
+			else if (board[T1][T2].piece.owner == 2){ cout << termcolor::grey; }// grey letters for player 2
+			
 
 			if (board[T1][T2].piece.name == EMPTY_PIECE_NAME) {
 				//cout << board[T1][T2].land <<" ";
@@ -85,7 +110,7 @@ void Board::print(const Tile board[10][10]) {
 				cout << board[T1][T2].piece.name << " ";
 			}
 		}
-		cout << termcolor::reset;
+		cout << termcolor::reset;// reset the color picker
 		printf("\n");
 	}
 }
