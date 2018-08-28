@@ -542,10 +542,10 @@ Move ScoreAI::generate_move(Tile field[10][10], Tile Attacker, FractPiece Target
 
 	if (Attacker.piece.value == 2) {// a two can move further then one 
 		for (T1; T1 < 10; T1++){// increase until the piece cant move annymove
-			if(cardinal == NORTH &&			(Attacker.y == T1-1		|| field[Attacker.y - T1 - 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y - T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y - T1][Attacker.x].land == TILE_WATER || T1 > abs(ydif))){ break; }
-			else if (cardinal == SOUTH &&	(Attacker.y == 10 - T1	|| field[Attacker.y + T1 + 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y + T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y + T1][Attacker.x].land == TILE_WATER || T1 > abs(ydif))) { break; }
-			else if (cardinal == WEST &&	(Attacker.y == T1 - 1	|| field[Attacker.y][Attacker.x - T1 - 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x - T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x - T1].land == TILE_WATER || T1 > abs(xdif))) { break; }
-			else if (cardinal == EAST &&	(Attacker.y == 10 - T1	|| field[Attacker.y][Attacker.x + T1 + 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x + T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x + T1].land == TILE_WATER || T1 > abs(xdif))) { break; }
+			if(cardinal == NORTH &&			(Attacker.y == T1-1		|| field[Attacker.y - T1 - 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y - T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y - T1][Attacker.x].land == TILE_WATER || T1 = abs(ydif))){ break; }
+			else if (cardinal == SOUTH &&	(Attacker.y == 10 - T1	|| field[Attacker.y + T1 + 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y + T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y + T1][Attacker.x].land == TILE_WATER || T1 = abs(ydif))) { break; }
+			else if (cardinal == WEST &&	(Attacker.y == T1 - 1	|| field[Attacker.y][Attacker.x - T1 - 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x - T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x - T1].land == TILE_WATER || T1 = abs(xdif))) { break; }
+			else if (cardinal == EAST &&	(Attacker.y == 10 - T1	|| field[Attacker.y][Attacker.x + T1 + 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x + T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x + T1].land == TILE_WATER || T1 = abs(xdif))) { break; }
 		}
 	}
 
