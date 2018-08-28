@@ -264,12 +264,19 @@ Game playAiGame(AI *player1, AI *player2) {
 			turnsDone = AI2_turn.count;
 		}
 
-		if (AI1_turn.youKilled[0].name == FLAG_NAME || AI2_turn.youKilled[0].name == FLAG_NAME || AI1_turn.error || AI2_turn.error) {
+		if (AI1_turn.youKilled[0].name == FLAG_NAME || AI2_turn.youKilled[0].name == FLAG_NAME) {
 			AI1avr = AI1tot / (turnsDone / 2);
 			AI2avr = AI2tot / (turnsDone / 2);
+			board.print(board.field);
 			return{ AIsTurn == 1 ? 2 : 1 , turnsDone, AI1avr, AI2avr };
 		}
-
+		if (AI1_turn.error || AI2_turn.error) {
+			AI1avr = AI1tot / (turnsDone / 2);
+			AI2avr = AI2tot / (turnsDone / 2);
+			board.print(board.field);
+			return{ AIsTurn, turnsDone, AI1avr, AI2avr };
+		}
+		
 		move = previous_move;
 	}
 
