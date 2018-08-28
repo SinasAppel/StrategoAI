@@ -523,9 +523,11 @@ void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float 
 
 Move ScoreAI::generate_move(Tile field[10][10], Tile Attacker, FractPiece Target){
 	int xdif = Target.x - Attacker.x, ydif = Target.y - Attacker.y;// calculate the directions the attacker wants to move in
-	int N = -10000, S = -10000, E = -10000, W = -10000, best = -1000;
+	int N = -10000, S = -10000, E = -10000, W = -10000, best = -1000, T1 = 1;
+	int opponentNumber = playerNumber == 1 ? 2 : 1;
 	char cardinal = SOUTH;
 	if (Attacker.piece.name == EMPTY_PIECE_NAME){ Move outputMove; outputMove.noMoves = true; return outputMove; }// if the piece is empty there are no pissible moves 
+
 	//check the availeble cardinals
 	// if the piece can move in that direction set the points to that option equal to the amount it wants to move in that direction
 	// inbetween the biggest score is updated
@@ -538,11 +540,20 @@ Move ScoreAI::generate_move(Tile field[10][10], Tile Attacker, FractPiece Target
 	if (Attacker.x != 9 && field[Attacker.y][Attacker.x + 1].piece.owner != playerNumber && field[Attacker.y][Attacker.x + 1].land != TILE_WATER){ E = xdif; }
 	if (E > best){ cardinal = EAST; best = E; }
 
+	if (Attacker.piece.value == 2) {// a two can move further then one 
+		for (T1; T1 < 10; T1++){// increase until the piece cant move annymove
+			if(cardinal == NORTH &&			(Attacker.y == T1-1		|| field[Attacker.y - T1 - 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y - T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y - T1][Attacker.x].land == TILE_WATER || T1 > abs(ydif))){ break; }
+			else if (cardinal == SOUTH &&	(Attacker.y == 10 - T1	|| field[Attacker.y + T1 + 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y + T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y + T1][Attacker.x].land == TILE_WATER || T1 > abs(ydif))) { break; }
+			else if (cardinal == WEST &&	(Attacker.y == T1 - 1	|| field[Attacker.y][Attacker.x - T1 - 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x - T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x - T1].land == TILE_WATER || T1 > abs(xdif))) { break; }
+			else if (cardinal == EAST &&	(Attacker.y == 10 - T1	|| field[Attacker.y][Attacker.x + T1 + 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x + T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x + T1].land == TILE_WATER || T1 > abs(xdif))) { break; }
+		}
+	}
+
 	Move outputMove;
 	outputMove.noMoves = false;
 	outputMove.x = Attacker.x;
 	outputMove.y = Attacker.y;
-	outputMove.tiles = 1; //asume 1 step(for 2's this will be changed)
+	outputMove.tiles = T1; 
 	outputMove.cardinal = cardinal;
 	if (best == -1000){ outputMove.noMoves = true; }// kill the move if the best is still -1000, that means it can not move. Some weird code but it works
 	return outputMove;
