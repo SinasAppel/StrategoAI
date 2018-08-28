@@ -504,7 +504,7 @@ void ScoreAI::check_for_moves(Tile field[10][10], Tile myMoves[40], FractPiece o
 void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float scoreMatrix[40][40]){
 	int bestT1 = 0, bestT2 = 0;// keep track of the best trade
 	for (int T1 = 0; T1 < 40; T1++){
-		if (myMoves[T1].piece.name != 'E'){ printf("\n"); printf("%c\n", myMoves[T1].piece.name); }
+		//if (myMoves[T1].piece.name != 'E'){ printf("\n"); printf("%c\n", myMoves[T1].piece.name); }
 		for (int T2 = 0; T2 < 40; T2++){// go though all the combinations
 			if (myMoves[T1].piece.name != EMPTY_PIECE_NAME && !opponentMoves[T2].empty){// if they are both falid pieces compute trade value
 				float disMod = 1 / sqrt(abs(myMoves[T1].x - opponentMoves[T2].x) + abs(myMoves[T1].y - opponentMoves[T2].y));// calculate a distance modifier
@@ -513,7 +513,7 @@ void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float 
 					bestT1 = T1;
 					bestT2 = T2;
 				}
-				printf("%.2f ", scoreMatrix[T1][T2]);
+				//printf("%.2f ", scoreMatrix[T1][T2]);
 			}
 		}
 	}

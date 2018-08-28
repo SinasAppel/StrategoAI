@@ -12,7 +12,7 @@
 #include "definitions.cpp"
 #include "Board.h"
 
-#define MAXGAMES 1
+#define MAXGAMES 64800
 
 using namespace std;
 
@@ -226,7 +226,7 @@ Game playAiGame(AI *player1, AI *player2) {
 			AI1_turn.count++;
 			AI1_turn = Turn(AI1_turn, AI2_turn);
 			board.updatePlayerBoard(1);
-			board.print(board.player1Field);
+			//board.print(board.player1Field);
 
 			AI11 = clock();
 			AI1_turn.youMoved = player1->move(board.player1Field, AI1_turn);
@@ -235,17 +235,17 @@ Game playAiGame(AI *player1, AI *player2) {
 			float diff ((float)AI12 - (float)AI11);
 			AI1tot = AI1tot + (diff / CLOCKS_PER_SEC);
 
-			printf("AI1: %i, %i, %c %i\n", AI1_turn.youMoved.x, AI1_turn.youMoved.y, AI1_turn.youMoved.cardinal, AI1_turn.youMoved.tiles);//print the move of the AI
+			//printf("AI1: %i, %i, %c %i\n", AI1_turn.youMoved.x, AI1_turn.youMoved.y, AI1_turn.youMoved.cardinal, AI1_turn.youMoved.tiles);//print the move of the AI
 			AI1_turn = handleMove(board.field, AI1_turn);
-			board.print(board.field);
-			printf("\n");
+			//board.print(board.field);
+			//printf("\n");
 
 			AIsTurn++;
 			turnsDone = AI1_turn.count;
 		} else { // player2's turn
 			AI2_turn = Turn(AI2_turn, AI1_turn);
 			board.updatePlayerBoard(2);
-			board.print(board.player2Field); // print what the AI sees
+			//board.print(board.player2Field); // print what the AI sees
 
 			AI21 = clock();
 			AI2_turn.youMoved = player2->move(board.player2Field, AI2_turn);
@@ -255,19 +255,26 @@ Game playAiGame(AI *player1, AI *player2) {
 			AI2tot = AI2tot + (diff / CLOCKS_PER_SEC);
 
 			AI2_turn.youMoved = turnaround_Move(AI2_turn.youMoved);
-			printf("AI2: %i, %i, %c %i\n", AI2_turn.youMoved.x, AI2_turn.youMoved.y, AI2_turn.youMoved.cardinal, AI2_turn.youMoved.tiles);//print the move of the AI
+			//printf("AI2: %i, %i, %c %i\n", AI2_turn.youMoved.x, AI2_turn.youMoved.y, AI2_turn.youMoved.cardinal, AI2_turn.youMoved.tiles);//print the move of the AI
 			AI2_turn = handleMove(board.field, AI2_turn);
-			board.print(board.field);//print the output of the AI
-			printf("\n");
+			//board.print(board.field);//print the output of the AI
+			//printf("\n");
 
 			AIsTurn--;
 			turnsDone = AI2_turn.count;
 		}
 
-		if (AI1_turn.youKilled[0].name == FLAG_NAME || AI2_turn.youKilled[0].name == FLAG_NAME || AI1_turn.error || AI2_turn.error) {
+		if (AI1_turn.youKilled[0].name == FLAG_NAME || AI2_turn.youKilled[0].name == FLAG_NAME) {
 			AI1avr = AI1tot / (turnsDone / 2);
 			AI2avr = AI2tot / (turnsDone / 2);
+			board.print(board.field);
 			return{ AIsTurn == 1 ? 2 : 1 , turnsDone, AI1avr, AI2avr };
+		}
+		if (AI1_turn.error || AI2_turn.error) {
+			AI1avr = AI1tot / (turnsDone / 2);
+			AI2avr = AI2tot / (turnsDone / 2);
+			board.print(board.field);
+			return{ AIsTurn, turnsDone, AI1avr, AI2avr };
 		}
 
 		move = previous_move;
