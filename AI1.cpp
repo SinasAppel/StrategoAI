@@ -67,6 +67,7 @@ Start_pos AI1::startPos() {
 	return output;
 }
 
+// gives a score for moveing to a tile. Still a really basic itiration
 int AI1::evaluate_tile(Tile target, int piece_falue)
 {
 	if (target.piece.owner == playerNumber){ return -900; }
@@ -85,6 +86,7 @@ int AI1::evaluate_tile(Tile target, int piece_falue)
 	 return 0; 
 }
 
+// returns a move
 Move AI1::move(Tile field[10][10], Turn turn)
 {
 	Move output;

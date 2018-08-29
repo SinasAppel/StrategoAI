@@ -38,6 +38,8 @@ private:
 	float evaluateFractTrade(Piece M, FractPiece T);
 	void make_FractField(Tile field[10][10]);
 	void check_for_moves(Tile field[10][10], Tile myMoves[40], FractPiece opponentMoves[40]);
+	void search_map(bool seached[10][10], FractPiece pieceReach[40], int x, int y);
+	void make_move_matrix(Tile field[10][10], Tile myMoves[40], FractPiece myReach[40][40]);
 	void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float scoreMatrix[40][40]);
 	Move generate_move(Tile field[10][10], Tile Attacker, FractPiece Target);
 	FractPiece FractField[10][10];

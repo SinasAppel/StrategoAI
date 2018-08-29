@@ -500,6 +500,21 @@ void ScoreAI::check_for_moves(Tile field[10][10], Tile myMoves[40], FractPiece o
 	}
 }
 
+//searches the tile that was specified and spreades recursive searches in all directions
+void ScoreAI::search_map(bool seached[10][10], FractPiece pieceReach[40], int x, int y) {
+
+}
+
+//computes the pieces of my opponent my moveble pieces can reach. Upgraded function from check_for_moves
+void ScoreAI::make_move_matrix(Tile field[10][10], Tile myMoves[40], FractPiece myReach[40][40]) {
+	int T1 = 0;
+	while(myMoves[T1].piece.name != EMPTY_PIECE_NAME && T1 < 40){// gothough all myMoves
+		bool seached[10][10] = { { false } }; // true for the tiles that are aleady searched
+		search_map(seached, myReach[T1], myMoves[T1].x, myMoves[T1].y);
+		T1++;
+	}
+}
+
 //scores all the possible combinations of combat with distance
 void ScoreAI::score_moves(Tile myMoves[40], FractPiece opponentMoves[40], float scoreMatrix[40][40]){
 	int bestT1 = 0, bestT2 = 0;// keep track of the best trade
@@ -542,7 +557,7 @@ Move ScoreAI::generate_move(Tile field[10][10], Tile Attacker, FractPiece Target
 
 	if (Attacker.piece.value == 2) {// a two can move further then one 
 		for (T1; T1 < 10; T1++){// increase until the piece cant move annymove
-			if(cardinal == NORTH &&			(Attacker.y == T1-1		|| field[Attacker.y - T1 - 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y - T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y - T1][Attacker.x].land == TILE_WATER || T1 == abs(ydif))){ break; }
+			if(cardinal == NORTH &&			(Attacker.y == T1-1		|| field[Attacker.y - T1 - 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y - T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y - T1][Attacker.x].land == TILE_WATER || T1 == abs(ydif))) { break; }
 			else if (cardinal == SOUTH &&	(Attacker.y == 10 - T1	|| field[Attacker.y + T1 + 1][Attacker.x].piece.owner == playerNumber || field[Attacker.y + T1][Attacker.x].piece.owner == opponentNumber || field[Attacker.y + T1][Attacker.x].land == TILE_WATER || T1 == abs(ydif))) { break; }
 			else if (cardinal == WEST &&	(Attacker.y == T1 - 1	|| field[Attacker.y][Attacker.x - T1 - 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x - T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x - T1].land == TILE_WATER || T1 == abs(xdif))) { break; }
 			else if (cardinal == EAST &&	(Attacker.y == 10 - T1	|| field[Attacker.y][Attacker.x + T1 + 1].piece.owner == playerNumber || field[Attacker.y][Attacker.x + T1].piece.owner == opponentNumber || field[Attacker.y][Attacker.x + T1].land == TILE_WATER || T1 == abs(xdif))) { break; }
